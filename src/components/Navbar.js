@@ -1,11 +1,6 @@
-
-import { useState } from "react";
+import { NavLink } from "react-router-dom";
 
 export default function Navbar() {
-  const [active, setActive] = useState("Home");
-
-  const links = ["Home", "About", "Contact"];
-
   return (
     <nav className="navbar">
       <div className="logo">
@@ -13,15 +8,21 @@ export default function Navbar() {
       </div>
 
       <ul className="nav-links">
-        {links.map(link => (
-          <li
-            key={link}
-            className={active === link ? "active" : ""}
-            onClick={() => setActive(link)}
-          >
-            {link}
-          </li>
-        ))}
+        <li>
+          <NavLink to="/" end>
+            Home
+          </NavLink>
+        </li>
+        <li>
+          <NavLink to="/about">
+            About
+          </NavLink>
+        </li>
+        <li>
+          <NavLink to="/contact">
+            Contact
+          </NavLink>
+        </li>
       </ul>
     </nav>
   );

@@ -1,5 +1,3 @@
-// src/components/BestToday.jsx
-
 import { useState } from "react";
 import FoodCard from "./FoodCard";
 import { foodData } from "../data/foodData";

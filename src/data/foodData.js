@@ -1,4 +1,3 @@
-// src/data/foodData.js
 
 export const foodData = [
   {
@@ -32,5 +31,23 @@ export const foodData = [
     price: 50,
     rating: 2.5,
     tags: ["oily"]
+  },
+    {
+    id: 5,
+    source: "Hotel Mitraya",
+    type: "restaurant",
+    dish: "Veg Thali",
+    price: 120,
+    rating: 4.1,
+    tags: ["balanced"]
+  },
+  {
+    id: 6,
+    source: "Hotel Godavari",
+    type: "restaurant",
+    dish: "Special Thali",
+    price: 140,
+    rating: 4.3,
+    tags: ["balanced", "high-protein"]
   }
 ];
