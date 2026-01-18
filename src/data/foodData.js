@@ -1,4 +1,3 @@
-
 export const foodData = [
   {
     id: 1,
@@ -6,48 +5,48 @@ export const foodData = [
     dish: "Dal Rice",
     price: 50,
     rating: 3.6,
-    tags: ["light", "budget", "balanced"]
+    tags: ["light", "budget"],
+    upvotes: 0,
+    downvotes: 0
   },
   {
     id: 2,
-    source: "Sai Tiffins",
-    dish: "Paneer Tikka",
-    price: 90,
-    rating: 4.2,
-    tags: ["high-protein", "balanced"]
-  },
-  {
-    id: 3,
-    source: "Sharma Canteen",
-    dish: "Veg Thali",
-    price: 70,
-    rating: 3.9,
-    tags: ["balanced"]
-  },
-  {
-    id: 4,
     source: "College Mess",
     dish: "Puri Bhaji",
     price: 50,
     rating: 2.5,
-    tags: ["oily"]
+    tags: ["oily"],
+    upvotes: 0,
+    downvotes: 0
   },
-    {
-    id: 5,
+  {
+    id: 3,
+    source: "Sai Tiffins",
+    dish: "Paneer Tikka",
+    price: 90,
+    rating: 4.2,
+    tags: ["high-protein"],
+    upvotes: 0,
+    downvotes: 0
+  },
+  {
+    id: 4,
     source: "Hotel Mitraya",
-    type: "restaurant",
     dish: "Veg Thali",
     price: 120,
     rating: 4.1,
-    tags: ["balanced"]
+    tags: ["balanced"],
+    upvotes: 0,
+    downvotes: 0
   },
   {
-    id: 6,
+    id: 5,
     source: "Hotel Godavari",
-    type: "restaurant",
     dish: "Special Thali",
     price: 140,
     rating: 4.3,
-    tags: ["balanced", "high-protein"]
+    tags: ["balanced"],
+    upvotes: 0,
+    downvotes: 0
   }
 ];

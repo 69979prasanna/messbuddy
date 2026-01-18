@@ -1,50 +1,60 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import FoodCard from "./FoodCard";
 import { foodData } from "../data/foodData";
 
 export default function BestToday() {
-  const [dietMode, setDietMode] = useState("all");
+  const [foods, setFoods] = useState(foodData);
+  const [userVotes, setUserVotes] = useState({});
 
-  // Filter based on diet mode
-  const filteredFood =
-    dietMode === "all"
-      ? foodData
-      : foodData.filter(food => food.tags.includes(dietMode));
+  // Load previous votes
+  useEffect(() => {
+    const savedVotes = JSON.parse(localStorage.getItem("votes")) || {};
+    setUserVotes(savedVotes);
+  }, []);
 
-  // Sort by rating (best first)
-  const sortedFood = [...filteredFood].sort(
-    (a, b) => b.rating - a.rating
+  // Save votes whenever updated
+  useEffect(() => {
+    localStorage.setItem("votes", JSON.stringify(userVotes));
+  }, [userVotes]);
+
+  const handleVote = (id, type) => {
+  // prevent double voting
+  if (userVotes[id] === "up" || userVotes[id] === "down") {
+    return;
+  }
+
+  setFoods(prev =>
+    prev.map(food =>
+      food.id === id
+        ? {
+            ...food,
+            upvotes: type === "up" ? food.upvotes + 1 : food.upvotes,
+            downvotes: type === "down" ? food.downvotes + 1 : food.downvotes
+          }
+        : food
+    )
   );
+
+  setUserVotes(prev => ({
+    ...prev,
+    [id]: type
+  }));
+};
+
 
   return (
     <div>
       <h2>🍽️ Best Food Options Today</h2>
 
-      {/* Diet Selector */}
-      <div className="diet-filter">
-        <label>Diet Mode:</label>
-        <select
-          value={dietMode}
-          onChange={e => setDietMode(e.target.value)}
-        >
-          <option value="all">All</option>
-          <option value="balanced">Balanced</option>
-          <option value="light">Light / Healthy</option>
-          <option value="high-protein">High Protein</option>
-          <option value="budget">Budget Friendly</option>
-          <option value="oily">Avoid Oily</option>
-        </select>
-      </div>
-
-      {/* Results */}
       <div className="grid">
-        {sortedFood.length > 0 ? (
-          sortedFood.map(food => (
-            <FoodCard key={food.id} food={food} />
-          ))
-        ) : (
-          <p>❌ No food matches this diet preference today.</p>
-        )}
+        {foods.map(food => (
+          <FoodCard
+            key={food.id}
+            food={food}
+            onVote={handleVote}
+            userVote={userVotes[food.id]}
+          />
+        ))}
       </div>
     </div>
   );
