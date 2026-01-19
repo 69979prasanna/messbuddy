@@ -43,19 +43,17 @@ export default function BestToday() {
 
 
   return (
-    <div>
-      <h2>🍽️ Best Food Options Today</h2>
-
-      <div className="grid">
-        {foods.map(food => (
-          <FoodCard
-            key={food.id}
-            food={food}
-            onVote={handleVote}
-            userVote={userVotes[food.id]}
-          />
-        ))}
-      </div>
+    <div className="row g-3">
+  {foods.map(food => (
+    <div className="col-md-4 col-sm-6" key={food.id}>
+      <FoodCard 
+        food={food}
+        onVote={handleVote}
+        userVote={userVotes[food.id]}
+      />
     </div>
+  ))}
+</div>
+
   );
 }
