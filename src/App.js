@@ -2,6 +2,7 @@ import { Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import BestToday from "./components/BestToday";
 import About from "./components/About";
+import PlaceDetails from "./components/PlaceDetails";
 
 export default function App() {
   return (
@@ -15,6 +16,8 @@ export default function App() {
             path="/contact"
             element={<p>📩 Contact page coming soon</p>}
           />
+          <Route path="/place/:name" element={<PlaceDetails/>} />
+
         </Routes>
       </div>
     </>
