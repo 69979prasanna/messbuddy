@@ -3,7 +3,14 @@ import FoodCard from "./FoodCard";
 import { foodData } from "../data/foodData";
 
 export default function BestToday() {
-  const [foods, setFoods] = useState(foodData);
+  const [foods, setFoods] = useState(
+  foodData.map(item => ({
+    ...item,
+    upvotes: 0,
+    downvotes: 0
+  }))
+);
+
   const [userVotes, setUserVotes] = useState({});
 
   // Load previous votes
@@ -18,27 +25,55 @@ export default function BestToday() {
   }, [userVotes]);
 
   const handleVote = (id, type) => {
-  // prevent double voting
-  if (userVotes[id] === "up" || userVotes[id] === "down") {
-    return;
-  }
+  const previousVote = userVotes[id]; // "up" | "down" | undefined
 
   setFoods(prev =>
-    prev.map(food =>
-      food.id === id
-        ? {
-            ...food,
-            upvotes: type === "up" ? food.upvotes + 1 : food.upvotes,
-            downvotes: type === "down" ? food.downvotes + 1 : food.downvotes
-          }
-        : food
-    )
+    prev.map(food => {
+      if (food.id !== id) return food;
+
+      let { upvotes, downvotes } = food;
+
+      // 🔁 Remove vote if same button clicked again
+      if (previousVote === type) {
+        if (type === "up") upvotes = Math.max(0, upvotes - 1);
+        if (type === "down") downvotes = Math.max(0, downvotes - 1);
+      }
+
+      // 🔄 Switch vote (up ↔ down)
+      else if (previousVote) {
+        if (previousVote === "up") {
+          upvotes = Math.max(0, upvotes - 1);
+          downvotes += 1;
+        } else {
+          downvotes = Math.max(0, downvotes - 1);
+          upvotes += 1;
+        }
+      }
+
+      // ➕ Fresh vote
+      else {
+        if (type === "up") upvotes += 1;
+        if (type === "down") downvotes += 1;
+      }
+
+      return { ...food, upvotes, downvotes };
+    })
   );
 
-  setUserVotes(prev => ({
-    ...prev,
-    [id]: type
-  }));
+  setUserVotes(prev => {
+    // ❌ remove vote
+    if (previousVote === type) {
+      const updated = { ...prev };
+      delete updated[id];
+      return updated;
+    }
+
+    // ✅ add / switch vote
+    return {
+      ...prev,
+      [id]: type
+    };
+  });
 };
 
 

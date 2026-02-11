@@ -1,4 +1,3 @@
-
 import { useNavigate } from "react-router-dom";
 
 export default function FoodCard({ food, onVote, userVote }) {
@@ -6,6 +5,16 @@ export default function FoodCard({ food, onVote, userVote }) {
 
   const openPlace = () => {
     navigate(`/place/${encodeURIComponent(food.source)}`);
+  };
+
+  const handleUpvote = (e) => {
+    e.stopPropagation();
+    onVote(food.id, "up");
+  };
+
+  const handleDownvote = (e) => {
+    e.stopPropagation();
+    onVote(food.id, "down");
   };
 
   return (
@@ -16,7 +25,7 @@ export default function FoodCard({ food, onVote, userVote }) {
     >
       <div className="card-body">
         <h5 className="card-title">{food.source}</h5>
-        <h6 className="card-subtitle mb-2 fw-semibold text-light mb-1">
+        <h6 className="card-subtitle mb-2 fw-semibold text-light">
           {food.dish}
         </h6>
 
@@ -24,18 +33,14 @@ export default function FoodCard({ food, onVote, userVote }) {
         <p className="mb-2">⭐ {food.rating}</p>
 
         {/* Voting */}
-        <div
-          className="d-flex gap-2"
-          onClick={(e) => e.stopPropagation()}
-        >
+        <div className="d-flex gap-2">
           <button
             className={`btn btn-sm ${
               userVote === "up"
-                ? "btn-outline-success"
+                ? "btn-success"
                 : "btn-outline-secondary"
             }`}
-            disabled={userVote !== undefined}
-            onClick={() => onVote(food.id, "up")}
+            onClick={handleUpvote}
           >
             👍 {food.upvotes}
           </button>
@@ -43,11 +48,10 @@ export default function FoodCard({ food, onVote, userVote }) {
           <button
             className={`btn btn-sm ${
               userVote === "down"
-                ? "btn-outline-danger"
+                ? "btn-danger"
                 : "btn-outline-secondary"
             }`}
-            disabled={userVote !== undefined}
-            onClick={() => onVote(food.id, "down")}
+            onClick={handleDownvote}
           >
             👎 {food.downvotes}
           </button>
