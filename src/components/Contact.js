@@ -1,7 +1,40 @@
+import { useState } from "react";
+
 export default function Contact() {
+  const [form, setForm] = useState({
+    name: "",
+    email: "",
+    message: ""
+  });
+
+  const [submitted, setSubmitted] = useState(false);
+
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = () => {
+    if (!form.message.trim()) return;
+
+    const feedbacks =
+      JSON.parse(localStorage.getItem("messbuddy-feedback")) || [];
+
+    feedbacks.push({
+      ...form,
+      date: new Date().toLocaleString()
+    });
+
+    localStorage.setItem(
+      "messbuddy-feedback",
+      JSON.stringify(feedbacks)
+    );
+
+    setSubmitted(true);
+    setForm({ name: "", email: "", message: "" });
+  };
+
   return (
     <div className="container py-5 text-light">
-      {/* Header */}
       <div className="text-center mb-5">
         <h1 className="fw-bold">
           Contact <span className="text-info">MessBuddy</span>
@@ -15,54 +48,64 @@ export default function Contact() {
         <div className="col-md-8">
           <div className="card bg-dark text-light shadow-sm">
             <div className="card-body">
-              <form>
-                {/* Name */}
-                <div className="mb-3">
-                  <label className="form-label">Name</label>
-                  <input
-                    type="text"
-                    className="form-control bg-dark text-light border-secondary"
-                    placeholder="Your name"
-                  />
+              {submitted ? (
+                <div className="alert alert-success text-center">
+                  ✅ Thanks for your feedback!
                 </div>
+              ) : (
+                <form>
+                  <div className="mb-3">
+                    <label className="form-label">Name</label>
+                    <input
+                      name="name"
+                      value={form.name}
+                      onChange={handleChange}
+                      className="form-control bg-dark text-light border-secondary"
+                      placeholder="Your name"
+                    />
+                  </div>
 
-                {/* Email */}
-                <div className="mb-3">
-                  <label className="form-label">Email</label>
-                  <input
-                    type="email"
-                    className="form-control bg-dark text-light border-secondary"
-                    placeholder="you@example.com"
-                  />
-                </div>
+                  <div className="mb-3">
+                    <label className="form-label">Email</label>
+                    <input
+                      name="email"
+                      value={form.email}
+                      onChange={handleChange}
+                      type="email"
+                      className="form-control bg-dark text-light border-secondary"
+                      placeholder="you@example.com"
+                    />
+                  </div>
 
-                {/* Message */}
-                <div className="mb-3">
-                  <label className="form-label">Message</label>
-                  <textarea
-                    rows="4"
-                    className="form-control bg-dark text-light border-secondary"
-                    placeholder="Your message..."
-                  ></textarea>
-                </div>
+                  <div className="mb-3">
+                    <label className="form-label">Message</label>
+                    <textarea
+                      name="message"
+                      rows="4"
+                      value={form.message}
+                      onChange={handleChange}
+                      className="form-control bg-dark text-light border-secondary"
+                      placeholder="Your message..."
+                    />
+                  </div>
 
-                {/* Submit */}
-                <button
-                  type="button"
-                  className="btn btn-info w-100 fw-semibold"
-                >
-                  Send Message
-                </button>
-              </form>
+                  <button
+                    type="button"
+                    className="btn btn-info w-100 fw-semibold"
+                    onClick={handleSubmit}
+                  >
+                    Send Message
+                  </button>
+                </form>
+              )}
             </div>
           </div>
         </div>
       </div>
 
-      {/* Footer Note */}
       <div className="text-center mt-4 text-secondary">
         <small>
-          This form is currently for feedback purposes only.
+          Feedback is stored locally. Backend coming soon 🚀
         </small>
       </div>
     </div>
