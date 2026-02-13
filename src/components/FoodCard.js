@@ -14,7 +14,7 @@ export default function FoodCard({ food, onVote, userVote }) {
 
   const handleDownvote = (e) => {
     e.stopPropagation();
-    onVote(food.id, "down");
+    onVote(food.id, "down")
   };
 
   return (
