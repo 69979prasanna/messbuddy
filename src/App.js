@@ -4,6 +4,7 @@ import BestToday from "./components/BestToday";
 import About from "./components/About";
 import PlaceDetails from "./components/PlaceDetails";
 import Contact from "./components/Contact";
+import AIChat from "./components/AIChat";
 
 export default function App() {
   return (
@@ -17,6 +18,7 @@ export default function App() {
           <Route path="/place/:name" element={<PlaceDetails/>} />
           
         </Routes>
+        <AIChat/>
       </div>
     </>
   );
