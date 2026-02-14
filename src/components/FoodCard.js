@@ -29,7 +29,7 @@ export default function FoodCard({ food, onVote, userVote }) {
     return { open, closingSoon };
   };
 
-  // ✅ THIS WAS MISSING
+
   const { open, closingSoon } = getStatus(food.source);
 
   const openPlace = () => {
@@ -58,7 +58,6 @@ export default function FoodCard({ food, onVote, userVote }) {
           {food.dish}
         </h6>
 
-        {/* ✅ STATUS BADGES */}
         <div className="mb-2">
           {!open && (
             <span className="badge bg-danger">🔴 Closed</span>
