@@ -1,7 +1,36 @@
 import { useNavigate } from "react-router-dom";
+import { restaurantTimings } from "../data/restaurantTimings";
 
 export default function FoodCard({ food, onVote, userVote }) {
   const navigate = useNavigate();
+
+  const normalize = (str) => str?.trim().toLowerCase();
+
+  const getStatus = (source) => {
+    const timing = restaurantTimings[normalize(source)];
+    if (!timing) return { open: false, closingSoon: false };
+
+    const now = new Date();
+    const currentMinutes = now.getHours() * 60 + now.getMinutes();
+
+    const [openH, openM] = timing.open.split(":").map(Number);
+    const [closeH, closeM] = timing.close.split(":").map(Number);
+
+    const openMinutes = openH * 60 + openM;
+    const closeMinutes = closeH * 60 + closeM;
+
+    const open =
+      currentMinutes >= openMinutes &&
+      currentMinutes < closeMinutes;
+
+    const closingSoon =
+      open && closeMinutes - currentMinutes <= 30;
+
+    return { open, closingSoon };
+  };
+
+  // ✅ THIS WAS MISSING
+  const { open, closingSoon } = getStatus(food.source);
 
   const openPlace = () => {
     navigate(`/place/${encodeURIComponent(food.source)}`);
@@ -14,7 +43,7 @@ export default function FoodCard({ food, onVote, userVote }) {
 
   const handleDownvote = (e) => {
     e.stopPropagation();
-    onVote(food.id, "down")
+    onVote(food.id, "down");
   };
 
   return (
@@ -28,6 +57,23 @@ export default function FoodCard({ food, onVote, userVote }) {
         <h6 className="card-subtitle mb-2 fw-semibold text-light">
           {food.dish}
         </h6>
+
+        {/* ✅ STATUS BADGES */}
+        <div className="mb-2">
+          {!open && (
+            <span className="badge bg-danger">🔴 Closed</span>
+          )}
+
+          {open && !closingSoon && (
+            <span className="badge bg-success">🟢 Open now</span>
+          )}
+
+          {closingSoon && (
+            <span className="badge bg-warning text-dark">
+              ⚠️ Closing Soon
+            </span>
+          )}
+        </div>
 
         <p className="mb-1">💰 ₹{food.price}</p>
         <p className="mb-2">⭐ {food.rating}</p>
