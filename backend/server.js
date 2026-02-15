@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import Groq from "groq-sdk";
+import { foodContext } from "./data/foodContext.js"
 
 dotenv.config();
 
@@ -17,18 +18,27 @@ app.post("/api/ai", async (req, res) => {
   try {
     const { message } = req.body;
 
-    const completion = await groq.chat.completions.create({
-      model: "llama-3.1-8b-instant",
-      messages: [
-        {
-          role: "system",
-          content:
-            "You are MessBuddy AI. You help college students decide what food to eat."
-        },
-        { role: "user", content: message }
-      ],
-      max_tokens: 200
-    });
+   const completion = await groq.chat.completions.create({
+  model: "llama-3.1-8b-instant",
+  messages: [
+    {
+      role: "system",
+      content: `
+You are MessBuddy AI, a food assistant for college students.
+
+Use ONLY the food options listed below to answer.
+Be practical, short, and helpful.
+
+${foodContext}
+`
+    },
+    {
+      role: "user",
+      content: message
+    }
+  ],
+  max_tokens: 250
+})
 
     res.json({
       reply: completion.choices[0].message.content

@@ -12,6 +12,8 @@ src/data/
 /build
 .gitignore
 backend/.env
+backend/node_modules/
+backend/data/
 # misc
 .DS_Store
 .env.local
