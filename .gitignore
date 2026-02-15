@@ -11,7 +11,7 @@ src/data/
 # production
 /build
 .gitignore
-
+backend/.env
 # misc
 .DS_Store
 .env.local
