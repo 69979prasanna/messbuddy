@@ -8,6 +8,7 @@ export default function Contact() {
     rating: 0
   });
 
+  const [hoverRating, setHoverRating] = useState(0);
   const [submitted, setSubmitted] = useState(false);
 
   const handleChange = (e) => {
@@ -41,6 +42,7 @@ export default function Contact() {
       message: "",
       rating: 0
     });
+    setHoverRating(0);
   };
 
   return (
@@ -90,27 +92,39 @@ export default function Contact() {
                     />
                   </div>
 
-                  {/* Rating */}
+                  {/* ⭐ Rating with hover animation */}
                   <div className="mb-3">
                     <label className="form-label">
                       Rate MessBuddy
                     </label>
 
-                    <div className="d-flex gap-2 fs-4">
-                      {[1, 2, 3, 4, 5].map((star) => (
-                        <span
-                          key={star}
-                          style={{ cursor: "pointer" }}
-                          className={
-                            star <= form.rating
-                              ? "text-warning"
-                              : "text-secondary"
-                          }
-                          onClick={() => handleRating(star)}
-                        >
-                          ★
-                        </span>
-                      ))}
+                    <div className="d-flex gap-2 fs-3">
+                      {[1, 2, 3, 4, 5].map((star) => {
+                        const active =
+                          hoverRating >= star || form.rating >= star;
+
+                        return (
+                          <span
+                            key={star}
+                            style={{
+                              cursor: "pointer",
+                              transition: "color 0.2s ease, transform 0.15s ease",
+                              transform:
+                                hoverRating === star ? "scale(1.2)" : "scale(1)"
+                            }}
+                            className={
+                              active
+                                ? "text-warning"
+                                : "text-secondary"
+                            }
+                            onMouseEnter={() => setHoverRating(star)}
+                            onMouseLeave={() => setHoverRating(0)}
+                            onClick={() => handleRating(star)}
+                          >
+                            ★
+                          </span>
+                        );
+                      })}
                     </div>
 
                     {form.rating === 0 && (
@@ -148,7 +162,7 @@ export default function Contact() {
         </div>
       </div>
 
-      {/* Footer note */}
+      {/* Footer */}
       <div className="text-center mt-4 text-secondary">
         <small>
           Feedback is stored locally. Backend coming soon 🚀
