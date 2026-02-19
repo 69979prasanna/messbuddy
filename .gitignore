@@ -12,6 +12,7 @@ src/data/
 /build
 .gitignore
 backend/.env
+/.env
 backend/node_modules/
 backend/data/
 # misc

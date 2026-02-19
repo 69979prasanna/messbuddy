@@ -1,6 +1,7 @@
 import { useState } from "react";
 
 export default function AIChat() {
+  const api = process.env.REACT_APP_APIKEY
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState([
     { role: "ai", text: "Hey 👋 I’m MessBuddy AI. What should I eat today?" }
@@ -17,7 +18,7 @@ export default function AIChat() {
     setLoading(true);
 
     try {
-      const res = await fetch("http://localhost:5000/api/ai", {
+      const res = await fetch(`${api}/api/ai`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message: userMsg.text })
