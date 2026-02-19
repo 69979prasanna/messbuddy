@@ -8,17 +8,22 @@ export default function PlaceDetails() {
   const placeName = decodeURIComponent(name);
 
   const [filter, setFilter] = useState("all"); // all | top | cheap
+  const [search, setSearch] = useState(""); // 🔍 NEW
 
   const menus = menuData.filter(
     item => item.place === placeName
   );
 
+  // 🔍 Apply filter + search together
   const filteredMenus =
-    filter === "top"
+    (filter === "top"
       ? menus.filter(item => item.rating >= 4.3)
       : filter === "cheap"
       ? menus.filter(item => item.price <= 60)
-      : menus;
+      : menus
+    ).filter(item =>
+      item.dish.toLowerCase().includes(search.toLowerCase())
+    );
 
   const avgPrice =
     menus.reduce((sum, item) => sum + item.price, 0) /
@@ -40,6 +45,15 @@ export default function PlaceDetails() {
         <p className="text-secondary mb-2">
           {menus.length} items · Avg price ₹{avgPrice.toFixed(0)}
         </p>
+
+        {/* 🔍 Search Bar */}
+        <input
+          type="text"
+          className="form-control bg-dark text-light border-secondary mb-3"
+          placeholder="🔍 Search dish..."
+          value={search}
+          onChange={e => setSearch(e.target.value)}
+        />
 
         {/* Filters */}
         <div className="d-flex gap-2">
@@ -111,7 +125,7 @@ export default function PlaceDetails() {
       {/* Empty State */}
       {filteredMenus.length === 0 && (
         <p className="text-secondary mt-4">
-          No items match this filter.
+          No items match this search or filter.
         </p>
       )}
     </div>
