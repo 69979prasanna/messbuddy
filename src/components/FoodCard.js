@@ -11,7 +11,8 @@ export default function FoodCard({ food, onVote, userVote }) {
     if (!timing) return { open: false, closingSoon: false };
 
     const now = new Date();
-    const currentMinutes = now.getHours() * 60 + now.getMinutes();
+    const currentMinutes =
+      now.getHours() * 60 + now.getMinutes();
 
     const [openH, openM] = timing.open.split(":").map(Number);
     const [closeH, closeM] = timing.close.split(":").map(Number);
@@ -29,20 +30,22 @@ export default function FoodCard({ food, onVote, userVote }) {
     return { open, closingSoon };
   };
 
-
   const { open, closingSoon } = getStatus(food.source);
 
   const openPlace = () => {
     navigate(`/place/${encodeURIComponent(food.source)}`);
   };
 
+  // ✅ SAFE HANDLERS
   const handleUpvote = (e) => {
     e.stopPropagation();
+    if (!onVote) return;
     onVote(food.id, "up");
   };
 
   const handleDownvote = (e) => {
     e.stopPropagation();
+    if (!onVote) return;
     onVote(food.id, "down");
   };
 
@@ -58,13 +61,18 @@ export default function FoodCard({ food, onVote, userVote }) {
           {food.dish}
         </h6>
 
+        {/* Status */}
         <div className="mb-2">
           {!open && (
-            <span className="badge bg-danger">🔴 Closed</span>
+            <span className="badge bg-danger">
+              🔴 Closed
+            </span>
           )}
 
           {open && !closingSoon && (
-            <span className="badge bg-success">🟢 Open now</span>
+            <span className="badge bg-success">
+              🟢 Open now
+            </span>
           )}
 
           {closingSoon && (
@@ -77,30 +85,32 @@ export default function FoodCard({ food, onVote, userVote }) {
         <p className="mb-1">💰 ₹{food.price}</p>
         <p className="mb-2">⭐ {food.rating}</p>
 
-        {/* Voting */}
-        <div className="d-flex gap-2">
-          <button
-            className={`btn btn-sm ${
-              userVote === "up"
-                ? "btn-success"
-                : "btn-outline-secondary"
-            }`}
-            onClick={handleUpvote}
-          >
-            👍 {food.upvotes}
-          </button>
+        {/* ✅ Voting (ONLY when onVote exists) */}
+        {onVote && (
+          <div className="d-flex gap-2">
+            <button
+              className={`btn btn-sm ${
+                userVote === "up"
+                  ? "btn-success"
+                  : "btn-outline-secondary"
+              }`}
+              onClick={handleUpvote}
+            >
+              👍 {food.upvotes}
+            </button>
 
-          <button
-            className={`btn btn-sm ${
-              userVote === "down"
-                ? "btn-danger"
-                : "btn-outline-secondary"
-            }`}
-            onClick={handleDownvote}
-          >
-            👎 {food.downvotes}
-          </button>
-        </div>
+            <button
+              className={`btn btn-sm ${
+                userVote === "down"
+                  ? "btn-danger"
+                  : "btn-outline-secondary"
+              }`}
+              onClick={handleDownvote}
+            >
+              👎 {food.downvotes}
+            </button>
+          </div>
+        )}
 
         {food.downvotes >= 3 && (
           <div className="alert alert-danger mt-2 py-1">
