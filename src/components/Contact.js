@@ -47,7 +47,7 @@ export default function Contact() {
 
   return (
     <div className="container py-5 text-light">
-      {/* Header */}
+
       <div className="text-center mb-5">
         <h1 className="fw-bold">
           Contact <span className="text-info">MessBuddy</span>
@@ -67,7 +67,7 @@ export default function Contact() {
                 </div>
               ) : (
                 <form>
-                  {/* Name */}
+
                   <div className="mb-3">
                     <label className="form-label">Name</label>
                     <input
@@ -79,7 +79,6 @@ export default function Contact() {
                     />
                   </div>
 
-                  {/* Email */}
                   <div className="mb-3">
                     <label className="form-label">Email</label>
                     <input
@@ -92,7 +91,7 @@ export default function Contact() {
                     />
                   </div>
 
-                  {/* ⭐ Rating with hover animation */}
+
                   <div className="mb-3">
                     <label className="form-label">
                       Rate MessBuddy
@@ -134,7 +133,6 @@ export default function Contact() {
                     )}
                   </div>
 
-                  {/* Message */}
                   <div className="mb-3">
                     <label className="form-label">Message</label>
                     <textarea
@@ -147,7 +145,6 @@ export default function Contact() {
                     />
                   </div>
 
-                  {/* Submit */}
                   <button
                     type="button"
                     className="btn btn-info w-100 fw-semibold"
@@ -162,7 +159,6 @@ export default function Contact() {
         </div>
       </div>
 
-      {/* Footer */}
       <div className="text-center mt-4 text-secondary">
         <small>
           Feedback is stored locally. Backend coming soon 🚀
