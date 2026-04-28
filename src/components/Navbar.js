@@ -35,6 +35,11 @@ export default function Navbar() {
                 Contact
               </NavLink>
             </li>
+            <li className="nav-item">
+              <NavLink className="nav-link" to="favorites">
+             Favorites 
+              </NavLink>
+            </li>
           </ul>
         </div>
       </div>

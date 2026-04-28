@@ -4,7 +4,7 @@ export default function AIChat() {
   const api = process.env.REACT_APP_APIKEY
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState([
-    { role: "ai", text: "Hey 👋 I’m MessBuddy AI. What should I eat today?" }
+    { role: "ai", text: "Hey, I’m MessBuddy AI. What should I eat today?" }
   ]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
@@ -42,7 +42,7 @@ export default function AIChat() {
 
   return (
     <>
-      {/* Floating Button */}
+   
       <button
         className="btn btn-primary rounded-circle position-fixed"
         style={{ bottom: 25, right: 25, width: 56, height: 56, zIndex: 1050 }}
@@ -51,7 +51,6 @@ export default function AIChat() {
         🤖
       </button>
 
-      {/* Chat Box */}
       {open && (
         <div
           className="card bg-dark text-light position-fixed shadow"
@@ -63,7 +62,7 @@ export default function AIChat() {
             zIndex: 1050
           }}
         >
-          {/* Header */}
+     
           <div className="card-header d-flex justify-content-between align-items-center">
             <span className="fw-semibold">MessBuddy AI</span>
             <button
@@ -74,7 +73,7 @@ export default function AIChat() {
             </button>
           </div>
 
-          {/* Messages */}
+   
           <div
             className="card-body d-flex flex-column gap-2 overflow-auto"
           >
@@ -99,7 +98,7 @@ export default function AIChat() {
             )}
           </div>
 
-          {/* Input */}
+      
           <div className="card-footer d-flex gap-2">
             <input
               className="form-control form-control-sm bg-dark text-light border-secondary"

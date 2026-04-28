@@ -2,7 +2,7 @@
 export default function About() {
   return (
     <div className="container py-5 text-light">
-      {/* Hero */}
+ 
       <div className="text-center mb-5">
         <h1 className="fw-bold">
           About <span className="text-info">MessBuddy</span>
@@ -13,7 +13,6 @@ export default function About() {
         </p>
       </div>
 
-      {/* Problem */}
       <div className="row justify-content-center mb-5">
         <div className="col-md-8">
           <div className="card bg-dark text-light shadow-sm">
@@ -29,7 +28,7 @@ export default function About() {
         </div>
       </div>
 
-      {/* Features */}
+  
       <div className="row g-4 mb-5">
         {[
           { icon: "📋", title: "Unified Daily View", desc: "All food options in one place." },
@@ -49,7 +48,6 @@ export default function About() {
         ))}
       </div>
 
-      {/* Footer */}
       <div className="text-center">
         <p className="fs-5">
           🎯 Our goal is simple: help students make faster, smarter food

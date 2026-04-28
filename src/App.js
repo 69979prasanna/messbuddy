@@ -5,6 +5,7 @@ import About from "./components/About";
 import PlaceDetails from "./components/PlaceDetails";
 import Contact from "./components/Contact";
 import AIChat from "./components/AIChat";
+import Favorites from "./components/Favorites";
 
 export default function App() {
   return (
@@ -16,6 +17,7 @@ export default function App() {
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact/>}/>
           <Route path="/place/:name" element={<PlaceDetails/>} />
+          <Route path="/favorites" element={<Favorites />} />
           
         </Routes>
         <AIChat/>

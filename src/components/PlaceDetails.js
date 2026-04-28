@@ -7,14 +7,13 @@ export default function PlaceDetails() {
   const navigate = useNavigate();
   const placeName = decodeURIComponent(name);
 
-  const [filter, setFilter] = useState("all"); // all | top | cheap
-  const [search, setSearch] = useState(""); // 🔍 NEW
+  const [filter, setFilter] = useState("all"); 
+  const [search, setSearch] = useState(""); 
 
   const menus = menuData.filter(
     item => item.place === placeName
   );
 
-  // 🔍 Apply filter + search together
   const filteredMenus =
     (filter === "top"
       ? menus.filter(item => item.rating >= 4.3)
@@ -31,7 +30,7 @@ export default function PlaceDetails() {
 
   return (
     <div className="container py-4 text-light">
-      {/* Back Button */}
+  
       <button
         className="btn btn-outline-light mb-4"
         onClick={() => navigate(-1)}
@@ -39,14 +38,14 @@ export default function PlaceDetails() {
         ← Back
       </button>
 
-      {/* Header */}
+
       <div className="mb-3">
         <h2 className="fw-bold">{placeName}</h2>
         <p className="text-secondary mb-2">
           {menus.length} items · Avg price ₹{avgPrice.toFixed(0)}
         </p>
 
-        {/* 🔍 Search Bar */}
+
         <input
           type="text"
           className="form-control bg-dark text-light border-secondary mb-3"
@@ -55,7 +54,7 @@ export default function PlaceDetails() {
           onChange={e => setSearch(e.target.value)}
         />
 
-        {/* Filters */}
+
         <div className="d-flex gap-2">
           <button
             className={`btn btn-sm ${
@@ -92,7 +91,7 @@ export default function PlaceDetails() {
         </div>
       </div>
 
-      {/* Menu Cards */}
+
       <div className="row g-3">
         {filteredMenus.map(item => (
           <div className="col-md-4 col-sm-6" key={item.id}>
@@ -122,7 +121,7 @@ export default function PlaceDetails() {
         ))}
       </div>
 
-      {/* Empty State */}
+
       {filteredMenus.length === 0 && (
         <p className="text-secondary mt-4">
           No items match this search or filter.

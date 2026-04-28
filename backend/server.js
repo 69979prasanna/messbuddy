@@ -50,5 +50,5 @@ ${foodContext}
 });
 
 app.listen(5000, () =>
-  console.log(`🤖 MessBuddy AI (Groq) running on http://localhost:${process.env.PORT}`)
+  console.log(`running on http://localhost:${process.env.PORT}`)
 );

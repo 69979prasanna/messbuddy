@@ -5,7 +5,7 @@ import { foodData } from "../data/foodData";
 export default function BestToday() {
   const [search, setSearch] = useState("");
 
-  // ⭐ votes state
+
   const [foods, setFoods] = useState(
     foodData.map(item => ({
       ...item,
@@ -16,14 +16,14 @@ export default function BestToday() {
 
   const [userVotes, setUserVotes] = useState({});
 
-  // 🔁 Load votes from localStorage
+
   useEffect(() => {
     const savedVotes =
       JSON.parse(localStorage.getItem("votes")) || {};
     setUserVotes(savedVotes);
   }, []);
 
-  // 💾 Save votes
+
   useEffect(() => {
     localStorage.setItem(
       "votes",
@@ -31,7 +31,6 @@ export default function BestToday() {
     );
   }, [userVotes]);
 
-  // 👍👎 Vote handler
   const handleVote = (id, type) => {
     const prevVote = userVotes[id];
 
@@ -42,11 +41,11 @@ export default function BestToday() {
         let { upvotes, downvotes } = food;
 
         if (prevVote === type) {
-          // remove vote
+
           if (type === "up") upvotes--;
           if (type === "down") downvotes--;
         } else if (prevVote) {
-          // switch vote
+  
           if (prevVote === "up") {
             upvotes--;
             downvotes++;
@@ -55,7 +54,7 @@ export default function BestToday() {
             upvotes++;
           }
         } else {
-          // new vote
+      
           if (type === "up") upvotes++;
           if (type === "down") downvotes++;
         }
@@ -78,16 +77,15 @@ export default function BestToday() {
     });
   };
 
-  // 🔍 Search filter
+
   const filteredPlaces = foods.filter(place =>
-    place.source
-      .toLowerCase()
-      .includes(search.toLowerCase())
+    place.source.toLowerCase().includes(search.toLowerCase())
+    
   );
 
   return (
     <>
-      {/* Search */}
+ 
       <input
         className="form-control bg-dark text-light border-secondary mb-3"
         placeholder="🔍 Search restaurant"
@@ -95,21 +93,25 @@ export default function BestToday() {
         onChange={e => setSearch(e.target.value)}
       />
 
-      {/* Cards */}
-      <div className="row g-3">
-        {filteredPlaces.map(place => (
-          <div
-            className="col-md-4 col-sm-6"
-            key={place.id}
-          >
-            <FoodCard
-              food={place}
-              onVote={handleVote}          // ✅ FIX
-              userVote={userVotes[place.id]}
-            />
-          </div>
-        ))}
+ 
+   <div className="row g-3">
+  {filteredPlaces.length === 0 ? (
+    <p className="text-light">No results found</p>
+  ) : (
+    filteredPlaces.map(place => (
+      <div
+        className="col-md-4 col-sm-6"
+        key={place.id}
+      >
+        <FoodCard
+          food={place}
+          onVote={handleVote}
+          userVote={userVotes[place.id]}
+        />
       </div>
+    ))
+  )}
+</div>
     </>
   );
 }
