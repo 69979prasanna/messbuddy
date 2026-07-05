@@ -20,7 +20,7 @@ export default function App() {
           <Route path="/" element={<BestToday setShowAuthModal={setShowAuthModal} />} />
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
-          <Route path="/place/:name" element={<PlaceDetails />} />
+          <Route path="/place/:name" element={<PlaceDetails setShowAuthModal={setShowAuthModal}/>} />
           <Route path="/favorites" element={<Favorites setShowAuthModal={setShowAuthModal}  />} />
         </Routes>
 

@@ -1,8 +1,33 @@
 import { useParams, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { menuData } from "../data/menuData";
+import {
+  addFavorite,
+  removeFavorite,
+  isFavorite
+} from "../utils/favorites";
 
 export default function PlaceDetails({setShowAuthModal}) {
+  const [favoriteIds, setFavoriteIds] = useState([]);
+  useEffect(() => {
+  const favs = JSON.parse(localStorage.getItem("favorites")) || [];
+  setFavoriteIds(favs.map(item => item.id));
+}, []);
+const toggleFavourite = (item) =>{
+  const token = localStorage.getItem("token")
+  if(!token){
+    setShowAuthModal(true)
+    return
+  }
+  if(isFavorite(item.id)){
+    removeFavorite(item.id)
+    setFavoriteIds(prev => prev.filter(id => id !== item.id))
+  }
+  else{
+    addFavorite(item)
+    setFavoriteIds(prev => [...prev, item.id])
+  }
+}
   const { name } = useParams();
   const navigate = useNavigate();
   const placeName = decodeURIComponent(name);
@@ -95,9 +120,9 @@ export default function PlaceDetails({setShowAuthModal}) {
       <div className="row g-3">
         {filteredMenus.map(item => (
           <div className="col-md-4 col-sm-6" key={item.id}>
-            <div className="card bg-dark text-light h-100 shadow-sm">
+            <div className="card bg-dark text-light h-100 shadow-sm position-relative">
               <div className="card-body">
-                
+                <button className="btn position-absolute top-0 end-0 m-2" style={{border:"none", background: "transparent", fontSize: "1.3rem"}}onClick={() =>toggleFavourite(item)}> {favoriteIds.includes(item.id) ? "❤️" : "🤍"}</button>
                 <h5 className="card-title fw-semibold">
                   {item.dish}
                 </h5>
