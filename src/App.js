@@ -10,18 +10,18 @@ import { useState } from "react";
 import AuthModal from "./components/AuthModal";
 
 export default function App() {
-  const [showAuthModal, setShowAuthModal] = useState(true);
+  const [showAuthModal, setShowAuthModal] = useState(false);
 
   return (
     <>
-      <Navbar />
+      <Navbar setShowAuthModal={setShowAuthModal}/>
       <div className="app">
         <Routes>
-          <Route path="/" element={<BestToday />} />
+          <Route path="/" element={<BestToday setShowAuthModal={setShowAuthModal} />} />
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/place/:name" element={<PlaceDetails />} />
-          <Route path="/favorites" element={<Favorites />} />
+          <Route path="/favorites" element={<Favorites setShowAuthModal={setShowAuthModal}  />} />
         </Routes>
 
         <AIChat />

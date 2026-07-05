@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import FoodCard from "./FoodCard";
 import { foodData } from "../data/foodData";
 
-export default function BestToday() {
+export default function BestToday({setShowAuthModal}) {
   const [search, setSearch] = useState("");
 
 
@@ -107,6 +107,7 @@ export default function BestToday() {
           food={place}
           onVote={handleVote}
           userVote={userVotes[place.id]}
+           setShowAuthModal={setShowAuthModal}
         />
       </div>
     ))

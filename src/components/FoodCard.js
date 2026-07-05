@@ -7,7 +7,7 @@ import {
   isFavorite,
 } from "../utils/favorites";
 
-export default function FoodCard({ food, onVote, userVote }) {
+export default function FoodCard({ food, onVote, userVote, setShowAuthModal }) {
   const navigate = useNavigate();
 
   const [fav, setFav] = useState(false);
@@ -20,6 +20,15 @@ export default function FoodCard({ food, onVote, userVote }) {
 
   const toggleFavorite = (e) => {
     e.stopPropagation();
+    console.log("heart clicked")
+    const token = localStorage.getItem("token")
+     console.log("token:", token);
+
+    if(!token){
+      console.log("no token");
+      setShowAuthModal(true)
+      return
+    }
     if (!food) return;
 
     if (fav) removeFavorite(food.id);
@@ -62,11 +71,23 @@ export default function FoodCard({ food, onVote, userVote }) {
 
   const handleUpvote = (e) => {
     e.stopPropagation();
+    const token = localStorage.getItem("token");
+
+  if (!token) {
+    setShowAuthModal(true);
+    return;
+  }
     onVote?.(food?.id, "up");
   };
 
   const handleDownvote = (e) => {
     e.stopPropagation();
+    const token = localStorage.getItem("token");
+
+  if (!token) {
+    setShowAuthModal(true);
+    return;
+  }
     onVote?.(food?.id, "down");
   };
 

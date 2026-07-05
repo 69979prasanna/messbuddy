@@ -2,7 +2,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { menuData } from "../data/menuData";
 
-export default function PlaceDetails() {
+export default function PlaceDetails({setShowAuthModal}) {
   const { name } = useParams();
   const navigate = useNavigate();
   const placeName = decodeURIComponent(name);
@@ -97,6 +97,7 @@ export default function PlaceDetails() {
           <div className="col-md-4 col-sm-6" key={item.id}>
             <div className="card bg-dark text-light h-100 shadow-sm">
               <div className="card-body">
+                
                 <h5 className="card-title fw-semibold">
                   {item.dish}
                 </h5>
