@@ -38,7 +38,6 @@ const handleSubmit = async (e) => {
 
     console.log(data);
 
-    // LOGIN SUCCESS
     if (data.token) {
       localStorage.setItem("token", data.token);
       localStorage.setItem("user", JSON.stringify(data.user));
@@ -46,8 +45,6 @@ const handleSubmit = async (e) => {
       alert("Login successful!");
       onClose();
     }
-
-    // SIGNUP SUCCESS
     else if (data.user) {
       alert("Signup successful! Please login now.");
 

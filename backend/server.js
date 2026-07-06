@@ -5,6 +5,7 @@ import Groq from "groq-sdk";
 import { foodContext } from "./data/foodContext.js"
 import mongoose from "mongoose";
 import authRoutes from "./routes/auth.js";
+import reviewRoutes from "./routes/review.js"
 dotenv.config();
 mongoose
   .connect(process.env.MONGO_URI)
@@ -17,7 +18,7 @@ app.use("/api/auth", authRoutes);
 const groq = new Groq({
   apiKey: process.env.GROQ_API_KEY
 });
-
+app.use("/api/reviews", reviewRoutes);
 app.post("/api/ai", async (req, res) => {
   try {
     const { message } = req.body;

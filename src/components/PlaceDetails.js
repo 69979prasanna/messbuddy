@@ -6,6 +6,8 @@ import {
   removeFavorite,
   isFavorite
 } from "../utils/favorites";
+import ReviewForm from "./ReviewForm";
+import ReviewList from "./ReviewList";
 
 export default function PlaceDetails({setShowAuthModal}) {
   const [favoriteIds, setFavoriteIds] = useState([]);
@@ -153,6 +155,14 @@ const toggleFavourite = (item) =>{
           No items match this search or filter.
         </p>
       )}
+      <ReviewForm
+    place={placeName}
+    onReviewAdded={() => window.location.reload()}
+/>
+
+<ReviewList
+    place={placeName}
+/>
     </div>
   );
 }
