@@ -158,6 +158,7 @@ const toggleFavourite = (item) =>{
       <ReviewForm
     place={placeName}
     onReviewAdded={() => window.location.reload()}
+    setShowAuthModal = {setShowAuthModal}
 />
 
 <ReviewList

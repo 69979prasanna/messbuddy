@@ -1,13 +1,18 @@
 import { useState } from "react";
 
-export default function ReviewForm({ place, onReviewAdded }) {
+export default function ReviewForm({ place, onReviewAdded, setShowAuthModal }) {
   const [rating, setRating] = useState(5);
   const [comment, setComment] = useState("");
 
   const submitReview = async (e) => {
   e.preventDefault();
+const token = localStorage.getItem("token");
 
-  const token = localStorage.getItem("token");
+if (!token) {
+  setShowAuthModal(true);
+  return;
+}
+
 
   const res = await fetch("http://localhost:5000/api/reviews", {
     method: "POST",
@@ -22,8 +27,16 @@ export default function ReviewForm({ place, onReviewAdded }) {
     }),
   });
 
+  
   const data = await res.json();
-
+  
+  if (res.status === 401) {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+  
+    setShowAuthModal(true);
+    return;
+  }
   console.log("Status:", res.status);
   console.log("Response:", data);
 
@@ -63,9 +76,13 @@ export default function ReviewForm({ place, onReviewAdded }) {
   onChange={(e)=>setComment(e.target.value)}
 />
 
-      <button className="btn btn-primary fw-bold mt-3 w-100">
-        Submit Review
-      </button>
+     <div className="d-flex justify-content-center mt-4">
+  <button
+    className="btn btn-primary fw-bold px-5 py-2 rounded-pill"
+  >
+    ⭐ Submit Review
+  </button>
+</div>
 
     </form>
   );
