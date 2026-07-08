@@ -38,8 +38,11 @@ if (!token) {
     return;
   }
   console.log("Status:", res.status);
-  console.log("Response:", data);
-
+  console.log("Response:", data)
+  if (!res.ok) {
+  alert(data.message);
+  return;
+}
   if (res.ok) {
     setComment("");
     setRating(5);
