@@ -2,6 +2,9 @@ import { useEffect, useState } from "react";
 
 export default function ReviewList({ place }) {
   const [reviews, setReviews] = useState([])
+  const [editingId, setEditingId] = useState(null)
+const [editComment, setEditComment] = useState("")
+const [editRating, setEditRating] = useState(5)
 
   const currentUser = JSON.parse(localStorage.getItem("user"))
 
@@ -48,7 +51,48 @@ useEffect(() => {
         prev.filter((review) => review._id !== id)
       );
     }
-  };
+  }
+
+  const handleEdit = (review) => {
+  setEditingId(review._id)
+  setEditComment(review.comment)
+  setEditRating(review.rating)
+}
+const handleSave = async () => {
+  const token = localStorage.getItem("token")
+
+  const res = await fetch(
+    `http://localhost:5000/api/reviews/${editingId}`,
+    {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        rating: editRating,
+        comment: editComment,
+      }),
+    }
+  )
+
+  if (res.ok) {
+    const updatedReview = await res.json()
+
+    setReviews((prev) =>
+      prev.map((review) =>
+        review._id === updatedReview._id
+          ? updatedReview
+          : review
+      )
+    )
+
+    setEditingId(null)
+  }
+}
+const handleCancel = () => {
+  setEditingId(null)
+}
 
   return (
     <div className="mt-5">
@@ -98,19 +142,56 @@ useEffect(() => {
 
                   </div>
 
-                  <p
-                    style={{
-                      lineHeight: "1.6"
-                    }}
-                  >
-                    {review.comment}
-                  </p>
+                  {editingId === review._id ? (
+  <>
+    <div className="mb-3 text-center">
+      {[1, 2, 3, 4, 5].map((star) => (
+        <span
+          key={star}
+          onClick={() => setEditRating(star)}
+          style={{
+            cursor: "pointer",
+            fontSize: "1.7rem",
+            color: star <= editRating ? "#FFD700" : "#666",
+          }}
+        >
+          ★
+        </span>
+      ))}
+    </div>
+
+    <textarea
+      className="form-control bg-dark text-light border-secondary mb-3"
+      value={editComment}
+      onChange={(e) => setEditComment(e.target.value)}
+    />
+
+    <div className="d-flex gap-2">
+      <button
+        className="btn btn-success btn-sm"
+        onClick={handleSave}
+      >
+        💾 Save
+      </button>
+
+      <button
+        className="btn btn-secondary btn-sm"
+        onClick={handleCancel}
+      >
+        Cancel
+      </button>
+    </div>
+  </>
+) : (
+  <p>{review.comment}</p>
+)}
                   {currentUser &&
                     currentUser.id === review.user && (
                       <div className="d-flex gap-2 mt-3">
 
                         <button
                           className="btn btn-warning btn-sm"
+                          onClick={() => handleEdit(review)}
                         >
                           ✏️ Edit
                         </button>
