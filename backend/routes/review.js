@@ -5,22 +5,20 @@ import User from "../models/User.js";
 
 const router = express.Router();
 
-/* Add Review */
-
 router.post("/", auth, async (req, res) => {
   try {
     const { place, rating, comment } = req.body;
 
-    const user = await User.findById(req.user.userId);
+    const user = await User.findById(req.user.userId)
     const existingReview = await Review.findOne({
   user: req.user.userId,
   place,
-});
+})
 
 if (existingReview) {
   return res.status(400).json({
     message: "You have already reviewed this restaurant.",
-  });
+  })
 }
     const review = await Review.create({
       user: req.user.userId,
@@ -28,15 +26,14 @@ if (existingReview) {
       place,
       rating,
       comment,
-    });
-
+    })
     res.status(201).json(review);
   } catch (err) {
     res.status(500).json({
       message: err.message,
-    });
+    })
   }
-});
+})
 
 router.get("/:place", async (req, res) => {
   try {
@@ -44,13 +41,28 @@ router.get("/:place", async (req, res) => {
       place: req.params.place,
     }).sort({ createdAt: -1 });
 
-    res.json(reviews);
+    const averageRating =
+      reviews.length > 0
+        ? (
+            reviews.reduce(
+              (sum, review) => sum + review.rating,
+              0
+            ) / reviews.length
+          ).toFixed(1)
+        : 0;
+
+    res.json({
+      reviews,
+      averageRating,
+      totalReviews: reviews.length,
+    });
+
   } catch (err) {
     res.status(500).json({
       message: err.message,
-    });
+    })
   }
-});
+})
 
 router.delete("/:id", auth, async(req, res)=>{
   try {
@@ -85,7 +97,7 @@ router.put("/:id", auth, async(req,res)=>{
     if(review.user.toString() !== req.user.userId){
       return res.status(403).json({
         message: "Not authorized",
-      });
+      })
     }
 
     review.rating = rating

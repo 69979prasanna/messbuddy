@@ -1,32 +1,35 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 
 export default function ReviewList({ place }) {
   const [reviews, setReviews] = useState([])
+  const [averageRating, setAverageRating] = useState(0)
+  const [totalReviews, setTotalReviews] = useState(0)
   const [editingId, setEditingId] = useState(null)
-const [editComment, setEditComment] = useState("")
-const [editRating, setEditRating] = useState(5)
+  const [editComment, setEditComment] = useState("")
+  const [editRating, setEditRating] = useState(5)
 
   const currentUser = JSON.parse(localStorage.getItem("user"))
 
-useEffect(() => {
-  const fetchReviews = async () => {
-    try {
-      const res = await fetch(
-        `http://localhost:5000/api/reviews/${encodeURIComponent(place)}`
-      );
+  const fetchReviews = useCallback(async () => {
+  try {
+    const res = await fetch(
+      `http://localhost:5000/api/reviews/${encodeURIComponent(place)}`
+    );
 
-      const data = await res.json();
+    const data = await res.json();
 
-      setReviews(Array.isArray(data) ? data : []);
-    } catch (err) {
-      console.error(err);
-    }
-  };
+    setReviews(data.reviews || []);
+    setAverageRating(data.averageRating);
+    setTotalReviews(data.totalReviews);
 
-  fetchReviews()
+  } catch (err) {
+    console.error(err);
+  }
 }, [place])
 
-
+useEffect(() => {
+  fetchReviews();
+}, [fetchReviews]);
   const handleDelete = async (id) => {
     const confirmDelete = window.confirm(
       "Are you sure you want to delete this review?"
@@ -47,9 +50,7 @@ useEffect(() => {
     );
 
     if (res.ok) {
-      setReviews((prev) =>
-        prev.filter((review) => review._id !== id)
-      );
+      fetchReviews()
     }
   }
 
@@ -77,17 +78,11 @@ const handleSave = async () => {
   )
 
   if (res.ok) {
-    const updatedReview = await res.json()
-
-    setReviews((prev) =>
-      prev.map((review) =>
-        review._id === updatedReview._id
-          ? updatedReview
-          : review
-      )
-    )
+    await res.json()
 
     setEditingId(null)
+
+   fetchReviews()
   }
 }
 const handleCancel = () => {
@@ -97,9 +92,17 @@ const handleCancel = () => {
   return (
     <div className="mt-5">
 
-      <h3 className="fw-bold mb-4">
-        Reviews ({reviews.length})
-      </h3>
+      <div className="mb-4 text-center">
+
+  <h2 className="text-warning mb-1">
+    ⭐ {averageRating}/5
+  </h2>
+
+  <p className="text-secondary">
+    {totalReviews} Reviews
+  </p>
+
+</div>
 
       {reviews.length === 0 ? (
         <p className="text-secondary">
