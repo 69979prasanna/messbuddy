@@ -9,11 +9,11 @@ export default function AuthModal({ onClose }) {
 
 const handleSubmit = async (e) => {
   e.preventDefault();
-
+  const api = process.env.REACT_APP_AUTH
   try {
     const endpoint = isLogin
-      ? "http://localhost:5000/api/auth/login"
-      : "http://localhost:5000/api/auth/signup";
+      ? `${api}/login`
+      : `${api}/signup`
 
     const body = isLogin
       ? {

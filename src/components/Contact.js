@@ -8,7 +8,7 @@ export default function Contact() {
     message: "",
     rating: 0,
   })
-
+  const api = process.env.REACT_APP_APIKEY
   const [hoverRating, setHoverRating] = useState(0)
   const [submitted, setSubmitted] = useState(false)
 
@@ -36,7 +36,7 @@ export default function Contact() {
 
     try {
       const res = await fetch(
-        "http://localhost:5000/api/feedback",
+        `${api}/feedback`,
         {
           method: "POST",
           headers: {

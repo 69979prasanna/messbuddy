@@ -9,11 +9,11 @@ export default function ReviewList({ place }) {
   const [editRating, setEditRating] = useState(5)
 
   const currentUser = JSON.parse(localStorage.getItem("user"))
-
+  const api = process.env.REACT_APP_APIKEY
   const fetchReviews = useCallback(async () => {
   try {
     const res = await fetch(
-      `http://localhost:5000/api/reviews/${encodeURIComponent(place)}`
+      `${api}/reviews/${encodeURIComponent(place)}`
     );
 
     const data = await res.json();
@@ -25,7 +25,7 @@ export default function ReviewList({ place }) {
   } catch (err) {
     console.error(err);
   }
-}, [place])
+}, [place, api])
 
 useEffect(() => {
   fetchReviews();
@@ -40,7 +40,7 @@ useEffect(() => {
     const token = localStorage.getItem("token")
 
     const res = await fetch(
-      `http://localhost:5000/api/reviews/${id}`,
+      `${api}/reviews/${id}`,
       {
         method: "DELETE",
         headers: {
@@ -63,7 +63,7 @@ const handleSave = async () => {
   const token = localStorage.getItem("token")
 
   const res = await fetch(
-    `http://localhost:5000/api/reviews/${editingId}`,
+    `${api}/reviews/${editingId}`,
     {
       method: "PUT",
       headers: {

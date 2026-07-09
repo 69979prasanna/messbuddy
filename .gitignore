@@ -13,9 +13,9 @@ shared/
 /build
 .gitignore
 backend/.env
-/.env
 backend/node_modules/
-backend/data/
+/.env
+
 # misc
 .DS_Store
 .env.local
