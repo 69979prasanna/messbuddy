@@ -1,9 +1,9 @@
-import { useState, useEffect } from "react";
-import FoodCard from "./FoodCard";
-import { foodData } from "../data/foodData";
+import { useState, useEffect } from "react"
+import FoodCard from "./FoodCard"
+import { foodData } from "../data/foodData"
 
 export default function BestToday({setShowAuthModal}) {
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useState("")
 
 
   const [foods, setFoods] = useState(
@@ -12,76 +12,76 @@ export default function BestToday({setShowAuthModal}) {
       upvotes: item.upvotes || 0,
       downvotes: item.downvotes || 0
     }))
-  );
+  )
 
-  const [userVotes, setUserVotes] = useState({});
+  const [userVotes, setUserVotes] = useState({})
 
 
   useEffect(() => {
     const savedVotes =
-      JSON.parse(localStorage.getItem("votes")) || {};
-    setUserVotes(savedVotes);
-  }, []);
+      JSON.parse(localStorage.getItem("votes")) || {}
+    setUserVotes(savedVotes)
+  }, [])
 
 
   useEffect(() => {
     localStorage.setItem(
       "votes",
       JSON.stringify(userVotes)
-    );
-  }, [userVotes]);
+    )
+  }, [userVotes])
 
   const handleVote = (id, type) => {
-    const prevVote = userVotes[id];
+    const prevVote = userVotes[id]
 
     setFoods(prev =>
       prev.map(food => {
-        if (food.id !== id) return food;
+        if (food.id !== id) return food
 
-        let { upvotes, downvotes } = food;
+        let { upvotes, downvotes } = food
 
         if (prevVote === type) {
 
-          if (type === "up") upvotes--;
-          if (type === "down") downvotes--;
+          if (type === "up") upvotes--
+          if (type === "down") downvotes--
         } else if (prevVote) {
   
           if (prevVote === "up") {
-            upvotes--;
-            downvotes++;
+            upvotes--
+            downvotes++
           } else {
-            downvotes--;
-            upvotes++;
+            downvotes--
+            upvotes++
           }
         } else {
       
-          if (type === "up") upvotes++;
-          if (type === "down") downvotes++;
+          if (type === "up") upvotes++
+          if (type === "down") downvotes++
         }
 
         return {
           ...food,
           upvotes: Math.max(0, upvotes),
           downvotes: Math.max(0, downvotes)
-        };
+        }
       })
-    );
+    )
 
     setUserVotes(prev => {
       if (prevVote === type) {
-        const updated = { ...prev };
-        delete updated[id];
-        return updated;
+        const updated = { ...prev }
+        delete updated[id]
+        return updated
       }
-      return { ...prev, [id]: type };
-    });
-  };
+      return { ...prev, [id]: type }
+    })
+  }
 
 
   const filteredPlaces = foods.filter(place =>
     place.source.toLowerCase().includes(search.toLowerCase())
     
-  );
+  )
 
   return (
     <>
@@ -114,5 +114,5 @@ export default function BestToday({setShowAuthModal}) {
   )}
 </div>
     </>
-  );
+  )
 }

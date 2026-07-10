@@ -1,13 +1,13 @@
-import express from "express";
-import Review from "../models/Review.js";
-import auth from "../middleware/authMiddleware.js";
-import User from "../models/User.js";
+import express from "express"
+import Review from "../models/Review.js"
+import auth from "../middleware/authMiddleware.js"
+import User from "../models/User.js"
 
-const router = express.Router();
+const router = express.Router()
 
 router.post("/", auth, async (req, res) => {
   try {
-    const { place, rating, comment } = req.body;
+    const { place, rating, comment } = req.body
 
     const user = await User.findById(req.user.userId)
     const existingReview = await Review.findOne({
@@ -27,7 +27,7 @@ if (existingReview) {
       rating,
       comment,
     })
-    res.status(201).json(review);
+    res.status(201).json(review)
   } catch (err) {
     res.status(500).json({
       message: err.message,
@@ -39,7 +39,7 @@ router.get("/:place", async (req, res) => {
   try {
     const reviews = await Review.find({
       place: req.params.place,
-    }).sort({ createdAt: -1 });
+    }).sort({ createdAt: -1 })
 
     const averageRating =
       reviews.length > 0
@@ -49,13 +49,13 @@ router.get("/:place", async (req, res) => {
               0
             ) / reviews.length
           ).toFixed(1)
-        : 0;
+        : 0
 
     res.json({
       reviews,
       averageRating,
       totalReviews: reviews.length,
-    });
+    })
 
   } catch (err) {
     res.status(500).json({
@@ -111,4 +111,4 @@ router.put("/:id", auth, async(req,res)=>{
     })
   }
 })
-export default router;
+export default router

@@ -1,15 +1,15 @@
-import { NavLink } from "react-router-dom";
+import { NavLink } from "react-router-dom"
 
 export default function Navbar({ setShowAuthModal }) {
-  const user = JSON.parse(localStorage.getItem("user"));
+  const user = JSON.parse(localStorage.getItem("user"))
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
+    localStorage.removeItem("token")
+    localStorage.removeItem("user")
 
-    alert("Logged out successfully");
-    window.location.reload();
-  };
+    alert("Logged out successfully")
+    window.location.reload()
+  }
 
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-dark sticky-top shadow-sm">
@@ -82,5 +82,5 @@ export default function Navbar({ setShowAuthModal }) {
         </div>
       </div>
     </nav>
-  );
+  )
 }

@@ -1,16 +1,16 @@
-import { useState } from "react";
+import { useState } from "react"
 
 export default function ReviewForm({ place, onReviewAdded, setShowAuthModal }) {
-  const [rating, setRating] = useState(5);
-  const [comment, setComment] = useState("");
+  const [rating, setRating] = useState(5)
+  const [comment, setComment] = useState("")
 
   const submitReview = async (e) => {
-  e.preventDefault();
-const token = localStorage.getItem("token");
+  e.preventDefault()
+const token = localStorage.getItem("token")
 
 if (!token) {
-  setShowAuthModal(true);
-  return;
+  setShowAuthModal(true)
+  return
 }
 const api = process.env.REACT_APP_APIKEY
 
@@ -25,31 +25,31 @@ const api = process.env.REACT_APP_APIKEY
       rating,
       comment,
     }),
-  });
+  })
 
   
-  const data = await res.json();
+  const data = await res.json()
   
   if (res.status === 401) {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
+    localStorage.removeItem("token")
+    localStorage.removeItem("user")
   
-    setShowAuthModal(true);
-    return;
+    setShowAuthModal(true)
+    return
   }
-  console.log("Status:", res.status);
+  console.log("Status:", res.status)
   console.log("Response:", data)
   if (!res.ok) {
-  alert(data.message);
-  return;
+  alert(data.message)
+  return
 }
   if (res.ok) {
-    setComment("");
-    setRating(5);
+    setComment("")
+    setRating(5)
 
-    onReviewAdded();
+    onReviewAdded()
   }
-};
+}
 
   return (
     <form onSubmit={submitReview} className="mb-4">
@@ -88,5 +88,5 @@ const api = process.env.REACT_APP_APIKEY
 </div>
 
     </form>
-  );
+  )
 }

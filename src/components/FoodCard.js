@@ -1,97 +1,97 @@
-import { useNavigate } from "react-router-dom";
-import { restaurantTimings } from "../data/restaurantTimings";
-import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom"
+import { restaurantTimings } from "../data/restaurantTimings"
+import { useState, useEffect } from "react"
 import {
   addFavorite,
   removeFavorite,
   isFavorite,
-} from "../utils/favorites";
+} from "../utils/favorites"
 
 export default function FoodCard({ food, onVote, userVote, setShowAuthModal }) {
-  const navigate = useNavigate();
+  const navigate = useNavigate()
 
-  const [fav, setFav] = useState(false);
+  const [fav, setFav] = useState(false)
 
   useEffect(() => {
     if (food?.id) {
-      setFav(isFavorite(food.id));
+      setFav(isFavorite(food.id))
     }
-  }, [food]);
+  }, [food])
 
   const toggleFavorite = (e) => {
-    e.stopPropagation();
+    e.stopPropagation()
     console.log("heart clicked")
     const token = localStorage.getItem("token")
-     console.log("token:", token);
+     console.log("token:", token)
 
     if(!token){
-      console.log("no token");
+      console.log("no token")
       setShowAuthModal(true)
       return
     }
-    if (!food) return;
+    if (!food) return
 
-    if (fav) removeFavorite(food.id);
-    else addFavorite(food);
+    if (fav) removeFavorite(food.id)
+    else addFavorite(food)
 
-    setFav(!fav);
-  };
+    setFav(!fav)
+  }
 
-  const normalize = (str) => str?.trim().toLowerCase();
+  const normalize = (str) => str?.trim().toLowerCase()
 
   const getStatus = (source) => {
-    const timing = restaurantTimings[normalize(source)];
-    if (!timing) return { open: false, closingSoon: false };
+    const timing = restaurantTimings[normalize(source)]
+    if (!timing) return { open: false, closingSoon: false }
 
-    const now = new Date();
-    const currentMinutes = now.getHours() * 60 + now.getMinutes();
+    const now = new Date()
+    const currentMinutes = now.getHours() * 60 + now.getMinutes()
 
-    const [openH, openM] = timing.open.split(":").map(Number);
-    const [closeH, closeM] = timing.close.split(":").map(Number);
+    const [openH, openM] = timing.open.split(":").map(Number)
+    const [closeH, closeM] = timing.close.split(":").map(Number)
 
-    const openMinutes = openH * 60 + openM;
-    const closeMinutes = closeH * 60 + closeM;
+    const openMinutes = openH * 60 + openM
+    const closeMinutes = closeH * 60 + closeM
 
     const open =
       currentMinutes >= openMinutes &&
-      currentMinutes < closeMinutes;
+      currentMinutes < closeMinutes
 
     const closingSoon =
-      open && closeMinutes - currentMinutes <= 30;
+      open && closeMinutes - currentMinutes <= 30
 
-    return { open, closingSoon };
-  };
+    return { open, closingSoon }
+  }
 
-  const { open, closingSoon } = getStatus(food?.source);
+  const { open, closingSoon } = getStatus(food?.source)
 
   const openPlace = () => {
-    if (!food) return;
-    navigate(`/place/${encodeURIComponent(food.source)}`);
-  };
+    if (!food) return
+    navigate(`/place/${encodeURIComponent(food.source)}`)
+  }
 
   const handleUpvote = (e) => {
-    e.stopPropagation();
-    const token = localStorage.getItem("token");
+    e.stopPropagation()
+    const token = localStorage.getItem("token")
 
   if (!token) {
-    setShowAuthModal(true);
-    return;
+    setShowAuthModal(true)
+    return
   }
-    onVote?.(food?.id, "up");
-  };
+    onVote?.(food?.id, "up")
+  }
 
   const handleDownvote = (e) => {
-    e.stopPropagation();
-    const token = localStorage.getItem("token");
+    e.stopPropagation()
+    const token = localStorage.getItem("token")
 
   if (!token) {
-    setShowAuthModal(true);
-    return;
+    setShowAuthModal(true)
+    return
   }
-    onVote?.(food?.id, "down");
-  };
+    onVote?.(food?.id, "down")
+  }
 
-  if (!food) return null;
+  if (!food) return null
 
   return (
     <div
@@ -150,5 +150,5 @@ export default function FoodCard({ food, onVote, userVote, setShowAuthModal }) {
         )}
       </div>
     </div>
-  );
+  )
 }

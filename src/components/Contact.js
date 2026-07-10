@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState } from "react"
 
 export default function Contact() {
   const [form, setForm] = useState({
@@ -27,11 +27,11 @@ export default function Contact() {
   }
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    e.preventDefault()
 
     if (!form.message.trim() || form.rating === 0) {
-      alert("Please provide a rating and message.");
-      return;
+      alert("Please provide a rating and message.")
+      return
     }
 
     try {
@@ -60,7 +60,7 @@ export default function Contact() {
         rating: 0,
       })
 
-      setHoverRating(0);
+      setHoverRating(0)
 
       setTimeout(() => {
         setSubmitted(false)
@@ -165,7 +165,7 @@ export default function Contact() {
                       {[1, 2, 3, 4, 5].map((star) => {
                         const active =
                           hoverRating >= star ||
-                          form.rating >= star;
+                          form.rating >= star
 
                         return (
                           <span
@@ -195,7 +195,7 @@ export default function Contact() {
                           >
                             ★
                           </span>
-                        );
+                        )
                       })}
                     </div>
 
@@ -248,5 +248,5 @@ export default function Contact() {
       </div>
 
     </div>
-  );
+  )
 }

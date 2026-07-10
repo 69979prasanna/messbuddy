@@ -1,20 +1,20 @@
-import { useParams, useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react";
-import { menuData } from "../data/menuData";
+import { useParams, useNavigate } from "react-router-dom"
+import { useState, useEffect } from "react"
+import { menuData } from "../data/menuData"
 import {
   addFavorite,
   removeFavorite,
   isFavorite
-} from "../utils/favorites";
-import ReviewForm from "./ReviewForm";
-import ReviewList from "./ReviewList";
+} from "../utils/favorites"
+import ReviewForm from "./ReviewForm"
+import ReviewList from "./ReviewList"
 
 export default function PlaceDetails({setShowAuthModal}) {
-  const [favoriteIds, setFavoriteIds] = useState([]);
+  const [favoriteIds, setFavoriteIds] = useState([])
   useEffect(() => {
-  const favs = JSON.parse(localStorage.getItem("favorites")) || [];
-  setFavoriteIds(favs.map(item => item.id));
-}, []);
+  const favs = JSON.parse(localStorage.getItem("favorites")) || []
+  setFavoriteIds(favs.map(item => item.id))
+}, [])
 const toggleFavourite = (item) =>{
   const token = localStorage.getItem("token")
   if(!token){
@@ -30,16 +30,16 @@ const toggleFavourite = (item) =>{
     setFavoriteIds(prev => [...prev, item.id])
   }
 }
-  const { name } = useParams();
-  const navigate = useNavigate();
-  const placeName = decodeURIComponent(name);
+  const { name } = useParams()
+  const navigate = useNavigate()
+  const placeName = decodeURIComponent(name)
 
-  const [filter, setFilter] = useState("all"); 
-  const [search, setSearch] = useState(""); 
+  const [filter, setFilter] = useState("all") 
+  const [search, setSearch] = useState("") 
 
   const menus = menuData.filter(
     item => item.place === placeName
-  );
+  )
 
   const filteredMenus =
     (filter === "top"
@@ -49,11 +49,11 @@ const toggleFavourite = (item) =>{
       : menus
     ).filter(item =>
       item.dish.toLowerCase().includes(search.toLowerCase())
-    );
+    )
 
   const avgPrice =
     menus.reduce((sum, item) => sum + item.price, 0) /
-      menus.length || 0;
+      menus.length || 0
 
   return (
     <div className="container py-4 text-light">
@@ -165,5 +165,5 @@ const toggleFavourite = (item) =>{
     place={placeName}
 />
     </div>
-  );
+  )
 }

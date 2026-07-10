@@ -1,13 +1,13 @@
-import { useEffect, useState } from "react";
-import { getFavorites } from "../utils/favorites";
-import FoodCard from "./FoodCard";
+import { useEffect, useState } from "react"
+import { getFavorites } from "../utils/favorites"
+import FoodCard from "./FoodCard"
 
 function Favorites() {
-  const [favorites, setFavorites] = useState([]);
+  const [favorites, setFavorites] = useState([])
 
   useEffect(() => {
-    setFavorites(getFavorites());
-  }, []);
+    setFavorites(getFavorites())
+  }, [])
 
   return (
  <div className="container text-light">
@@ -25,7 +25,7 @@ function Favorites() {
     </div>
   )}
 </div>
-  );
+  )
 }
 
-export default Favorites;
+export default Favorites

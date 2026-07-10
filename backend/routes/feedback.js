@@ -1,11 +1,11 @@
-import express from "express";
-import Feedback from "../models/Feedback.js";
+import express from "express"
+import Feedback from "../models/Feedback.js"
 
-const router = express.Router();
+const router = express.Router()
 
 router.post("/", async (req, res) => {
   try {
-    const { name, email, type, rating, message } = req.body;
+    const { name, email, type, rating, message } = req.body
 
     const feedback = await Feedback.create({
       name,
@@ -13,9 +13,9 @@ router.post("/", async (req, res) => {
       type,
       rating,
       message,
-    });
+    })
 
-    res.status(201).json(feedback);
+    res.status(201).json(feedback)
   } catch (err) {
     res.status(500).json({
       message: err.message,

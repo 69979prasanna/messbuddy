@@ -1,35 +1,35 @@
-import express from "express";
-import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
-import User from "../models/User.js";
-import  dotenv from "dotenv";
-const router = express.Router();
+import express from "express"
+import bcrypt from "bcryptjs"
+import jwt from "jsonwebtoken"
+import User from "../models/User.js"
+import  dotenv from "dotenv"
+const router = express.Router()
 dotenv.config()
 router.post("/signup", async (req, res) => {
   try {
-    const { username, email, password } = req.body;
+    const { username, email, password } = req.body
 
     if (!username || !email || !password) {
       return res.status(400).json({
         message: "All fields required"
-      });
+      })
     }
 
-    const existingUser = await User.findOne({ email });
+    const existingUser = await User.findOne({ email })
 
     if (existingUser) {
       return res.status(400).json({
         message: "User already exists"
-      });
+      })
     }
 
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const hashedPassword = await bcrypt.hash(password, 10)
 
     const newUser = await User.create({
       username,
       email,
       password: hashedPassword
-    });
+    })
 
     res.status(201).json({
       message: "Signup successful",
@@ -38,14 +38,14 @@ router.post("/signup", async (req, res) => {
         username: newUser.username,
         email: newUser.email
       }
-    });
+    })
   } catch (err) {
-    console.error(err);
+    console.error(err)
     res.status(500).json({
       message: "Server error"
-    });
+    })
   }
-});
+})
 router.post("/login", async(req, res)=>{
     try {
         const {email, password} = req.body
@@ -75,10 +75,10 @@ router.post("/login", async(req, res)=>{
         })
     
     } catch (err) {
-        console.error(err);
+        console.error(err)
     res.status(500).json({
       message: "Server error"
-    });
+    })
     }
 })
 

@@ -1,14 +1,14 @@
-import { useState } from "react";
-import "../App.css";
+import { useState } from "react"
+import "../App.css"
 
 export default function AuthModal({ onClose }) {
-  const [isLogin, setIsLogin] = useState(true);
-  const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [isLogin, setIsLogin] = useState(true)
+  const [username, setUsername] = useState("")
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
 
 const handleSubmit = async (e) => {
-  e.preventDefault();
+  e.preventDefault()
   const api = process.env.REACT_APP_AUTH
   try {
     const endpoint = isLogin
@@ -24,7 +24,7 @@ const handleSubmit = async (e) => {
           username,
           email,
           password
-        };
+        }
 
     const response = await fetch(endpoint, {
       method: "POST",
@@ -32,32 +32,32 @@ const handleSubmit = async (e) => {
         "Content-Type": "application/json"
       },
       body: JSON.stringify(body)
-    });
+    })
 
-    const data = await response.json();
+    const data = await response.json()
 
-    console.log(data);
+    console.log(data)
 
     if (data.token) {
-      localStorage.setItem("token", data.token);
-      localStorage.setItem("user", JSON.stringify(data.user));
+      localStorage.setItem("token", data.token)
+      localStorage.setItem("user", JSON.stringify(data.user))
 
-      alert("Login successful!");
-      onClose();
+      alert("Login successful!")
+      onClose()
     }
     else if (data.user) {
-      alert("Signup successful! Please login now.");
+      alert("Signup successful! Please login now.")
 
-      setIsLogin(true);
-      setUsername("");
-      setEmail("");
-      setPassword("");
+      setIsLogin(true)
+      setUsername("")
+      setEmail("")
+      setPassword("")
     }
   } catch (error) {
-    console.error("Auth Error:", error);
-    alert("Something went wrong");
+    console.error("Auth Error:", error)
+    alert("Something went wrong")
   }
-};
+}
   return (
     <div className="modal-overlay">
       <div className="auth-modal" >
@@ -119,5 +119,5 @@ const handleSubmit = async (e) => {
         </p>
       </div>
     </div>
-  );
+  )
 }

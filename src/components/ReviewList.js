@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback } from "react"
 
 export default function ReviewList({ place }) {
   const [reviews, setReviews] = useState([])
@@ -14,28 +14,28 @@ export default function ReviewList({ place }) {
   try {
     const res = await fetch(
       `${api}/reviews/${encodeURIComponent(place)}`
-    );
+    )
 
-    const data = await res.json();
+    const data = await res.json()
 
-    setReviews(data.reviews || []);
-    setAverageRating(data.averageRating);
-    setTotalReviews(data.totalReviews);
+    setReviews(data.reviews || [])
+    setAverageRating(data.averageRating)
+    setTotalReviews(data.totalReviews)
 
   } catch (err) {
-    console.error(err);
+    console.error(err)
   }
 }, [place, api])
 
 useEffect(() => {
-  fetchReviews();
-}, [fetchReviews]);
+  fetchReviews()
+}, [fetchReviews])
   const handleDelete = async (id) => {
     const confirmDelete = window.confirm(
       "Are you sure you want to delete this review?"
-    );
+    )
 
-    if (!confirmDelete) return;
+    if (!confirmDelete) return
 
     const token = localStorage.getItem("token")
 
@@ -47,7 +47,7 @@ useEffect(() => {
           Authorization: `Bearer ${token}`,
         },
       }
-    );
+    )
 
     if (res.ok) {
       fetchReviews()
@@ -220,5 +220,5 @@ const handleCancel = () => {
       )}
 
     </div>
-  );
+  )
 }
