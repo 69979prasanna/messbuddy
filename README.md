@@ -1,70 +1,278 @@
-# Getting Started with Create React App
+# 🍽️ MessBuddy
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A modern full-stack web application that helps students discover, compare, and review nearby messes and restaurants around their college. Built with the **MERN Stack**, MessBuddy provides an intuitive platform for exploring menus, viewing ratings, managing favorites, and making informed dining decisions.
 
-## Available Scripts
+![React](https://img.shields.io/badge/React-19-blue?logo=react)
+![Node.js](https://img.shields.io/badge/Node.js-22-green?logo=node.js)
+![Express](https://img.shields.io/badge/Express.js-black?logo=express)
+![MongoDB](https://img.shields.io/badge/MongoDB-green?logo=mongodb)
+![JWT](https://img.shields.io/badge/Auth-JWT-orange)
+![Bootstrap](https://img.shields.io/badge/Bootstrap-5-purple?logo=bootstrap)
+![License](https://img.shields.io/badge/License-MIT-green)
 
-In the project directory, you can run:
+---
 
-### `npm start`
+# 📸 Screenshots
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+### 🏠 Home Page
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+<img width="1906" height="975" alt="image" src="https://github.com/user-attachments/assets/64e15a40-dd1c-41da-8cf5-4c0f38015ec2" />
 
-### `npm test`
+### 👤 Login
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+<img width="1897" height="967" alt="image" src="https://github.com/user-attachments/assets/9d931ea6-0510-4e22-aac0-c5d478c3e849" />
 
-### `npm run build`
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+---
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+# ✨ Features
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## 🍽 Restaurant Discovery
 
-### `npm run eject`
+- Browse nearby messes and restaurants
+- Restaurant-specific pages
+- Dynamic food cards
+- Search restaurants instantly
+- Responsive navigation
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+## 📋 Menu Management
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+- View daily menus
+- Restaurant-wise menu organization
+- Category-based food display
+- Best Today's Specials section
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+## 👤 User Authentication
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+- Secure user registration
+- Login using JWT Authentication
+- Password encryption with bcrypt
+- Protected routes
+- Persistent user sessions
 
-## Learn More
+## ❤️ Personalized Experience
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+- Save favorite restaurants
+- Manage favorites
+- Personalized recommendations
+- User profile support
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## ⭐ Community Features
 
-### Code Splitting
+- Restaurant ratings
+- Upvote & Downvote system
+- Customer reviews
+- Popular dishes
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+## 🤖 AI Integration
 
-### Analyzing the Bundle Size
+- AI-powered food assistance
+- Smart menu recommendations
+- Interactive chatbot support
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+## 📱 User Experience
 
-### Making a Progressive Web App
+- Fully responsive design
+- Mobile-friendly interface
+- Modern Bootstrap UI
+- Fast page loading
+- Smooth navigation
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+---
 
-### Advanced Configuration
+# 🛠 Tech Stack
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+| Category | Technologies |
+|----------|--------------|
+| Frontend | React.js, Bootstrap, HTML5, CSS3 |
+| Backend | Node.js, Express.js |
+| Database | MongoDB Atlas |
+| Authentication | JWT, bcrypt |
+| APIs | REST APIs |
+| Storage | Supabase Storage |
+| Version Control | Git, GitHub |
+| Deployment | Vercel, Render |
 
-### Deployment
+---
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+# 🏗 System Architecture
 
-### `npm run build` fails to minify
+```
+                React Frontend
+                      │
+                      ▼
+              Express REST API
+                      │
+        ┌─────────────┴─────────────┐
+        ▼                           ▼
+ JWT Authentication          MongoDB Atlas
+        │                           │
+        ▼                           ▼
+     User Data              Restaurant Data
+        │
+        ▼
+  Supabase Storage
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+---
+
+# 📂 Project Structure
+
+```
+MessBuddy/
+│
+├── backend/
+│   ├── middleware/
+│   ├── models/
+│   ├── routes/
+│   └── server.js
+│
+├── frontend/
+│   ├── src/
+│   │   ├── components/
+│   │   ├── utils/
+│   │   └── App.js
+│
+├── package.json
+└── README.md
+```
+
+---
+
+# ⚙ Installation
+
+## Clone Repository
+
+```bash
+git clone https://github.com/69979Prasanna/MessBuddy.git
+```
+
+## Navigate
+
+```bash
+cd MessBuddy
+```
+
+## Install Backend
+
+```bash
+npm install
+```
+
+## Install Frontend
+
+```bash
+cd frontend
+npm install
+```
+
+## Configure Environment Variables
+
+Create a `.env` file.
+
+```env
+MONGO_URI=your_mongodb_connection_string
+JWT_SECRET=your_secret_key
+REACT_APP_APIKEY=your_api_key
+SUPABASE_URL=your_supabase_url
+SUPABASE_KEY=your_supabase_key
+```
+
+---
+
+## Run Backend
+
+```bash
+npm run dev
+```
+
+## Run Frontend
+
+```bash
+npm start
+```
+
+---
+
+# 🔐 Security
+
+- JWT Authentication
+- bcrypt Password Hashing
+- Protected API Routes
+- Secure User Sessions
+- Environment Variable Configuration
+
+---
+
+# 📈 Performance
+
+- Fast React Rendering
+- Optimized REST APIs
+- Efficient MongoDB Queries
+- Responsive UI
+- Lazy Component Loading
+- Mobile Optimized
+
+---
+
+# 🚀 Future Enhancements
+
+- 📍 GPS-based Nearby Mess Search
+- 💳 Online Meal Subscription
+- 🍱 Meal Booking
+- 🔔 Push Notifications
+- 🤖 AI Meal Recommendation Engine
+- 📊 Restaurant Analytics Dashboard
+- 🌙 Dark Mode
+- 📷 Image Upload for Reviews
+- 📱 Progressive Web App (PWA)
+- 💬 Real-time Chat Support
+
+---
+
+# 🤝 Contributing
+
+Contributions are welcome!
+
+1. Fork the repository
+2. Create your feature branch
+
+```bash
+git checkout -b feature-name
+```
+
+3. Commit your changes
+
+```bash
+git commit -m "Add new feature"
+```
+
+4. Push
+
+```bash
+git push origin feature-name
+```
+
+5. Open a Pull Request
+
+---
+
+# 👨‍💻 Author
+
+**Prasanna Solapure**
+
+📧 prasannasolapure5@gmail.com
+
+💼 LinkedIn: https://linkedin.com/in/prasanna-solapure-581a22333
+
+💻 GitHub: https://github.com/69979Prasanna
+
+---
+
+# ⭐ Support
+
+If you found this project useful, consider giving it a ⭐ on GitHub.
+
+It motivates me to build more open-source projects!
+
+---
