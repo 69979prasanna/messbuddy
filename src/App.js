@@ -1,22 +1,26 @@
-import { Routes, Route } from "react-router-dom";
-import Navbar from "./components/Navbar";
-import BestToday from "./components/BestToday";
-import About from "./components/About";
-import PlaceDetails from "./components/PlaceDetails";
-import Contact from "./components/Contact";
-import AIChat from "./components/AIChat";
-import Favorites from "./components/Favorites";
-import { useState } from "react";
-import AuthModal from "./components/AuthModal";
-
+import { Routes, Route } from "react-router-dom"
+import Navbar from "./components/Navbar"
+import BestToday from "./components/BestToday"
+import About from "./components/About"
+import PlaceDetails from "./components/PlaceDetails"
+import Contact from "./components/Contact"
+import AIChat from "./components/AIChat"
+import Favorites from "./components/Favorites"
+import { useState } from "react"
+import AuthModal from "./components/AuthModal"
+import AdminDashboard from "./components/AdminDashboard";
 export default function App() {
-  const [showAuthModal, setShowAuthModal] = useState(false);
+  const [showAuthModal, setShowAuthModal] = useState(false)
 
   return (
     <>
       <Navbar setShowAuthModal={setShowAuthModal}/>
       <div className="app">
         <Routes>
+          <Route
+    path="/admin"
+    element={<AdminDashboard />}
+/>
           <Route path="/" element={<BestToday setShowAuthModal={setShowAuthModal} />} />
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
@@ -31,5 +35,5 @@ export default function App() {
         )}
       </div>
     </>
-  );
+  )
 }
