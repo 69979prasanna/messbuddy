@@ -6,8 +6,8 @@ import {
   removeFavorite,
   isFavorite
 } from "../utils/favorites"
-import ReviewForm from "./ReviewForm"
-import ReviewList from "./ReviewList"
+import ReviewForm from "../components/ReviewForm"
+import ReviewList from "../components/ReviewList"
 
 export default function PlaceDetails({setShowAuthModal}) {
   const [favoriteIds, setFavoriteIds] = useState([])
