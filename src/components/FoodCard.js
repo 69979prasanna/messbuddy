@@ -12,11 +12,13 @@ export default function FoodCard({ food, onVote, userVote, setShowAuthModal }) {
 
   const [fav, setFav] = useState(false)
 
-  useEffect(() => {
-    if (food?.id) {
-      setFav(isFavorite(food.id))
-    }
-  }, [food])
+ useEffect(() => {
+  if (food?.id) {
+    setFav(isFavorite(food.id));
+  } else {
+    setFav(false);
+  }
+}, [food])
 
   const toggleFavorite = (e) => {
     e.stopPropagation()
@@ -31,10 +33,14 @@ export default function FoodCard({ food, onVote, userVote, setShowAuthModal }) {
     }
     if (!food) return
 
-    if (fav) removeFavorite(food.id)
-    else addFavorite(food)
+    if (fav) {
+  removeFavorite(food.id);
+} else {
+  addFavorite(food);
+}
 
-    setFav(!fav)
+const updatedFav = isFavorite(food.id);
+setFav(updatedFav)
   }
 
   const normalize = (str) => str?.trim().toLowerCase()

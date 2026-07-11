@@ -1,21 +1,53 @@
+const getFavoritesKey = () => {
+  const user = JSON.parse(localStorage.getItem("user"))
+
+  if (!user) return null
+
+  return `favorites_${user.id}`
+}
+
 export const getFavorites = () => {
-  return JSON.parse(localStorage.getItem("favorites")) || [];
-};
+  const key = getFavoritesKey()
+
+  if (!key) return []
+
+  return JSON.parse(localStorage.getItem(key)) || []
+}
 
 export const addFavorite = (item) => {
-  const favorites = getFavorites();
-  const exists = favorites.find((fav) => fav.id === item.id);
+  const key = getFavoritesKey()
+
+  if (!key) return
+
+  const favorites = getFavorites()
+
+  const exists = favorites.find((fav) => fav.id === item.id)
 
   if (!exists) {
-    localStorage.setItem("favorites", JSON.stringify([...favorites, item]));
+    localStorage.setItem(
+      key,
+      JSON.stringify([...favorites, item])
+    )
   }
-};
+}
 
 export const removeFavorite = (id) => {
-  const favorites = getFavorites().filter((item) => item.id !== id);
-  localStorage.setItem("favorites", JSON.stringify(favorites));
-};
+  const key = getFavoritesKey()
+
+  if (!key) return
+
+  const favorites = getFavorites().filter(
+    (item) => item.id !== id
+  )
+
+  localStorage.setItem(
+    key,
+    JSON.stringify(favorites)
+  )
+}
 
 export const isFavorite = (id) => {
-  return getFavorites().some((item) => item.id === id);
-};
+  return getFavorites().some(
+    (item) => item.id === id
+  )
+}
