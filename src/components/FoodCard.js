@@ -44,7 +44,7 @@ setFav(updatedFav)
   }
 
   const normalize = (str) => str?.trim().toLowerCase()
-
+  const placeName = food?.place || food?.source
   const getStatus = (source) => {
     const timing = restaurantTimings[normalize(source)]
     if (!timing) return { open: false, closingSoon: false }
@@ -68,11 +68,11 @@ setFav(updatedFav)
     return { open, closingSoon }
   }
 
-  const { open, closingSoon } = getStatus(food?.source)
+  const { open, closingSoon } = getStatus(placeName)
 
   const openPlace = () => {
     if (!food) return
-    navigate(`/place/${encodeURIComponent(food.source)}`)
+    navigate(`/place/${encodeURIComponent(placeName)}`)
   }
 
   const handleUpvote = (e) => {
@@ -115,16 +115,15 @@ setFav(updatedFav)
       </button>
 
       <div className="card-body">
-        <h5>{food.source}</h5>
+        <h5>{placeName}</h5>
+        {food.dish && (
         <h6>{food.dish}</h6>
-
+        )}
         <div className="mb-2">
           {!open && <span className="badge bg-danger">🔴 Closed</span>}
           {open && !closingSoon && <span className="badge bg-success">🟢 Open</span>}
           {closingSoon && <span className="badge bg-warning text-dark">⚠️ Closing Soon</span>}
         </div>
-
-        <p>💰 ₹{food.price}</p>
         <p>⭐ {food.rating}</p>
 
         {onVote && (

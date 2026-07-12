@@ -17,16 +17,23 @@ export const getFavorites = () => {
 export const addFavorite = (item) => {
   const key = getFavoritesKey()
 
-  if (!key) return
+  if (!key) return;
 
   const favorites = getFavorites()
 
-  const exists = favorites.find((fav) => fav.id === item.id)
+  const exists = favorites.find((fav) => fav.id === item.id);
 
   if (!exists) {
+    const favoriteItem = {
+      id: item.id,
+      place: item.place || item.source,
+      dish: item.dish,
+      rating: item.rating,
+    };
+
     localStorage.setItem(
       key,
-      JSON.stringify([...favorites, item])
+      JSON.stringify([...favorites, favoriteItem])
     )
   }
 }
