@@ -8,7 +8,11 @@ import AIChat from "./components/AIChat"
 import Favorites from "./pages/Favorites"
 import { useState } from "react"
 import AuthModal from "./components/AuthModal"
-import AdminDashboard from "./components/AdminDashboard";
+import Dashboard from "./pages/admin/Dashboard"
+import AddRestaurant from "./pages/admin/AddRestaurant"
+import ManageRestaurants from "./pages/admin/ManageRestaurants"
+import MenuManager from "./pages/admin/MenuManager"
+import FeedbackManager from "./pages/admin/FeedbackManager"
 export default function App() {
   const [showAuthModal, setShowAuthModal] = useState(false)
 
@@ -17,10 +21,11 @@ export default function App() {
       <Navbar setShowAuthModal={setShowAuthModal}/>
       <div className="app">
         <Routes>
-          <Route
-    path="/admin"
-    element={<AdminDashboard />}
-/>
+          <Route path="/admin" element={<Dashboard />} />
+          <Route path="/admin/restaurants/new"element={<AddRestaurant />}/>
+          <Route path="/admin/restaurants"element={<ManageRestaurants />}/>
+          <Route path="/admin/menu"element={<MenuManager />}/>
+          <Route path="/admin/feedback"element={<FeedbackManager />}/>
           <Route path="/" element={<BestToday setShowAuthModal={setShowAuthModal} />} />
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />

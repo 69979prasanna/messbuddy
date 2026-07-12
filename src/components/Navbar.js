@@ -1,8 +1,8 @@
-import { NavLink } from "react-router-dom"
+import { NavLink} from "react-router-dom"
 
 export default function Navbar({ setShowAuthModal }) {
   const user = JSON.parse(localStorage.getItem("user"))
-
+  const mail = process.env.REACT_APP_MYMAIL
   const handleLogout = () => {
     localStorage.removeItem("token")
     localStorage.removeItem("user")
@@ -76,6 +76,13 @@ export default function Navbar({ setShowAuthModal }) {
                     Logout
                   </button>
                 </li>
+                {user?.email === mail && (
+                 <li className="nav-item">
+                   <NavLink className="nav-link" to="/admin">
+                          🛠 Admin
+                   </NavLink>
+                  </li>
+                )}
               </>
             )}
           </ul>
