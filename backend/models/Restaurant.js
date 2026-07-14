@@ -14,7 +14,7 @@ const restaurantSchema = new mongoose.Schema(
       required: true,
     },
 
-    price: {
+    featuredPrice: {
       type: Number,
       required: true,
     },
@@ -39,6 +39,15 @@ const restaurantSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
+    openingTime: {
+    type: String,
+    required: true,
+},
+
+closingTime: {
+    type: String,
+    required: true,
+}
   },
   {
     timestamps: true,

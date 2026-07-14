@@ -22,7 +22,10 @@ router.post("/", upload.single("image"), async (req, res) => {
         contentType: req.file.mimetype,
       });
 
-    if (error) throw error;
+    if (error) {
+  console.error("Supabase Upload Error:", error);
+  return res.status(500).json(error);
+}
 
     const { data } = supabase.storage
       .from("restaurants")

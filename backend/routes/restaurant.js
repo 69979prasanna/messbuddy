@@ -38,9 +38,11 @@ router.post("/", async (req, res) => {
     const {
       name,
       featuredDish,
-      price,
+      featuredPrice,
       image,
       tags,
+       openingTime,
+    closingTime,
     } = req.body
 
     const exists = await Restaurant.findOne({
@@ -54,12 +56,14 @@ router.post("/", async (req, res) => {
     }
 
     const restaurant = await Restaurant.create({
-      name,
-      featuredDish,
-      price,
-      image,
-      tags,
-    })
+    name,
+    featuredDish,
+    featuredPrice,
+    image,
+    tags,
+    openingTime,
+    closingTime,
+});
 
     res.status(201).json(restaurant)
   } catch (err) {
