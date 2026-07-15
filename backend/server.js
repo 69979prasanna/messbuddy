@@ -8,7 +8,8 @@ import authRoutes from "./routes/auth.js"
 import reviewRoutes from "./routes/review.js"
 import feedbackRoutes from "./routes/feedback.js"
 import restaurantRoutes from "./routes/restaurant.js"
-import uploadRoutes from "./routes/upload.js";
+import uploadRoutes from "./routes/upload.js"
+import adminRoutes from "./routes/admin.js"
 dotenv.config()
 mongoose
   .connect(process.env.MONGO_URI)
@@ -25,6 +26,7 @@ const groq = new Groq({
 app.use("/api/upload", uploadRoutes);
 app.use("/api/restaurants", restaurantRoutes)
 app.use("/api/reviews", reviewRoutes)
+app.use("/api/admin", adminRoutes)
 app.post("/api/ai", async (req, res) => {
   try {
     const { message } = req.body

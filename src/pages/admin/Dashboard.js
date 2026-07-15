@@ -11,34 +11,28 @@ export default function Dashboard() {
     menus: 0,
     reviews: 0,
     feedback: 0,
-  });
+  })
 
   useEffect(() => {
-    fetchDashboardStats();
-  }, []);
+    fetchDashboard();
+  }, [])
 
-  const fetchDashboardStats = async () => {
+const fetchDashboard = async () => {
+
     try {
-
-      const restaurantRes = await fetch(`${API}/restaurants`);
-      const restaurants = await restaurantRes.json();
-
-      // We'll make these dynamic later
-      setStats({
-        restaurants: restaurants.length,
-        menus: 0,
-        reviews: 0,
-        feedback: 0,
-      });
-
-    } catch (err) {
-      console.error(err);
+        const res = await fetch(`${API}/admin/dashboard`);
+        const data = await res.json();
+        setStats(data);
     }
-  };
+    catch(err){
+        console.log(err);
+
+    }
+
+}
 
   return (
     <div className="container py-5 text-light">
-
       <h1 className="fw-bold text-center mb-5">
         🍽 Admin Dashboard
       </h1>
