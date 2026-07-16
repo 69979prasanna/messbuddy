@@ -12,25 +12,15 @@ export default function ManageRestaurants() {
   }, [])
 
   const fetchRestaurants = async () => {
-
     try {
-
       const res = await fetch(`${API}/restaurants`)
-
       const data = await res.json()
-
       setRestaurants(data)
-
     } catch (err) {
-
       console.error(err)
-
     } finally {
-
       setLoading(false)
-
     }
-
   }
 
   if (loading) {
@@ -40,6 +30,34 @@ export default function ManageRestaurants() {
       </div>
     )
   }
+  const deleteRestaurant = async (id) => {
+
+  const confirmDelete = window.confirm(
+    "Delete this restaurant?"
+  )
+
+  if (!confirmDelete) return;
+
+  try {
+    const res = await fetch(
+      `${API}/restaurants/${id}`,
+      {
+        method: "DELETE",
+      }
+    )
+    if (!res.ok) {
+      throw new Error("Delete failed");
+    }
+    setRestaurants(prev =>
+      prev.filter(r => r._id !== id)
+    )
+    alert("Restaurant deleted!");
+  } catch (err) {
+    console.error(err);
+    alert("Couldn't delete.");
+
+  }
+}
 
   return (
     <div className="container py-5 text-light">
@@ -72,52 +90,34 @@ export default function ManageRestaurants() {
               <div className="card-body">
 
                 <h4>{restaurant.name}</h4>
-
                 <p>
                   🍽 {restaurant.featuredDish}
                 </p>
-
                 <p>
                   💰 ₹{restaurant.featuredPrice}
                 </p>
-
                 <p>
                   ⭐ {restaurant.averageRating}
                 </p>
-
                 <p>
-
                   🏷
-
                   {restaurant.tags.map(tag => (
-
                     <span
                       key={tag}
                       className="badge bg-info me-2"
                     >
                       {tag}
                     </span>
-
                   ))}
-
                 </p>
-
                 <p>
-
                   🕒
-
                   {restaurant.openingTime}
-
                   -
-
                   {restaurant.closingTime}
-
                 </p>
-
               </div>
-
               <div className="card-footer d-flex gap-2">
-
                 <button
                   className="btn btn-warning w-50"
                 >
@@ -125,21 +125,15 @@ export default function ManageRestaurants() {
                 </button>
 
                 <button
-                  className="btn btn-danger w-50"
-                >
+                 className="btn btn-danger w-50"
+                 onClick={() => deleteRestaurant(restaurant._id)}>
                   🗑 Delete
-                </button>
-
+               </button>
               </div>
-
             </div>
-
           </div>
-
         ))}
-
       </div>
-
     </div>
   )
 }
