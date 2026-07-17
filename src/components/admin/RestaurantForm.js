@@ -9,7 +9,9 @@ export default function RestaurantForm({
     name: initialData.name || "",
     featuredDish: initialData.featuredDish || "",
     featuredPrice: initialData.featuredPrice || "",
-    tags: initialData.tags || "",
+    tags: initialData.tags
+  ? initialData.tags.join(", ")
+  : "",
     openingTime: initialData.openingTime || "",
     closingTime: initialData.closingTime || "",
     image: null,

@@ -13,6 +13,7 @@ import AddRestaurant from "./pages/admin/AddRestaurant"
 import ManageRestaurants from "./pages/admin/ManageRestaurants"
 import MenuManager from "./pages/admin/MenuManager"
 import FeedbackManager from "./pages/admin/FeedbackManager"
+import EditRestaurant from "./pages/admin/EditRestaurant"
 export default function App() {
   const [showAuthModal, setShowAuthModal] = useState(false)
 
@@ -21,6 +22,7 @@ export default function App() {
       <Navbar setShowAuthModal={setShowAuthModal}/>
       <div className="app">
         <Routes>
+          <Route path="/admin/restaurants/edit/:id" element={<EditRestaurant />}/>
           <Route path="/admin" element={<Dashboard />} />
           <Route path="/admin/restaurants/new"element={<AddRestaurant />}/>
           <Route path="/admin/restaurants"element={<ManageRestaurants />}/>

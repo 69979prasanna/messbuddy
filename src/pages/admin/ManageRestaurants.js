@@ -1,9 +1,10 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState, } from "react"
+import { useNavigate } from "react-router-dom"
 
 const API = process.env.REACT_APP_APIKEY
 
 export default function ManageRestaurants() {
-
+  const navigate = useNavigate()
   const [restaurants, setRestaurants] = useState([])
   const [loading, setLoading] = useState(true)
 
@@ -120,10 +121,9 @@ export default function ManageRestaurants() {
               <div className="card-footer d-flex gap-2">
                 <button
                   className="btn btn-warning w-50"
-                >
-                  ✏ Edit
+                  onClick={() => navigate(`/admin/restaurants/edit/${restaurant._id}`)}>
+                        ✏ Edit
                 </button>
-
                 <button
                  className="btn btn-danger w-50"
                  onClick={() => deleteRestaurant(restaurant._id)}>
