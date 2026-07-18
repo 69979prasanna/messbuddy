@@ -10,6 +10,7 @@ import feedbackRoutes from "./routes/feedback.js"
 import restaurantRoutes from "./routes/restaurant.js"
 import uploadRoutes from "./routes/upload.js"
 import adminRoutes from "./routes/admin.js"
+import menuRoutes from "./routes/menu.js"
 dotenv.config()
 mongoose
   .connect(process.env.MONGO_URI)
@@ -23,6 +24,7 @@ app.use("/api/feedback", feedbackRoutes)
 const groq = new Groq({
   apiKey: process.env.GROQ_API_KEY
 })
+app.use("/api/menus", menuRoutes)
 app.use("/api/upload", uploadRoutes);
 app.use("/api/restaurants", restaurantRoutes)
 app.use("/api/reviews", reviewRoutes)

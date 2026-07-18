@@ -1,58 +1,73 @@
-import { useState } from "react"
+import { useState } from "react";
 
 export default function MenuForm({
   restaurants = [],
   onSubmit,
-  initialData = {},
   loading = false,
 }) {
 
   const [formData, setFormData] = useState({
-    restaurant: initialData.restaurant || "",
-    dish: initialData.dish || "",
-    price: initialData.price || "",
-    rating: initialData.rating || "",
-    category: initialData.category || "",
-    description: initialData.description || "",
+    restaurant: "",
+    dish: "",
+    price: "",
+    rating: 0,
+    category: "",
+    description: "",
+    isAvailable: true,
     image: null,
-  })
+  });
 
   const handleChange = (e) => {
 
-    const { name, value, files } = e.target
+    const { name, value, files, type } = e.target;
 
-    if (name === "image") {
-      setFormData({
-        ...formData,
+    if (type === "file") {
+
+      setFormData(prev => ({
+        ...prev,
         image: files[0],
-      })
-    } else {
-      setFormData({
-        ...formData,
-        [name]: value,
-      })
+      }));
+
+      return;
     }
-  }
+
+    if (name === "isAvailable") {
+
+      setFormData(prev => ({
+        ...prev,
+        isAvailable: value === "true",
+      }));
+
+      return;
+    }
+
+    setFormData(prev => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
 
   const handleSubmit = (e) => {
 
-    e.preventDefault()
+    e.preventDefault();
 
-    if (onSubmit) {
-      onSubmit(formData)
-    }
-  }
+    onSubmit(formData);
+
+  };
 
   return (
-    <div className="card bg-dark text-light shadow-lg border-secondary">
+
+    <div className="card bg-dark text-light border-secondary shadow-lg">
 
       <div className="card-body p-4">
 
         <h2 className="text-center mb-4">
-          🍕 Menu Item
+          🍽 Add Menu Item
         </h2>
 
         <form onSubmit={handleSubmit}>
+
+          {/* Restaurant */}
 
           <div className="mb-3">
 
@@ -73,17 +88,21 @@ export default function MenuForm({
               </option>
 
               {restaurants.map((restaurant) => (
+
                 <option
                   key={restaurant._id}
-                  value={restaurant.name}
+                  value={restaurant._id}
                 >
                   {restaurant.name}
                 </option>
+
               ))}
 
             </select>
 
           </div>
+
+          {/* Dish */}
 
           <div className="mb-3">
 
@@ -92,6 +111,7 @@ export default function MenuForm({
             </label>
 
             <input
+              type="text"
               className="form-control bg-dark text-light border-secondary"
               name="dish"
               value={formData.dish}
@@ -103,6 +123,8 @@ export default function MenuForm({
 
           <div className="row">
 
+            {/* Price */}
+
             <div className="col-md-4 mb-3">
 
               <label className="form-label">
@@ -111,6 +133,7 @@ export default function MenuForm({
 
               <input
                 type="number"
+                min="0"
                 className="form-control bg-dark text-light border-secondary"
                 name="price"
                 value={formData.price}
@@ -119,6 +142,8 @@ export default function MenuForm({
               />
 
             </div>
+
+            {/* Rating */}
 
             <div className="col-md-4 mb-3">
 
@@ -139,23 +164,44 @@ export default function MenuForm({
 
             </div>
 
+            {/* Category */}
+
             <div className="col-md-4 mb-3">
 
               <label className="form-label">
                 Category
               </label>
 
-              <input
-                className="form-control bg-dark text-light border-secondary"
-                placeholder="Pizza, Chinese..."
+              <select
+                className="form-select bg-dark text-light border-secondary"
                 name="category"
                 value={formData.category}
                 onChange={handleChange}
-              />
+                required
+              >
+
+                <option value="">
+                  Select Category
+                </option>
+
+                <option value="Starter">Starter</option>
+                <option value="Main Course">Main Course</option>
+                <option value="Rice">Rice</option>
+                <option value="Bread">Bread</option>
+                <option value="Chinese">Chinese</option>
+                <option value="Pizza">Pizza</option>
+                <option value="Dessert">Dessert</option>
+                <option value="Beverage">Beverage</option>
+                <option value="South Indian">South Indian</option>
+                <option value="North Indian">North Indian</option>
+
+              </select>
 
             </div>
 
           </div>
+
+          {/* Description */}
 
           <div className="mb-3">
 
@@ -172,6 +218,35 @@ export default function MenuForm({
             />
 
           </div>
+
+          {/* Availability */}
+
+          <div className="mb-3">
+
+            <label className="form-label">
+              Availability
+            </label>
+
+            <select
+              className="form-select bg-dark text-light border-secondary"
+              name="isAvailable"
+              value={String(formData.isAvailable)}
+              onChange={handleChange}
+            >
+
+              <option value="true">
+                Available
+              </option>
+
+              <option value="false">
+                Out of Stock
+              </option>
+
+            </select>
+
+          </div>
+
+          {/* Image */}
 
           <div className="mb-4">
 
@@ -190,12 +265,11 @@ export default function MenuForm({
           </div>
 
           <button
+            type="submit"
             className="btn btn-primary w-100 fw-bold"
             disabled={loading}
           >
-            {loading
-              ? "Saving..."
-              : "🍕 Save Menu Item"}
+            {loading ? "Saving..." : "🍽 Save Menu Item"}
           </button>
 
         </form>
@@ -203,5 +277,7 @@ export default function MenuForm({
       </div>
 
     </div>
-  )
+
+  );
+
 }
