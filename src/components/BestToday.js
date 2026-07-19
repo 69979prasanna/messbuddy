@@ -13,39 +13,28 @@ export default function BestToday({setShowAuthModal}) {
       downvotes: item.downvotes || 0
     }))
   )
-
   const [userVotes, setUserVotes] = useState({})
-
-
   useEffect(() => {
     const savedVotes =
       JSON.parse(localStorage.getItem("votes")) || {}
     setUserVotes(savedVotes)
   }, [])
-
-
   useEffect(() => {
     localStorage.setItem(
       "votes",
       JSON.stringify(userVotes)
     )
   }, [userVotes])
-
   const handleVote = (id, type) => {
     const prevVote = userVotes[id]
-
     setFoods(prev =>
       prev.map(food => {
         if (food.id !== id) return food
-
         let { upvotes, downvotes } = food
-
         if (prevVote === type) {
-
           if (type === "up") upvotes--
           if (type === "down") downvotes--
         } else if (prevVote) {
-  
           if (prevVote === "up") {
             upvotes--
             downvotes++
@@ -54,11 +43,9 @@ export default function BestToday({setShowAuthModal}) {
             upvotes++
           }
         } else {
-      
           if (type === "up") upvotes++
           if (type === "down") downvotes++
         }
-
         return {
           ...food,
           upvotes: Math.max(0, upvotes),
@@ -66,7 +53,6 @@ export default function BestToday({setShowAuthModal}) {
         }
       })
     )
-
     setUserVotes(prev => {
       if (prevVote === type) {
         const updated = { ...prev }
@@ -76,24 +62,17 @@ export default function BestToday({setShowAuthModal}) {
       return { ...prev, [id]: type }
     })
   }
-
-
   const filteredPlaces = foods.filter(place =>
     place.source.toLowerCase().includes(search.toLowerCase())
-    
   )
-
   return (
     <>
- 
       <input
         className="form-control bg-dark text-light border-secondary mb-3"
         placeholder="🔍 Search restaurant"
         value={search}
         onChange={e => setSearch(e.target.value)}
       />
-
- 
    <div className="row g-3">
   {filteredPlaces.length === 0 ? (
     <p className="text-light">No results found</p>
