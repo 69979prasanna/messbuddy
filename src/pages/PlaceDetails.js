@@ -5,63 +5,66 @@ import {
   removeFavorite,
   isFavorite,
 } from "../utils/favorites"
+
 import ReviewForm from "../components/ReviewForm"
 import ReviewList from "../components/ReviewList"
 
 const API = process.env.REACT_APP_APIKEY
 
 export default function PlaceDetails({ setShowAuthModal }) {
-
-  const { name } = useParams()
+  const { id } = useParams()
   const navigate = useNavigate()
-  const placeName = decodeURIComponent(name)
+
+  const [restaurant, setRestaurant] = useState(null)
   const [menus, setMenus] = useState([])
   const [loading, setLoading] = useState(true)
+
   const [favoriteIds, setFavoriteIds] = useState([])
+
   const [filter, setFilter] = useState("all")
   const [search, setSearch] = useState("")
 
   useEffect(() => {
-
     const favs =
       JSON.parse(localStorage.getItem("favorites")) || []
-    setFavoriteIds(favs.map(item => item.id))
+
+    setFavoriteIds(favs.map((item) => item.id))
   }, [])
 
   useEffect(() => {
-    const fetchMenus = async () => {
+    const fetchRestaurant = async () => {
       try {
         setLoading(true)
         const restaurantRes = await fetch(
-          `${API}/restaurants`
+          `${API}/restaurants/${id}`
         )
 
-        const restaurants = await restaurantRes.json()
-        const restaurant = restaurants.find(
-          r => r.name === placeName
-        )
-
-        if (!restaurant) {
-          setMenus([])
-          setLoading(false)
-          return
+        if (!restaurantRes.ok) {
+          throw new Error("Restaurant not found")
         }
+
+        const restaurantData =
+          await restaurantRes.json()
+        setRestaurant(restaurantData)
         const menuRes = await fetch(
-          `${API}/menus/restaurant/${restaurant._id}`
+          `${API}/menus/restaurant/${id}`
         )
-        const data = await menuRes.json()
-        setMenus(data)
+        if (!menuRes.ok) {
+          throw new Error("Couldn't load menu")
+        }
+        const menuData = await menuRes.json()
+        setMenus(menuData)
       } catch (err) {
         console.error(err)
       } finally {
         setLoading(false)
       }
     }
-    fetchMenus()
-  }, [placeName])
+
+    fetchRestaurant()
+  }, [id])
 
   const toggleFavourite = (item) => {
-
     const token = localStorage.getItem("token")
 
     if (!token) {
@@ -70,22 +73,25 @@ export default function PlaceDetails({ setShowAuthModal }) {
     }
 
     if (isFavorite(item._id)) {
+
       removeFavorite(item._id)
-      setFavoriteIds(prev =>
-        prev.filter(id => id !== item._id)
+
+      setFavoriteIds((prev) =>
+        prev.filter((favId) => favId !== item._id)
       )
+
     } else {
 
       addFavorite({
         id: item._id,
-        place: placeName,
+        place: restaurant?.name,
         dish: item.dish,
         price: item.price,
         rating: item.rating,
         image: item.image,
       })
 
-      setFavoriteIds(prev => [
+      setFavoriteIds((prev) => [
         ...prev,
         item._id,
       ])
@@ -94,11 +100,11 @@ export default function PlaceDetails({ setShowAuthModal }) {
 
   const filteredMenus = (
     filter === "top"
-      ? menus.filter(item => item.rating >= 4.3)
+      ? menus.filter((item) => item.rating >= 4.3)
       : filter === "cheap"
-      ? menus.filter(item => item.price <= 60)
+      ? menus.filter((item) => item.price <= 60)
       : menus
-  ).filter(item =>
+  ).filter((item) =>
     item.dish
       .toLowerCase()
       .includes(search.toLowerCase())
@@ -120,17 +126,13 @@ export default function PlaceDetails({ setShowAuthModal }) {
       >
         ← Back
       </button>
-
-      <div className="mb-3">
-
+      <div className="mb-4">
         <h2 className="fw-bold">
-          {placeName}
+          {restaurant?.name || "Loading..."}
         </h2>
-
         <p className="text-secondary mb-2">
           {menus.length} items · Avg price ₹{avgPrice.toFixed(0)}
         </p>
-
         <input
           type="text"
           className="form-control bg-dark text-light border-secondary mb-3"
@@ -138,9 +140,7 @@ export default function PlaceDetails({ setShowAuthModal }) {
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
-
-        <div className="d-flex gap-2">
-
+        <div className="d-flex gap-2 flex-wrap">
           <button
             className={`btn btn-sm ${
               filter === "all"
@@ -151,7 +151,6 @@ export default function PlaceDetails({ setShowAuthModal }) {
           >
             🍽 All
           </button>
-
           <button
             className={`btn btn-sm ${
               filter === "top"
@@ -162,7 +161,6 @@ export default function PlaceDetails({ setShowAuthModal }) {
           >
             ⭐ Top Rated
           </button>
-
           <button
             className={`btn btn-sm ${
               filter === "cheap"
@@ -171,17 +169,12 @@ export default function PlaceDetails({ setShowAuthModal }) {
             }`}
             onClick={() => setFilter("cheap")}
           >
-            💸 Cheap
+            💸 Budget
           </button>
-
         </div>
-
       </div>
-
       {loading ? (
-
         <div className="text-center py-5">
-
           <div
             className="spinner-border text-info"
             role="status"
@@ -190,120 +183,88 @@ export default function PlaceDetails({ setShowAuthModal }) {
               Loading...
             </span>
           </div>
-
           <p className="mt-3">
             Loading Menu...
           </p>
-
         </div>
-
+      ) : filteredMenus.length === 0 ? (
+        <div className="text-center mt-5">
+          <h3>🍽 No Menu Available</h3>
+          <p className="text-secondary">
+            This restaurant doesn't have any menu items yet.
+          </p>
+        </div>
       ) : (
         <div className="row g-3">
-
           {filteredMenus.map((item) => (
-
             <div
               className="col-md-4 col-sm-6"
               key={item._id}
             >
-
-              <div className="card bg-dark text-light h-100 shadow-sm position-relative">
-
-                <button
-                  className="btn position-absolute top-0 end-0 m-2"
-                  style={{
-                    border: "none",
-                    background: "transparent",
-                    fontSize: "1.4rem",
-                    zIndex: 2,
-                  }}
+              <div className="card bg-dark text-light shadow-sm h-100 position-relative">
+                <button className="btn position-absolute top-0 end-0 m-2" style={{ border: "none", background: "transparent", fontSize: "1.4rem", zIndex: 2}}
                   onClick={() => toggleFavourite(item)}
                 >
                   {favoriteIds.includes(item._id)
                     ? "❤️"
                     : "🤍"}
                 </button>
-
                 {item.image && (
-                  <img
-                    src={item.image}
-                    alt={item.dish}
-                    className="card-img-top"
-                    style={{
-                      height: "220px",
-                      objectFit: "cover",
-                    }}
+                  <img src={item.image} alt={item.dish} className="card-img-top" style={{   height: "220px",   objectFit: "cover"}}
                   />
                 )}
-
-                <div className="card-body">
-
-                  <h5 className="card-title fw-bold">
+                <div className="card-body d-flex flex-column">
+                  <h5 className="fw-bold">
                     {item.dish}
                   </h5>
-
-                  <p className="mb-2 text-secondary">
+                  <p className="text-secondary">
                     {item.description}
                   </p>
-
-                  <p className="mb-1">
+                  <p>
                     💰 ₹{item.price}
                   </p>
-
-                  <p className="mb-2">
+                  <p>
                     ⭐ {item.rating}
                   </p>
-
-                  {!item.isAvailable ? (
-
-                    <span className="badge bg-danger">
-                      Out of Stock
-                    </span>
-
-                  ) : (
-
-                    <span className="badge bg-success">
-                      Available
-                    </span>
-
-                  )}
-
-                  {item.price <= 60 && (
-                    <span className="badge bg-warning text-dark ms-2">
-                      💸 Budget
-                    </span>
-                  )}
-
-                  {item.rating >= 4.3 && (
-                    <span className="badge bg-info text-dark ms-2">
-                      ⭐ Top Pick
-                    </span>
-                  )}
+                  <div className="mb-3">
+                    {item.isAvailable ? (
+                      <span className="badge bg-success">
+                        Available
+                      </span>
+                    ) : (
+                      <span className="badge bg-danger">
+                        Out of Stock
+                      </span>
+                    )}
+                    {item.price <= 60 && (
+                      <span className="badge bg-warning text-dark ms-2">
+                        💸 Budget
+                      </span>
+                    )}
+                    {item.rating >= 4.3 && (
+                      <span className="badge bg-info text-dark ms-2">
+                        ⭐ Top Pick
+                      </span>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
           ))}
         </div>
-
       )}
-      {!loading && filteredMenus.length === 0 && (
-        <div className="text-center mt-5">
-
-          <h4>
-            🍽 No Menu Available
-          </h4>
-
-          <p className="text-secondary">
-            This restaurant doesn't have any menu items yet.
-          </p>
-        </div>
-      )}
-      <ReviewForm
-        place={placeName}
-        onReviewAdded={() => window.location.reload()}
-        setShowAuthModal={setShowAuthModal}
-      />
-      <ReviewList place={placeName} />
+      <div className="mt-5">
+        <ReviewForm
+          place={restaurant?.name}
+          onReviewAdded={() => window.location.reload()}
+          setShowAuthModal={setShowAuthModal}
+        />
+      </div>
+      <div className="mt-4">
+        <ReviewList
+          place={restaurant?.name}
+        />
+      </div>
     </div>
   )
 }

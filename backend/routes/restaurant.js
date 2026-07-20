@@ -63,7 +63,7 @@ router.post("/", async (req, res) => {
     tags,
     openingTime,
     closingTime,
-});
+})
 
     res.status(201).json(restaurant)
   } catch (err) {
