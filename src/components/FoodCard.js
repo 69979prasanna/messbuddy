@@ -6,11 +6,7 @@ import {
   isFavorite,
 } from "../utils/favorites"
 export default function FoodCard({
-  food,
-  onVote,
-  userVote,
-  setShowAuthModal,
-}) {
+  food, setShowAuthModal,}) {
   const navigate = useNavigate()
   const [fav, setFav] = useState(false)
   useEffect(() => {
@@ -77,145 +73,108 @@ export default function FoodCard({
   const openPlace = () => {
     navigate(`/place/${food._id}`)
   }
-  const handleUpvote = (e) => {
-    e.stopPropagation()
-    const token = localStorage.getItem("token")
-    if (!token) {
-      setShowAuthModal(true)
-      return
-    }
-    onVote?.(food._id, "up")
-  }
-  const handleDownvote = (e) => {
-    e.stopPropagation()
-    const token = localStorage.getItem("token")
-    if (!token) {
-      setShowAuthModal(true)
-      return
-    }
-    onVote?.(food._id, "down")
-  }
   if (!food) return null
     return (
-    <div
-      className="card bg-dark text-light shadow-sm h-100 position-relative"
-      style={{
-        cursor: "pointer",
-        borderRadius: "12px",
-      }}
-      onClick={openPlace}
-    >
+  <div
+    className="card bg-dark text-light shadow food-card border-0"
+    style={{
+      cursor: "pointer",
+      borderRadius: "16px",
+      overflow: "hidden",
+      transition: "0.25s",
+    }}
+    onClick={openPlace}
+  >
+    <div className="position-relative">
+
+      <img
+        src={food.image}
+        alt={food.name}
+        className="w-100"
+        style={{
+          height: "190px",
+          objectFit: "cover",
+        }}
+      />
+
       <button
         onClick={toggleFavorite}
-        className="btn position-absolute top-0 end-0 m-2"
+        className="btn position-absolute top-0 end-0 m-2 p-0"
         style={{
-          fontSize: "1.4rem",
-          border: "none",
           background: "transparent",
-          zIndex: 10,
+          border: "none",
+          fontSize: "1.5rem",
         }}
       >
         {fav ? "❤️" : "🤍"}
       </button>
 
-      {food.image && (
-        <img
-          src={food.image}
-          alt={food.name}
-          className="card-img-top"
-          style={{
-            height: "220px",
-            objectFit: "cover",
-          }}
-        />
-      )}
+      <div
+        className="position-absolute bottom-0 start-0 w-100 px-3 py-2"
+        style={{
+          background:
+            "linear-gradient(transparent, rgba(0,0,0,.88))",
+        }}
+      >
+        <div className="d-flex justify-content-between align-items-center">
 
-      <div className="card-body d-flex flex-column">
+          <h5 className="text-white fw-bold mb-0">
+            {food.name}
+          </h5>
 
-        <h5 className="fw-bold">
-          {food.name}
-        </h5>
-
-        <h6 className="text-info">
-          🍽 {food.featuredDish}
-        </h6>
-
-        <p className="mb-2">
-          💰 ₹{food.featuredPrice}
-        </p>
-
-        <div className="mb-2">
-
-          {!open && (
-            <span className="badge bg-danger">
-              🔴 Closed
-            </span>
-          )}
-
-          {open && !closingSoon && (
-            <span className="badge bg-success">
-              🟢 Open
-            </span>
-          )}
-
-          {closingSoon && (
-            <span className="badge bg-warning text-dark">
-              ⚠️ Closing Soon
-            </span>
-          )}
-
+          <span className="badge bg-success fs-6">
+            ⭐ {(food.averageRating ?? 0).toFixed(1)}
+          </span>
         </div>
-
-        <p className="mb-2">
-          ⭐ {(food.averageRating ?? 0).toFixed(1)}
-        </p>
-
-        {food.tags?.length > 0 && (
-          <div className="mb-3">
-
-            {food.tags.map((tag) => (
-              <span
-                key={tag}
-                className="badge bg-secondary me-1"
-              >
-                {tag}
-              </span>
-            ))}
-
-          </div>
-        )}
-
-        {onVote && (
-          <div className="d-flex gap-2 mt-auto">
-
-            <button
-              className={`btn btn-sm ${
-                userVote === "up"
-                  ? "btn-success"
-                  : "btn-outline-light"
-              }`}
-              onClick={handleUpvote}
-            >
-              👍 {food.upvotes ?? 0}
-            </button>
-            <button
-              className={`btn btn-sm ${
-                userVote === "down"
-                  ? "btn-danger"
-                  : "btn-outline-light"
-              }`}
-              onClick={handleDownvote}
-            >
-              👎 {food.downvotes ?? 0}
-            </button>
-          </div>
-        )}
-        {(food.downvotes ?? 0) >= 3 && (
-          <div className="alert alert-danger mt-3 py-2 mb-0">
-            ⚠️ Not recommended today
-          </div>
-        )}
       </div>
     </div>
-  )
+
+    <div className="card-body">
+
+      <div className="d-flex justify-content-between align-items-center mb-3">
+
+        <span className="text-info">
+          🍽 {food.featuredDish}
+        </span>
+
+        <span
+          className="fw-bold text-warning"
+          style={{ fontSize: "1.15rem" }}
+        >
+          ₹{food.featuredPrice}
+        </span>
+
+      </div>
+
+      <div className="mb-3">
+
+        {!open && (
+          <span className="badge rounded-pill bg-danger px-3 py-2">
+            🔴 Closed
+          </span>
+        )}
+        {open && !closingSoon && (
+          <span className="badge rounded-pill bg-success px-3 py-2">
+            🟢 Open
+          </span>
+        )}
+        {closingSoon && (
+          <span className="badge rounded-pill bg-warning text-dark px-3 py-2">
+            ⚠️ Closing Soon
+          </span>
+        )}
+      </div>
+      {food.tags?.length > 0 && (
+        <div className="d-flex flex-wrap gap-2">
+
+          {food.tags.map((tag) => (
+            <span key={tag} className="badge rounded-pill bg-secondary">
+              {tag}
+            </span>
+          ))}
+        </div>
+      )}
+    </div>
+  </div>
+)
 }

@@ -1,0 +1,82 @@
+.restaurant-hero{
+    border-radius:24px;
+    overflow:hidden;
+    box-shadow:0 20px 45px rgba(0,0,0,.35);
+}
+
+.input-group-text{
+    border-radius:14px 0 0 14px !important;
+}
+
+.form-control{
+    border-radius:0 14px 14px 0 !important;
+}
+
+.form-control:focus{
+    box-shadow:none;
+    border-color:#ffc107;
+}
+
+.btn.rounded-pill{
+    transition:.25s;
+}
+
+.btn.rounded-pill:hover{
+    transform:translateY(-2px);
+}
+
+.menu-card{
+    border-radius:18px;
+    overflow:hidden;
+    background:#1c1c1c;
+    transition:.3s ease;
+    cursor:pointer;
+}
+
+.menu-card:hover{
+    transform:translateY(-10px);
+    box-shadow: 0 18px 45px rgba(0,0,0,.45);
+}
+
+.menu-card img{
+    transition:.45s ease;
+}
+
+.menu-card:hover img{
+    transform:scale(1.08);
+}
+
+.menu-card button{
+    transition:.25s;
+}
+
+.menu-card button:hover{
+    transform:scale(1.25);
+}
+
+.menu-card h4{
+    color:#FFC107;
+}
+
+.badge{
+    font-weight:500;
+    letter-spacing:.3px;
+}
+
+.menu-card p{
+    font-size:.93rem;
+    line-height:1.5;
+}
+
+::-webkit-scrollbar{
+ width:8px;
+}
+
+::-webkit-scrollbar-thumb{
+    background:#555;
+    border-radius:20px;
+}
+
+::-webkit-scrollbar-thumb:hover{
+    background:#888;
+}
