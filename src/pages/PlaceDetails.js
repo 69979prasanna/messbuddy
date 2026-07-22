@@ -6,8 +6,8 @@ import {
   isFavorite,
 } from "../utils/favorites"
 import "../styles/PlaceDetails.css"
-import ReviewForm from "../components/ReviewForm"
-import ReviewList from "../components/ReviewList"
+import ReviewForm from "../components/restaurantDetails/ReviewForm"
+import ReviewList from "../components/restaurantDetails/ReviewList"
 
 const API = process.env.REACT_APP_APIKEY
 

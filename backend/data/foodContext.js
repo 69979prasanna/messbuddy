@@ -1,11 +1,39 @@
-import { menuData } from "../../src/data/menuData.js";
-const groupMenu = menuData.reduce((acc, item) => {
-    if(!acc[item.place]) acc[item.place] = []
-    acc[item.place].push(item)
-    return acc
-}, {})
+import Menu from "../models/Menu.js"
 
-export const foodContext = `
+export const getFoodContext = async () => {
+  const menus = await Menu.find().populate(
+    "restaurant",
+    "name"
+  )
+
+ const grouped = menus.reduce((acc, item) => {
+  if (!item.restaurant) return acc; // Skip invalid menus
+
+  const place = item.restaurant.name;
+
+  if (!acc[place]) {
+    acc[place] = [];
+  }
+
+  acc[place].push(item);
+
+  return acc;
+}, {});
+
+  return `
 Available food options today:
 
-${Object.entries(groupMenu).map(([place, foods]) => `${place}:${foods.map(food => `- ${food.dish} (₹${food.price}, rating ${food.rating})`).join("\n")}`).join("\n")}`;
+${Object.entries(grouped)
+  .map(
+    ([place, foods]) => `
+${place}:
+${foods
+  .map(
+    (food) =>
+      `- ${food.dish} (₹${food.price})`
+  )
+  .join("\n")}`
+  )
+  .join("\n")}
+`
+}

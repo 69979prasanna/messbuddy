@@ -1,5 +1,5 @@
 import { useState } from "react"
-import "../App.css"
+import "../../App.css"
 
 export default function AuthModal({ onClose }) {
   const [isLogin, setIsLogin] = useState(true)
@@ -11,9 +11,7 @@ const handleSubmit = async (e) => {
   e.preventDefault()
   const api = process.env.REACT_APP_AUTH
   try {
-    const endpoint = isLogin
-      ? `${api}/login`
-      : `${api}/signup`
+    const endpoint = isLogin ? `${api}/login` : `${api}/signup`
 
     const body = isLogin
       ? {

@@ -4,7 +4,7 @@ import {
   addFavorite,
   removeFavorite,
   isFavorite,
-} from "../utils/favorites"
+} from "../../utils/favorites"
 export default function FoodCard({
   food, setShowAuthModal,}) {
   const navigate = useNavigate()
