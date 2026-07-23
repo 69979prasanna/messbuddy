@@ -14,14 +14,15 @@ import ManageRestaurants from "./pages/admin/ManageRestaurants"
 import MenuManager from "./pages/admin/MenuManager"
 import FeedbackManager from "./pages/admin/FeedbackManager"
 import EditRestaurant from "./pages/admin/EditRestaurant"
+import ManageMenus from "./pages/admin/ManageMenus"
 export default function App() {
   const [showAuthModal, setShowAuthModal] = useState(false)
-
   return (
     <>
       <Navbar setShowAuthModal={setShowAuthModal}/>
       <div className="app">
         <Routes>
+          <Route path="/admin/manage-menus" element={<ManageMenus />} />
           <Route path="/admin/restaurants/edit/:id" element={<EditRestaurant />}/>
           <Route path="/admin" element={<Dashboard />} />
           <Route path="/admin/restaurants/new"element={<AddRestaurant />}/>
@@ -34,9 +35,7 @@ export default function App() {
           <Route path="/place/:id" element={<PlaceDetails setShowAuthModal={setShowAuthModal}/>} />
           <Route path="/favorites" element={<Favorites setShowAuthModal={setShowAuthModal}  />} />
         </Routes>
-
         <AIChat />
-
         {showAuthModal && (
           <AuthModal onClose={() => setShowAuthModal(false)} />
         )}

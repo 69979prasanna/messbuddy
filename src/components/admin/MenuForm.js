@@ -1,11 +1,9 @@
-import { useState } from "react";
-
+import { useState } from "react"
 export default function MenuForm({
   restaurants = [],
   onSubmit,
   loading = false,
 }) {
-
   const [formData, setFormData] = useState({
     restaurant: "",
     dish: "",
@@ -15,20 +13,16 @@ export default function MenuForm({
     description: "",
     isAvailable: true,
     image: null,
-  });
-
+  })
   const handleChange = (e) => {
-
-    const { name, value, files, type } = e.target;
-
+    const { name, value, files, type } = e.target
     if (type === "file") {
-
       setFormData(prev => ({
         ...prev,
         image: files[0],
-      }));
+      }))
 
-      return;
+      return
     }
 
     if (name === "isAvailable") {
@@ -36,24 +30,24 @@ export default function MenuForm({
       setFormData(prev => ({
         ...prev,
         isAvailable: value === "true",
-      }));
+      }))
 
-      return;
+      return
     }
 
     setFormData(prev => ({
       ...prev,
       [name]: value,
-    }));
-  };
+    }))
+  }
 
   const handleSubmit = (e) => {
 
-    e.preventDefault();
+    e.preventDefault()
 
-    onSubmit(formData);
+    onSubmit(formData)
 
-  };
+  }
 
   return (
 
@@ -218,26 +212,19 @@ export default function MenuForm({
             />
 
           </div>
-
-          {/* Availability */}
-
           <div className="mb-3">
-
             <label className="form-label">
               Availability
             </label>
-
             <select
               className="form-select bg-dark text-light border-secondary"
               name="isAvailable"
               value={String(formData.isAvailable)}
               onChange={handleChange}
             >
-
               <option value="true">
                 Available
               </option>
-
               <option value="false">
                 Out of Stock
               </option>
@@ -246,14 +233,10 @@ export default function MenuForm({
 
           </div>
 
-          {/* Image */}
-
           <div className="mb-4">
-
             <label className="form-label">
               Dish Image
             </label>
-
             <input
               type="file"
               accept="image/*"
@@ -261,9 +244,7 @@ export default function MenuForm({
               name="image"
               onChange={handleChange}
             />
-
           </div>
-
           <button
             type="submit"
             className="btn btn-primary w-100 fw-bold"
@@ -271,13 +252,8 @@ export default function MenuForm({
           >
             {loading ? "Saving..." : "🍽 Save Menu Item"}
           </button>
-
         </form>
-
       </div>
-
     </div>
-
-  );
-
+  )
 }
