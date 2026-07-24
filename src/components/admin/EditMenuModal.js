@@ -1,14 +1,17 @@
-import { useEffect, useState } from "react"
-import axios from "axios"
+import { useEffect, useState } from "react";
+import axios from "axios";
+import "../../styles/EditMenuModal.css";
 
-const API = process.env.REACT_APP_APIKEY
+const API = process.env.REACT_APP_APIKEY;
 export default function EditMenuModal({
   show,
-  onClose,
   menu,
   restaurants,
+  onClose,
   refreshMenus,
 }) {
+  const [saving, setSaving] = useState(false);
+  const [uploading, setUploading] = useState(false);
   const [formData, setFormData] = useState({
     restaurant: "",
     dish: "",
@@ -19,7 +22,6 @@ export default function EditMenuModal({
     rating: 0,
     isAvailable: true,
   })
-  const [saving, setSaving] = useState(false)
   useEffect(() => {
     if (menu) {
       setFormData({
@@ -34,8 +36,9 @@ export default function EditMenuModal({
       })
     }
   }, [menu])
+  if (!show) return null;
   const handleChange = (e) => {
-    const { name, value, type, checked } = e.target
+    const { name, value, checked, type } = e.target;
     setFormData((prev) => ({
       ...prev,
       [name]:
@@ -44,113 +47,149 @@ export default function EditMenuModal({
           : value,
     }))
   }
-  const handleSubmit = async (e) => {
-    e.preventDefault()
+  const handleImageUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
     try {
-      setSaving(true)
+      setUploading(true);
+      const imageData = new FormData();
+      imageData.append("image", file);
+      const res = await fetch(`${API}/upload`, {
+        method: "POST",
+        body: imageData,
+      })
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.message || "Upload failed");
+      }
+      setFormData((prev) => ({
+        ...prev,
+        image: data.imageUrl,
+      }))
+    } catch (err) {
+      console.error(err);
+      alert("Image upload failed.");
+    } finally {
+      setUploading(false);
+    }
+  }
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      setSaving(true);
+
       await axios.put(
         `${API}/menus/${menu._id}`,
         formData
-      )
-      alert("✅ Menu updated successfully")
-      refreshMenus()
-      onClose()
+      );
+
+      refreshMenus();
+      onClose();
+
     } catch (err) {
-      if (err.response?.data?.message) {
-        alert(err.response.data.message)
-      } else {
-        alert("Unable to update menu.")
-      }
+      alert(
+        err.response?.data?.message ||
+        "Unable to update menu."
+      );
     } finally {
-      setSaving(false)
+      setSaving(false);
     }
   }
-  if (!show) return null
   return (
-    <div
-      className="modal d-block"
-      style={{
-        background:
-          "rgba(0,0,0,.55)",
-      }}
-    >
-      <div className="modal-dialog modal-lg modal-dialog-centered">
-        <div className="modal-content">
-          <div className="modal-header">
-            <h4>Edit Menu</h4>
-            <button
-              className="btn-close"
-              onClick={onClose}
-            />
+    <div className="edit-overlay">
+      <div className="edit-modal">
+        <div className="edit-header">
+          <div>
+            <h2>🍽 Edit Menu Item</h2>
+            <p>
+              Update menu details for your restaurant
+            </p>
           </div>
-          <form onSubmit={handleSubmit}>
-            <div className="modal-body">
-              <div className="mb-3">
-                <label className="form-label">
-                  Restaurant
-                </label>
-                <select className="form-select" name="restaurant" value={formData.restaurant} onChange={handleChange} required >
-                  {restaurants.map((restaurant) => (
-                    <option key={restaurant._id} value={restaurant._id}>
-                      {restaurant.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <div className="mb-3">
-                <label className="form-label">
-                  Dish
-                </label>
-                <input className="form-control" name="dish" value={formData.dish} onChange={handleChange} required/>
-              </div>
-              <div className="mb-3">
-                <label className="form-label">
+          <button
+            className="close-btn"
+            onClick={onClose}
+          >
+            ✕
+          </button>
+        </div>
+        <form onSubmit={handleSubmit} className="edit-body">
+          <div className="image-section">
+            <img src={formData.image || "https://placehold.co/500x350?text=Food+Image"} alt="Preview" className="preview-image" />
+            <label className="upload-btn">
+              {uploading ? "Uploading..." : "📷 Choose Image"}
+              <input type="file" hidden accept="image/*" onChange={handleImageUpload} />
+            </label>
+            {formData.image && (
+              <small className="upload-success">
+                ✅ Image uploaded
+              </small>
+            )}
+          </div>
+          <div className="form-section">
+            <div className="input-group">
+              <label>
+                Dish Name
+              </label>
+              <input type="text" name="dish" value={formData.dish} onChange={handleChange} required />
+            </div>
+            <div className="input-group">
+              <label>
+                Restaurant
+              </label>
+              <select name="restaurant" value={formData.restaurant} onChange={handleChange}>
+                {restaurants.map((r) => (
+                  <option key={r._id} value={r._id}>
+                    {r.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="triple-grid">
+              <div className="input-group">
+                <label>
                   Category
                 </label>
-                <input className="form-control" name="category" value={formData.category} onChange={handleChange} required />
+                <input name="category" value={formData.category} onChange={handleChange} />
               </div>
-              <div className="mb-3">
-                <label className="form-label">
+              <div className="input-group">
+                <label>
                   Price
                 </label>
-                <input type="number" className="form-control" name="price" value={formData.price} onChange={handleChange} required />
+                <input type="number" name="price" value={formData.price} onChange={handleChange} />
               </div>
-              <div className="mb-3">
-                <label className="form-label">
-                  Description
-                </label>
-                <textarea rows="3" className="form-control" name="description" value={formData.description} onChange={handleChange}/>
-              </div>
-              <div className="mb-3">
-                <label className="form-label">
-                  Image URL
-                </label>
-                <input className="form-control" name="image" value={formData.image} onChange={handleChange}/>
-              </div>
-              <div className="mb-3">
-                <label className="form-label">
+              <div className="input-group">
+                <label>
                   Rating
                 </label>
-                <input type="number" min="0" max="5" step="0.1" className="form-control" name="rating" value={formData.rating} onChange={handleChange}/>
-              </div>
-              <div className="form-check">
-                <input className="form-check-input" type="checkbox" name="isAvailable" checked={ formData.isAvailable}
-                  onChange={handleChange}/>
-                <label className="form-check-label">
-                  Available
-                </label>
+                <input type="number" step="0.1" min="0" max="5" name="rating" value={formData.rating} onChange={handleChange} />
               </div>
             </div>
-            <div className="modal-footer">
-              <button type="button" className="btn btn-secondary" onClick={onClose} >
+            <div className="input-group">
+              <label>
+                Description
+              </label>
+              <textarea rows={5} name="description" value={formData.description} onChange={handleChange} />
+            </div>
+            <div className="availability">
+              <label className="switch">
+                <input type="checkbox" name="isAvailable" checked={formData.isAvailable} onChange={handleChange} />
+                <span className="slider"></span>
+              </label>
+              <span>
+                Available
+              </span>
+            </div>
+            <div className="button-row">
+              <button type="button" className="cancel-btn" onClick={onClose}>
                 Cancel
               </button>
-              <button className="btn btn-success" disabled={saving}>
-                {saving ? "Saving..." : "Save Changes"}
+              <button type="submit" className="save-btn">
+                {saving ? "Saving..." : "💾 Save Changes"}
               </button>
             </div>
-          </form>
-        </div>
+          </div>
+        </form>
       </div>
     </div>
   )

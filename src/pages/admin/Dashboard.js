@@ -17,19 +17,19 @@ export default function Dashboard() {
     fetchDashboard();
   }, [])
 
-const fetchDashboard = async () => {
+  const fetchDashboard = async () => {
 
     try {
-        const res = await fetch(`${API}/admin/dashboard`);
-        const data = await res.json();
-        setStats(data);
+      const res = await fetch(`${API}/admin/dashboard`);
+      const data = await res.json();
+      setStats(data);
     }
-    catch(err){
-        console.log(err);
+    catch (err) {
+      console.log(err);
 
     }
 
-}
+  }
 
   return (
     <div className="container py-5 text-light">
@@ -92,15 +92,17 @@ const fetchDashboard = async () => {
           icon="📋"
           path="/admin/menu"
         />
-
         <ActionCard
           title="Feedback"
           icon="💬"
           path="/admin/feedback"
         />
-
+        <ActionCard
+          title="Manage Menus"
+          icon="🍔"
+          path="/admin/manage-menus"
+        />
       </div>
-
     </div>
   );
 }

@@ -13,20 +13,20 @@ export default function MenuCard({
         style={{  height: "220px", objectFit: "cover",}}/>
       <div className="card-body d-flex flex-column">
         <div className="d-flex justify-content-between align-items-start">
-          <h5 className="fw-bold mb-0">
+          <h5 className="fw-bold mb-0 text-white">
             {menu.dish}
           </h5>
           <span className={`badge ${ menu.isAvailable ? "bg-success" :"bg-danger"}`}>
             {menu.isAvailable ? "Available" : "Out of Stock"}
           </span>
         </div>
-        <small className="text-muted mt-2">
+        <small className="text-light mt-2">
           {menu.restaurant?.name}
         </small>
         <span className="badge bg-warning text-dark mt-3 align-self-start">
           {menu.category}
         </span>
-        <p className="text-muted mt-3 mb-3"
+        <p className="text-light mt-3 mb-3"
           style={{ minHeight: "50px" }}>
           {menu.description || "No description"}
         </p>
@@ -35,11 +35,11 @@ export default function MenuCard({
             ₹{menu.price}
           </h4>
           <div>
-            <button className="btn btn-outline-primary btn-sm me-2"
+            <button className="btn btn-outline-primary btn me-2"
               onClick={() => onEdit(menu)}>
               ✏ Edit
             </button>
-            <button className="btn btn-outline-danger btn-sm" onClick={() =>
+            <button className="btn btn-outline-danger btn" onClick={() =>
                 onDelete(menu._id)}
             >
               🗑 Delete

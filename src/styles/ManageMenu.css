@@ -1,0 +1,24 @@
+.menu-search,
+.menu-filter {
+    width: 100%;
+    background: #1d2942;
+    color: white;
+    border: 2px solid transparent;
+    border-radius: 14px;
+    padding: 14px 18px;
+    outline: none;
+    transition: .3s;
+}
+.menu-search::placeholder{
+    color:#94a3b8;
+}
+.menu-search:focus,
+.menu-filter:focus{
+    border-color:#3b82f6;
+    box-shadow:0 0 0 4px rgba(59,130,246,.2);
+}
+.menu-filter option{
+    background:#1d2942;
+    color:white;
+
+}

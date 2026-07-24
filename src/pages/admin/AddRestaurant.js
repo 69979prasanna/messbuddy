@@ -7,8 +7,6 @@ export default function AddRestaurant() {
   const handleSubmit = async (formData) => {
 
     try {
-
-      // Upload image to Supabase
       const imageData = new FormData();
       imageData.append("image", formData.image);
 

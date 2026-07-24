@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react"
 import axios from "axios"
 import MenuCard from "../../components/admin/MenuCard"
 import EditMenuModal from "../../components/admin/EditMenuModal"
+import "../../styles/ManageMenu.css"
 const API = process.env.REACT_APP_APIKEY
 export default function ManageMenus() {
   const [menus, setMenus] = useState([])
@@ -91,30 +92,34 @@ export default function ManageMenus() {
 
       </div>
       <div className="row mb-4">
-        <div className="col-md-6">
-          <input type="text" className="form-control" placeholder="Search menu..." value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
-        </div>
-        <div className="col-md-4">
-          <select className="form-select" value={selectedRestaurant} onChange={(e) =>
-              setSelectedRestaurant(
-                e.target.value
-              )}>
-            <option value="all">
-              All Restaurants
-            </option>
-            {restaurants.map((r) => (
-              <option
-                key={r._id}
-                value={r._id}
-              >
-                {r.name}
-              </option>
-            ))}
-          </select>
-        </div>
-      </div>
+
+  <div className="col-md-8 mb-3">
+    <input
+      type="text"
+      className="menu-search"
+      placeholder="Search menu..."
+      value={search}
+      onChange={(e) => setSearch(e.target.value)}
+    />
+  </div>
+
+  <div className="col-md-4 mb-3">
+    <select
+      className="menu-filter"
+      value={selectedRestaurant}
+      onChange={(e) => setSelectedRestaurant(e.target.value)}
+    >
+      <option value="all">All Restaurants</option>
+
+      {restaurants.map((r) => (
+        <option key={r._id} value={r._id}>
+          {r.name}
+        </option>
+      ))}
+    </select>
+  </div>
+
+</div>
       {loading ? (
         <div className="text-center">
           Loading...
@@ -129,7 +134,7 @@ export default function ManageMenus() {
           ) : (
             filteredMenus.map((menu) => (
               <div
-                className="col-lg-4 col-md-6 mb-4"
+                className="col-xl-6 col-lg-6 col-md-12 mb-4"
                 key={menu._id}
               >
                 <MenuCard menu={menu} onEdit={handleEdit} onDelete={handleDelete}/>
