@@ -133,10 +133,7 @@ export default function ManageMenus() {
             </div>
           ) : (
             filteredMenus.map((menu) => (
-              <div
-                className="col-xl-6 col-lg-6 col-md-12 mb-4"
-                key={menu._id}
-              >
+              <div className="col-xl-4 col-lg-6 col-md-6 mb-3" key={menu._id}>
                 <MenuCard menu={menu} onEdit={handleEdit} onDelete={handleDelete}/>
               </div>
             ))

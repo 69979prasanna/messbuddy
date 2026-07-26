@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import FeedbackCard from "../../components/admin/FeedbackCard"
-
+import "../../styles/FeedbackManager.css"
 const API = process.env.REACT_APP_APIKEY
 
 export default function FeedbackManager() {

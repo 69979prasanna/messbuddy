@@ -6,7 +6,7 @@ import {
   isFavorite,
 } from "../../utils/favorites"
 export default function FoodCard({
-  food, setShowAuthModal,}) {
+  food, setShowAuthModal, }) {
   const navigate = useNavigate()
   const [fav, setFav] = useState(false)
   useEffect(() => {
@@ -74,107 +74,92 @@ export default function FoodCard({
     navigate(`/place/${food._id}`)
   }
   if (!food) return null
-    return (
-  <div
-    className="card bg-dark text-light shadow food-card border-0"
-    style={{
-      cursor: "pointer",
-      borderRadius: "16px",
-      overflow: "hidden",
-      transition: "0.25s",
-    }}
-    onClick={openPlace}
-  >
-    <div className="position-relative">
+  return (
+    <div className="card bg-dark text-light shadow food-card border-0" style={{ cursor: "pointer",  borderRadius: "16px", overflow: "hidden", transition: "0.25s", }}  onClick={openPlace}>
+      <div className="position-relative">
 
-      <img
-        src={food.image}
-        alt={food.name}
-        className="w-100"
-        style={{
-          height: "190px",
-          objectFit: "cover",
-        }}
-      />
+        <img src={food.image} alt={food.name} className="w-100" style={{ height: "190px", objectFit: "cover",}}/>
+        <button
+          onClick={toggleFavorite}
+          className="btn position-absolute top-0 end-0 m-2 p-0"
+          style={{
+            background: "transparent",
+            border: "none",
+            fontSize: "1.5rem",
+          }}>
+          {fav ? "❤️" : "🤍"}
+        </button>
 
-      <button
-        onClick={toggleFavorite}
-        className="btn position-absolute top-0 end-0 m-2 p-0"
-        style={{
-          background: "transparent",
-          border: "none",
-          fontSize: "1.5rem",
-        }}
-      >
-        {fav ? "❤️" : "🤍"}
-      </button>
-
-      <div
-        className="position-absolute bottom-0 start-0 w-100 px-3 py-2"
-        style={{
-          background:
-            "linear-gradient(transparent, rgba(0,0,0,.88))",
-        }}
-      >
-        <div className="d-flex justify-content-between align-items-center">
-
-          <h5 className="text-white fw-bold mb-0">
-            {food.name}
-          </h5>
-
-          <span className="badge bg-success fs-6">
-            ⭐ {(food.averageRating ?? 0).toFixed(1)}
-          </span>
+        <div
+          className="position-absolute bottom-0 start-0 w-100 px-3 py-2"
+          style={{
+            background:
+              "linear-gradient(transparent, rgba(0,0,0,.88))",
+          }}>
+          <div className="d-flex justify-content-between align-items-center">
+            <h5 className="text-white fw-bold mb-0">
+              {food.name}
+            </h5>
+            <div className="food-rating">
+              {food.totalReviews > 0 ? (
+                <>
+                  ⭐ {food.averageRating}
+                  <span>({food.totalReviews})</span>
+                </>
+              ) : (
+                "New"
+              )}
+            </div>
+          </div>
         </div>
       </div>
-    </div>
 
-    <div className="card-body">
+      <div className="card-body">
 
-      <div className="d-flex justify-content-between align-items-center mb-3">
+        <div className="d-flex justify-content-between align-items-center mb-3">
 
-        <span className="text-info">
-          🍽 {food.featuredDish}
-        </span>
-
-        <span
-          className="fw-bold text-warning"
-          style={{ fontSize: "1.15rem" }}
-        >
-          ₹{food.featuredPrice}
-        </span>
-
-      </div>
-
-      <div className="mb-3">
-
-        {!open && (
-          <span className="badge rounded-pill bg-danger px-3 py-2">
-            🔴 Closed
+          <span className="text-info">
+            🍽 {food.featuredDish}
           </span>
-        )}
-        {open && !closingSoon && (
-          <span className="badge rounded-pill bg-success px-3 py-2">
-            🟢 Open
-          </span>
-        )}
-        {closingSoon && (
-          <span className="badge rounded-pill bg-warning text-dark px-3 py-2">
-            ⚠️ Closing Soon
-          </span>
-        )}
-      </div>
-      {food.tags?.length > 0 && (
-        <div className="d-flex flex-wrap gap-2">
 
-          {food.tags.map((tag) => (
-            <span key={tag} className="badge rounded-pill bg-secondary">
-              {tag}
+          <span
+            className="fw-bold text-warning"
+            style={{ fontSize: "1.15rem" }}
+          >
+            ₹{food.featuredPrice}
+          </span>
+
+        </div>
+
+        <div className="mb-3">
+
+          {!open && (
+            <span className="badge rounded-pill bg-danger px-3 py-2">
+              🔴 Closed
             </span>
-          ))}
+          )}
+          {open && !closingSoon && (
+            <span className="badge rounded-pill bg-success px-3 py-2">
+              🟢 Open
+            </span>
+          )}
+          {closingSoon && (
+            <span className="badge rounded-pill bg-warning text-dark px-3 py-2">
+              ⚠️ Closing Soon
+            </span>
+          )}
         </div>
-      )}
+        {food.tags?.length > 0 && (
+          <div className="d-flex flex-wrap gap-2">
+
+            {food.tags.map((tag) => (
+              <span key={tag} className="badge rounded-pill bg-secondary">
+                {tag}
+              </span>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
-  </div>
-)
+  )
 }

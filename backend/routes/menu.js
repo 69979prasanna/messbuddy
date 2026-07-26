@@ -1,16 +1,38 @@
 import express from "express"
 import Menu from "../models/Menu.js"
-
+import Review from "../models/Review.js"
 const router = express.Router()
 
 router.get("/", async (req, res) => {
   try {
+
     const menus = await Menu.find().populate(
       "restaurant",
       "name"
     )
-
-    res.json(menus)
+    const menusWithRatings = await Promise.all(
+      menus.map(async (menu) => {
+        const reviews = await Review.find({
+          place: menu.restaurant.name,
+        })
+        const totalReviews = reviews.length
+        const averageRating =
+          totalReviews > 0
+            ? (
+                reviews.reduce(
+                  (sum, review) => sum + review.rating,
+                  0
+                ) / totalReviews
+              ).toFixed(1)
+            : "0.0"
+        return {
+          ...menu.toObject(),
+          averageRating,
+          totalReviews,
+        }
+      })
+    )
+    res.json(menusWithRatings)
   } catch (err) {
     res.status(500).json({
       message: err.message,
