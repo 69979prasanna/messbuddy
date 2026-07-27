@@ -59,11 +59,11 @@ export default function FeedbackManager() {
   )
   return (
 
-    <div className="container py-5">
+    <div className="container py-4">
       <h1 className="text-white fw-bold mb-4">
         ⭐ Feedback Manager
       </h1>
-      <input className="menu-search mb-4" placeholder="Search reviews..." value={search} onChange={(e) => setSearch(e.target.value)} />
+      <input className="menu-search mb-3" placeholder="Search reviews..." value={search} onChange={(e) => setSearch(e.target.value)} />
       {loading ? (
         <h4 className="text-white">
           Loading...

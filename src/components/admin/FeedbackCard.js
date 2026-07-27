@@ -1,6 +1,5 @@
 import {
     FaTrash,
-    FaUser,
     FaEnvelope,
     FaCalendarAlt,
     FaStar,
@@ -28,7 +27,7 @@ export default function FeedbackCard({
         }
     }
     return (
-        <div className="col-lg-6">
+        <div className="col-lg-6" style={{maxWidth:"380px", padding:"8px"}}>
             <div className="feedback-card">
                 <div className="feedback-card-header">
                     <div className="feedback-stars">
@@ -43,7 +42,7 @@ export default function FeedbackCard({
                 <div className="feedback-user">
 
                     <div className="feedback-avatar">
-                        {(feedback.name || "A").charAt(0).toUpperCase()}
+                       {(feedback.name || "A").charAt(0).toUpperCase()}
                     </div>
 
                     <span>{feedback.name || "Anonymous"}</span>
