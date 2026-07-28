@@ -46,6 +46,7 @@ export default function PlaceDetails({ setShowAuthModal }) {
         const restaurantData =
           await restaurantRes.json()
         setRestaurant(restaurantData)
+        console.log(restaurantData)
         const menuRes = await fetch(
           `${API}/menus/restaurant/${id}`
         )
@@ -105,26 +106,28 @@ export default function PlaceDetails({ setShowAuthModal }) {
       .includes(search.toLowerCase())
   )
 
-  const avgPrice =
-    menus.length > 0
-      ? menus.reduce(
-        (sum, item) => sum + item.price,
-        0
-      ) / menus.length
-      : 0
+  const avgPrice = menus.length > 0
+    ? menus.reduce(
+      (sum, item) => sum + item.price,
+      0
+    ) / menus.length
+    : 0
+  if (loading || !restaurant) {
+    return (
+      <div className="container py-5 text-center text-light">
+        <div className="spinner-border text-warning" />
+        <p className="mt-3">Loading restaurant...</p>
+      </div>
+    )
+  }
   return (
     <div className="container py-4 text-light">
       <button className="btn btn-outline-light rounded-pill px-4 mb-4" onClick={() => navigate(-1)}>
         ← Back
       </button>
-      <div className="position-relative overflow-hidden rounded-4 shadow-lg mb-4" style={{ height: "300px", backgroundImage: `url(${restaurant.image})`, backgroundSize: "cover", backgroundPosition: "center" }}>
-        <div
-          className="position-absolute top-0 start-0 w-100 h-100"
-          style={{
-            background:
-              "linear-gradient(rgba(0,0,0,.25), rgba(0,0,0,.92))",
-          }}
-        />
+      <div className="position-relative overflow-hidden rounded-4 shadow-lg mb-4" style={{ height: "300px" }}>
+        <img src={restaurant.image} alt={restaurant.name} className="w-100 h-100" style={{ objectFit: "cover"}}/>
+        <div className="position-absolute top-0 start-0 w-100 h-100" style={{ background: "linear-gradient(rgba(0,0,0,.25), rgba(0,0,0,.92))"}} />
         <div className="position-absolute bottom-0 start-0 w-100 p-4">
           <div className="d-flex justify-content-between align-items-end flex-wrap">
             <div>
@@ -147,13 +150,13 @@ export default function PlaceDetails({ setShowAuthModal }) {
         </div>
       </div>
       <div className="input-group mb-4">
-        <input type="text" className="input-group-text bg-dark text-light border-secondaryform-control bg-dark text-light border-secondary" placeholder=" 🔍 Search your favourite dish..." value={search} onChange={(e) => setSearch(e.target.value)} />
+        <input type="text" className="input-group-text bg-dark text-light border-secondary" placeholder=" 🔍 Search your favourite dish..." value={search} onChange={(e) => setSearch(e.target.value)} />
       </div>
       <div className="d-flex flex-wrap gap-3 mb-4">
         <button className={`btn rounded-pill px-4 ${filter === "all"
-              ? "btn-warning text-dark"
-              : "btn-outline-warning"
-            }`}
+          ? "btn-warning text-dark"
+          : "btn-outline-warning"
+          }`}
           onClick={() => setFilter("all")}
         >
           🍽 All
@@ -161,7 +164,7 @@ export default function PlaceDetails({ setShowAuthModal }) {
       </div>
       {loading ? (
         <div className="text-center py-5">
-          <div className="spinner-border text-info"  role="status">
+          <div className="spinner-border text-info" role="status">
             <span className="visually-hidden">
               Loading...
             </span>
@@ -181,7 +184,7 @@ export default function PlaceDetails({ setShowAuthModal }) {
         <div className="row g-4">
           {filteredMenus.map((item) => (
             <div className="col-lg-4 col-md-6" key={item._id}>
-              <div className="card bg-dark text-light border-0 shadow-lg h-100 menu-card" style={{ borderRadius: "18px", overflow: "hidden", transition: ".3s"}}>
+              <div className="card bg-dark text-light border-0 shadow-lg h-100 menu-card" style={{ borderRadius: "18px", overflow: "hidden", transition: ".3s" }}>
                 <div className="position-relative">
 
                   <img src={item.image} alt={item.dish} className="w-100" style={{ height: "190px", objectFit: "cover" }} />

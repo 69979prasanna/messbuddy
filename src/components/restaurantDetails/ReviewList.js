@@ -12,12 +12,8 @@ export default function ReviewList({ place }) {
   const api = process.env.REACT_APP_APIKEY
   const fetchReviews = useCallback(async () => {
   try {
-    const res = await fetch(
-      `${api}/reviews/${encodeURIComponent(place)}`
-    )
-
+    const res = await fetch(`${api}/reviews/${encodeURIComponent(place)}`)
     const data = await res.json()
-
     setReviews(data.reviews || [])
     setAverageRating(data.averageRating)
     setTotalReviews(data.totalReviews)

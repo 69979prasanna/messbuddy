@@ -1,5 +1,4 @@
 import { useState } from "react"
-
 export default function ReviewForm({ place, onReviewAdded, setShowAuthModal }) {
   const [rating, setRating] = useState(5)
   const [comment, setComment] = useState("")
