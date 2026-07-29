@@ -75,10 +75,10 @@ export default function FoodCard({
   }
   if (!food) return null
   return (
-    <div className="card bg-dark text-light shadow food-card border-0" style={{ cursor: "pointer",  borderRadius: "16px", overflow: "hidden", transition: "0.25s", }}  onClick={openPlace}>
+    <div className="card bg-dark text-light shadow food-card border-0" style={{ cursor: "pointer", borderRadius: "16px", overflow: "hidden", transition: "0.25s", }} onClick={openPlace}>
       <div className="position-relative">
 
-        <img src={food.image} alt={food.name} className="w-100" style={{ height: "190px", objectFit: "cover",}}/>
+        <img src={food.image} alt={food.name} className="w-100" style={{ height: "190px", objectFit: "cover", }} />
         <button
           onClick={toggleFavorite}
           className="btn position-absolute top-0 end-0 m-2 p-0"
@@ -103,8 +103,8 @@ export default function FoodCard({
             <div className="food-rating">
               {food.totalReviews > 0 ? (
                 <>
-                  ⭐ {food.averageRating}
-                  <span>({food.totalReviews})</span>
+                  ⭐ {food.averageRating.toFixed(1)}
+                  <span> ({food.totalReviews})</span>
                 </>
               ) : (
                 "New"

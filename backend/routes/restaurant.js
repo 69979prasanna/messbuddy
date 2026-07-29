@@ -1,13 +1,31 @@
 import express from "express"
 import Restaurant from "../models/Restaurant.js"
-
+import Review from "../models/Review.js"
 const router = express.Router()
 
 router.get("/", async (req, res) => {
   try {
     const restaurants = await Restaurant.find().sort({ name: 1 })
-
-    res.json(restaurants)
+    const restaurantsWithRatings = await Promise.all(
+      restaurants.map(async (restaurant) => {
+        const reviews = await Review.find({
+          place: restaurant.name,
+        })
+        const totalReviews = reviews.length
+        const averageRating = totalReviews > 0
+            ? reviews.reduce(
+                (sum, review) => sum + review.rating,
+                0
+              ) / totalReviews
+            : 0
+        return {
+          ...restaurant.toObject(),
+          averageRating,
+          totalReviews,
+        }
+      })
+    )
+    res.json(restaurantsWithRatings)
   } catch (err) {
     res.status(500).json({
       message: err.message,
