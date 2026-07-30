@@ -39,11 +39,9 @@ export default function FeedbackManager() {
   }
 
   const filtered = reviews.filter(review =>
-
     (review.name || "")
       .toLowerCase()
       .includes(search.toLowerCase()) ||
-
     (review.email || "")
       .toLowerCase()
       .includes(search.toLowerCase()) ||
