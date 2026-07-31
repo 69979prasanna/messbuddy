@@ -7,25 +7,26 @@ export default function ReviewList({ place }) {
   const [editingId, setEditingId] = useState(null)
   const [editComment, setEditComment] = useState("")
   const [editRating, setEditRating] = useState(5)
-
+  const [replyingTo, setReplyingTo] = useState(null)
+  const [replyText, setReplyText] = useState("")
   const currentUser = JSON.parse(localStorage.getItem("user"))
   const api = process.env.REACT_APP_APIKEY
   const fetchReviews = useCallback(async () => {
-  try {
-    const res = await fetch(`${api}/reviews/${encodeURIComponent(place)}`)
-    const data = await res.json()
-    setReviews(data.reviews || [])
-    setAverageRating(data.averageRating)
-    setTotalReviews(data.totalReviews)
+    try {
+      const res = await fetch(`${api}/reviews/${encodeURIComponent(place)}`)
+      const data = await res.json()
+      setReviews(data.reviews || [])
+      setAverageRating(data.averageRating)
+      setTotalReviews(data.totalReviews)
 
-  } catch (err) {
-    console.error(err)
-  }
-}, [place, api])
+    } catch (err) {
+      console.error(err)
+    }
+  }, [place, api])
 
-useEffect(() => {
-  fetchReviews()
-}, [fetchReviews])
+  useEffect(() => {
+    fetchReviews()
+  }, [fetchReviews])
   const handleDelete = async (id) => {
     const confirmDelete = window.confirm(
       "Are you sure you want to delete this review?"
@@ -44,61 +45,88 @@ useEffect(() => {
         },
       }
     )
-
     if (res.ok) {
       fetchReviews()
     }
   }
-
   const handleEdit = (review) => {
-  setEditingId(review._id)
-  setEditComment(review.comment)
-  setEditRating(review.rating)
-}
-const handleSave = async () => {
-  const token = localStorage.getItem("token")
-
-  const res = await fetch(
-    `${api}/reviews/${editingId}`,
-    {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({
-        rating: editRating,
-        comment: editComment,
-      }),
-    }
-  )
-
-  if (res.ok) {
-    await res.json()
-
-    setEditingId(null)
-
-   fetchReviews()
+    setEditingId(review._id)
+    setEditComment(review.comment)
+    setEditRating(review.rating)
   }
-}
-const handleCancel = () => {
-  setEditingId(null)
-}
+  const handleSave = async () => {
+    const token = localStorage.getItem("token")
+
+    const res = await fetch(
+      `${api}/reviews/${editingId}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          rating: editRating,
+          comment: editComment,
+        }),
+      }
+    )
+
+    if (res.ok) {
+      await res.json()
+      setEditingId(null)
+      fetchReviews()
+    }
+  }
+  const handleReply = async (reviewId) => {
+    const token = localStorage.getItem("token")
+
+    if (!token) {
+      alert("Please login first.")
+      return
+    }
+
+    try {
+      const res = await fetch(
+        `${api}/reviews/${reviewId}/reply`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            comment: replyText,
+          }),
+        }
+      )
+      if (res.ok) {
+        setReplyText("")
+        setReplyingTo(null)
+        fetchReviews()
+      }
+    } catch (err) {
+      console.error(err)
+    }
+  }
+  const handleCancel = () => {
+    setEditingId(null)
+  }
 
   return (
     <div className="mt-5">
 
       <div className="mb-4 text-center">
 
-  <h2 className="text-warning mb-1">
-    ⭐ {averageRating}/5
-  </h2>
+        <h2 className="text-warning mb-1">
+          ⭐ {averageRating}/5
+        </h2>
 
-  <p className="text-secondary">
-    {totalReviews} Reviews
-  </p>
+        <p className="text-secondary">
+          {totalReviews} Reviews
+        </p>
 
-</div>
+      </div>
 
       {reviews.length === 0 ? (
         <p className="text-secondary">
@@ -130,64 +158,42 @@ const handleCancel = () => {
                         ).toLocaleString()}
                       </small>
                     </div>
-
-                    <span
-                      className="text-warning"
-                      style={{ fontSize: "1.2rem" }}
-                    >
+                    <span className="text-warning" style={{ fontSize: "1.2rem" }}>
                       {"★".repeat(review.rating)}
                       {"☆".repeat(5 - review.rating)}
                     </span>
-
                   </div>
-
                   {editingId === review._id ? (
-  <>
-    <div className="mb-3 text-center">
-      {[1, 2, 3, 4, 5].map((star) => (
-        <span
-          key={star}
-          onClick={() => setEditRating(star)}
-          style={{
-            cursor: "pointer",
-            fontSize: "1.7rem",
-            color: star <= editRating ? "#FFD700" : "#666",
-          }}
-        >
-          ★
-        </span>
-      ))}
-    </div>
+                    <>
+                      <div className="mb-3 text-center">
+                        {[1, 2, 3, 4, 5].map((star) => (
+                          <span key={star} onClick={() => setEditRating(star)} style={{ cursor: "pointer", fontSize: "1.7rem", color: star <= editRating ? "#FFD700" : "#666" }}>
+                            ★
+                          </span>
+                        ))}
+                      </div>
 
-    <textarea
-      className="form-control bg-dark text-light border-secondary mb-3"
-      value={editComment}
-      onChange={(e) => setEditComment(e.target.value)}
-    />
+                      <textarea
+                        className="form-control bg-dark text-light border-secondary mb-3"
+                        value={editComment}
+                        onChange={(e) => setEditComment(e.target.value)}
+                      />
 
-    <div className="d-flex gap-2">
-      <button
-        className="btn btn-success btn-sm"
-        onClick={handleSave}
-      >
-        💾 Save
-      </button>
-
-      <button
-        className="btn btn-secondary btn-sm"
-        onClick={handleCancel}
-      >
-        Cancel
-      </button>
-    </div>
-  </>
-) : (
-  <p>{review.comment}</p>
-)}
+                      <div className="d-flex gap-2">
+                        <button className="btn btn-success btn-sm" onClick={handleSave}>
+                          💾 Save
+                        </button>
+                        <button className="btn btn-secondary btn-sm" onClick={handleCancel}>
+                          Cancel
+                        </button>
+                      </div>
+                    </>
+                  ) : (
+                    <p>{review.comment}</p>
+                  )}
                   {currentUser &&
                     currentUser.id === review.user && (
                       <div className="d-flex gap-2 mt-3">
-
                         <button
                           className="btn btn-warning btn-sm"
                           onClick={() => handleEdit(review)}
@@ -197,16 +203,72 @@ const handleCancel = () => {
 
                         <button
                           className="btn btn-danger btn-sm"
-                          onClick={() =>
-                            handleDelete(review._id)
-                          }
-                        >
+                          onClick={() => handleDelete(review._id)}>
                           🗑 Delete
+                        </button>
+                      </div>
+                    )}
+                  {currentUser && currentUser.id !== review.user  && (
+                    <button className="btn btn-outline-warning btn-sm mt-3" onClick={() => setReplyingTo(review._id)}>
+                      💬 Reply
+                    </button>
+                  )}
+                  {replyingTo === review._id && (
+                    <div className="mt-3">
+
+                      <textarea
+                        className="form-control bg-dark text-light border-secondary"
+                        rows={3}
+                        placeholder="Write your reply..."
+                        value={replyText}
+                        onChange={(e) => setReplyText(e.target.value)}
+                      />
+
+                      <div className="d-flex gap-2 mt-2">
+
+                        <button
+                          className="btn btn-warning btn-sm"
+                          onClick={() => handleReply(review._id)}
+                        >
+                          Reply
+                        </button>
+
+                        <button
+                          className="btn btn-secondary btn-sm"
+                          onClick={() => {
+                            setReplyingTo(null)
+                            setReplyText("")
+                          }}
+                        >
+                          Cancel
                         </button>
 
                       </div>
-                    )}
 
+                    </div>
+                  )}
+                  {review.replies?.length > 0 && (
+                    <div className="mt-4 ms-4">
+
+                      {review.replies.map((reply) => (
+                        <div
+                          key={reply._id}
+                          className="border-start border-warning ps-3 mb-3"
+                        >
+                          <h6 className="text-warning mb-1">
+                            👤 {reply.username}
+                          </h6>
+
+                          <small className="text-secondary d-block mb-1">
+                            {new Date(reply.createdAt).toLocaleString()}
+                          </small>
+
+                          <p className="mb-0">{reply.comment}</p>
+                        </div>
+                      ))}
+
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
