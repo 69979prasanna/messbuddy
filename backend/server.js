@@ -11,6 +11,7 @@ import restaurantRoutes from "./routes/restaurant.js"
 import uploadRoutes from "./routes/upload.js"
 import adminRoutes from "./routes/admin.js"
 import menuRoutes from "./routes/menu.js"
+import favoriteRoutes from "./routes/favorite.js"
 dotenv.config()
 mongoose
   .connect(process.env.MONGO_URI)
@@ -18,6 +19,7 @@ mongoose
   .catch((err) => console.error("Mongo Error:", err))
 const app = express()
 app.use(cors())
+app.use("/api/favorites", favoriteRoutes)
 app.use(express.json())
 app.use("/api/auth", authRoutes)
 app.use("/api/feedback", feedbackRoutes)
