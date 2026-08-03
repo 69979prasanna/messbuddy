@@ -1,10 +1,8 @@
 import express from "express"
-import Favorite from "../models/Favorite.js"
+import Favorite from "../models/Favourite.js"
 import Restaurant from "../models/Restaurant.js"
 import auth from "../middleware/authMiddleware.js"
-
 const router = express.Router()
-
 router.post("/toggle/:restaurantId", auth, async (req, res) => {
   try {
     const { restaurantId } = req.params
@@ -47,10 +45,6 @@ router.post("/toggle/:restaurantId", auth, async (req, res) => {
     })
   }
 })
-
-//
-// Get Logged-in User Favorites
-//
 router.get("/", auth, async (req, res) => {
   try {
 

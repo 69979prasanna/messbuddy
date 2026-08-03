@@ -1,43 +1,42 @@
 import { useNavigate } from "react-router-dom"
 import { useState, useEffect } from "react"
-import {
-  addFavorite,
-  removeFavorite,
-  isFavorite,
-} from "../../utils/favorites"
+import { getFavorites, toggleFavorite } from "../../utils/favorites"
 export default function FoodCard({
   food, setShowAuthModal, }) {
   const navigate = useNavigate()
   const [fav, setFav] = useState(false)
   useEffect(() => {
-    if (food?._id) {
-      setFav(isFavorite(food._id))
-    } else {
-      setFav(false)
-    }
+    checkFavorite()
   }, [food])
-  const toggleFavorite = (e) => {
+  const checkFavorite = async () => {
+    const token = localStorage.getItem("token")
+    if (!token || !food?._id) {
+      setFav(false)
+      return
+    }
+    try {
+      const favorites = await getFavorites()
+      const exists = favorites.some(
+        (fav) => fav.restaurant._id === food._id
+      )
+      setFav(exists)
+    } catch (err) {
+      console.error(err)
+    }
+  }
+  const handleFavorite = async (e) => {
     e.stopPropagation()
     const token = localStorage.getItem("token")
     if (!token) {
       setShowAuthModal(true)
       return
     }
-    if (!food) return
-    if (fav) {
-      removeFavorite(food._id)
-    } else {
-      addFavorite({
-        id: food._id,
-        name: food.name,
-        featuredDish: food.featuredDish,
-        featuredPrice: food.featuredPrice,
-        image: food.image,
-        averageRating: food.averageRating,
-      })
+    try {
+      await toggleFavorite(food._id)
+      await checkFavorite()
+    } catch (err) {
+      console.error(err)
     }
-
-    setFav(isFavorite(food._id))
   }
 
   const getStatus = () => {
@@ -77,10 +76,9 @@ export default function FoodCard({
   return (
     <div className="card bg-dark text-light shadow food-card border-0" style={{ cursor: "pointer", borderRadius: "16px", overflow: "hidden", transition: "0.25s", }} onClick={openPlace}>
       <div className="position-relative">
-
         <img src={food.image} alt={food.name} className="w-100" style={{ height: "190px", objectFit: "cover", }} />
         <button
-          onClick={toggleFavorite}
+          onClick={handleFavorite}
           className="btn position-absolute top-0 end-0 m-2 p-0"
           style={{
             background: "transparent",
@@ -89,13 +87,8 @@ export default function FoodCard({
           }}>
           {fav ? "❤️" : "🤍"}
         </button>
-
-        <div
-          className="position-absolute bottom-0 start-0 w-100 px-3 py-2"
-          style={{
-            background:
-              "linear-gradient(transparent, rgba(0,0,0,.88))",
-          }}>
+        <div className="position-absolute bottom-0 start-0 w-100 px-3 py-2"
+          style={{ background: "linear-gradient(transparent, rgba(0,0,0,.88))", }}>
           <div className="d-flex justify-content-between align-items-center">
             <h5 className="text-white fw-bold mb-0">
               {food.name}
@@ -113,26 +106,16 @@ export default function FoodCard({
           </div>
         </div>
       </div>
-
       <div className="card-body">
-
         <div className="d-flex justify-content-between align-items-center mb-3">
-
           <span className="text-info">
             🍽 {food.featuredDish}
           </span>
-
-          <span
-            className="fw-bold text-warning"
-            style={{ fontSize: "1.15rem" }}
-          >
+          <span className="fw-bold text-warning" style={{ fontSize: "1.15rem" }}>
             ₹{food.featuredPrice}
           </span>
-
         </div>
-
         <div className="mb-3">
-
           {!open && (
             <span className="badge rounded-pill bg-danger px-3 py-2">
               🔴 Closed
@@ -151,7 +134,6 @@ export default function FoodCard({
         </div>
         {food.tags?.length > 0 && (
           <div className="d-flex flex-wrap gap-2">
-
             {food.tags.map((tag) => (
               <span key={tag} className="badge rounded-pill bg-secondary">
                 {tag}

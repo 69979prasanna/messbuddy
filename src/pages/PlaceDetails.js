@@ -1,36 +1,22 @@
 import { useParams, useNavigate } from "react-router-dom"
 import { useState, useEffect } from "react"
-import {
-  addFavorite,
-  removeFavorite,
-  isFavorite,
-} from "../utils/favorites"
+import { getFavorites, toggleFavorite,} from "../utils/favorites"
 import "../styles/PlaceDetails.css"
 import ReviewForm from "../components/restaurantDetails/ReviewForm"
 import ReviewList from "../components/restaurantDetails/ReviewList"
-
 const API = process.env.REACT_APP_APIKEY
-
 export default function PlaceDetails({ setShowAuthModal }) {
   const { id } = useParams()
   const navigate = useNavigate()
-
   const [restaurant, setRestaurant] = useState(null)
   const [menus, setMenus] = useState([])
   const [loading, setLoading] = useState(true)
-
   const [favoriteIds, setFavoriteIds] = useState([])
-
   const [filter, setFilter] = useState("all")
   const [search, setSearch] = useState("")
-
   useEffect(() => {
-    const favs =
-      JSON.parse(localStorage.getItem("favorites")) || []
-
-    setFavoriteIds(favs.map((item) => item.id))
+    loadFavorites()
   }, [])
-
   useEffect(() => {
     const fetchRestaurant = async () => {
       try {
@@ -38,11 +24,9 @@ export default function PlaceDetails({ setShowAuthModal }) {
         const restaurantRes = await fetch(
           `${API}/restaurants/${id}`
         )
-
         if (!restaurantRes.ok) {
           throw new Error("Restaurant not found")
         }
-
         const restaurantData =
           await restaurantRes.json()
         setRestaurant(restaurantData)
@@ -61,39 +45,36 @@ export default function PlaceDetails({ setShowAuthModal }) {
         setLoading(false)
       }
     }
-
     fetchRestaurant()
   }, [id])
-
-  const toggleFavourite = (item) => {
+  const loadFavorites = async () => {
     const token = localStorage.getItem("token")
-
+    if (!token) {
+      setFavoriteIds([])
+      return
+    }
+    try {
+      const data = await getFavorites()
+      setFavoriteIds(
+        data.map((fav) => fav.restaurant._id)
+      )
+    } catch (err) {
+      console.error(err)
+    }
+  }
+  const toggleFavourite = async (item) => {
+    const token = localStorage.getItem("token")
     if (!token) {
       setShowAuthModal(true)
       return
     }
-
-    if (isFavorite(item._id)) {
-      removeFavorite(item._id)
-      setFavoriteIds((prev) =>
-        prev.filter((favId) => favId !== item._id)
-      )
-    } else {
-      addFavorite({
-        id: item._id,
-        place: restaurant?.name,
-        dish: item.dish,
-        price: item.price,
-        rating: item.rating,
-        image: item.image,
-      })
-      setFavoriteIds((prev) => [
-        ...prev,
-        item._id,
-      ])
+    try {
+      await toggleFavorite(item._id)
+      await loadFavorites()
+    } catch (err) {
+      console.error(err)
     }
   }
-
   const filteredMenus = (
     filter === "top"
       ? menus.filter((item) => item.rating >= 4.3)
@@ -126,8 +107,8 @@ export default function PlaceDetails({ setShowAuthModal }) {
         ← Back
       </button>
       <div className="position-relative overflow-hidden rounded-4 shadow-lg mb-4" style={{ height: "300px" }}>
-        <img src={restaurant.image} alt={restaurant.name} className="w-100 h-100" style={{ objectFit: "cover"}}/>
-        <div className="position-absolute top-0 start-0 w-100 h-100" style={{ background: "linear-gradient(rgba(0,0,0,.25), rgba(0,0,0,.92))"}} />
+        <img src={restaurant.image} alt={restaurant.name} className="w-100 h-100" style={{ objectFit: "cover" }} />
+        <div className="position-absolute top-0 start-0 w-100 h-100" style={{ background: "linear-gradient(rgba(0,0,0,.25), rgba(0,0,0,.92))" }} />
         <div className="position-absolute bottom-0 start-0 w-100 p-4">
           <div className="d-flex justify-content-between align-items-end flex-wrap">
             <div>

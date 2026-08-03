@@ -1,60 +1,28 @@
-const getFavoritesKey = () => {
-  const user = JSON.parse(localStorage.getItem("user"))
-
-  if (!user) return null
-
-  return `favorites_${user.id}`
+const API = process.env.REACT_APP_APIKEY
+export const getFavorites = async () => {
+  const token = localStorage.getItem("token")
+  if (!token) return []
+  const res = await fetch(`${API}/favorites`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
+  if (!res.ok) return []
+  return await res.json()
 }
 
-export const getFavorites = () => {
-  const key = getFavoritesKey()
-
-  if (!key) return []
-
-  return JSON.parse(localStorage.getItem(key)) || []
-}
-
-export const addFavorite = (item) => {
-  const key = getFavoritesKey()
-
-  if (!key) return;
-
-  const favorites = getFavorites()
-
-  const exists = favorites.find((fav) => fav.id === item.id);
-
-  if (!exists) {
-    const favoriteItem = {
-      id: item.id,
-      place: item.place || item.source,
-      dish: item.dish,
-      rating: item.rating,
-    };
-
-    localStorage.setItem(
-      key,
-      JSON.stringify([...favorites, favoriteItem])
-    )
-  }
-}
-
-export const removeFavorite = (id) => {
-  const key = getFavoritesKey()
-
-  if (!key) return
-
-  const favorites = getFavorites().filter(
-    (item) => item.id !== id
+export const toggleFavorite = async (restaurantId) => {
+  const token = localStorage.getItem("token")
+  if (!token) return null
+  const res = await fetch(
+    `${API}/favorites/toggle/${restaurantId}`,
+    {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
   )
-
-  localStorage.setItem(
-    key,
-    JSON.stringify(favorites)
-  )
-}
-
-export const isFavorite = (id) => {
-  return getFavorites().some(
-    (item) => item.id === id
-  )
+  if (!res.ok) return null
+  return await res.json()
 }
