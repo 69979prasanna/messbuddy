@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react"
 import FeedbackCard from "../../components/admin/FeedbackCard"
 import "../../styles/FeedbackManager.css"
+import FeedbackModal from "../../components/admin/FeedbackModal"
 const API = process.env.REACT_APP_APIKEY
 
 export default function FeedbackManager() {
-
+  const [selectedFeedback, setSelectedFeedback] = useState(null)
+  const [showModal, setShowModal] = useState(false)
   const [reviews, setReviews] = useState([])
   const [search, setSearch] = useState("")
   const [loading, setLoading] = useState(true)
@@ -69,13 +71,11 @@ export default function FeedbackManager() {
       ) : (
         <div className="row">
           {filtered.map(review => (
-
-            <FeedbackCard
-              key={review._id}
-              feedback={review}
-              onDelete={deleteReview}
-            />
+            <FeedbackCard key={review._id} feedback={review} onDelete={deleteReview} onView ={()=>{setSelectedFeedback(review)
+              setShowModal(true)
+            }}/>
           ))}
+         <FeedbackModal show={showModal} feedback={selectedFeedback} onClose={() => setShowModal(false)}/>
         </div>
       )}
     </div>

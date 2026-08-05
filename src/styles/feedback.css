@@ -1,0 +1,39 @@
+.feedback-card{
+    background:#1d273d;
+    border-radius:18px;
+    padding:20px;
+    transition:.25s;
+    border:1px solid rgba(255,255,255,.05);
+}
+
+.feedback-card:hover{
+    transform:translateY(-5px);
+    box-shadow:0 10px 30px rgba(0,0,0,.35);
+}
+
+.feedback-avatar{
+    width:46px;
+    height:46px;
+    border-radius:50%;
+    background:#3b82f6;
+    color:white;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:bold;
+    font-size:20px;
+}
+
+.feedback-message{
+    color:#d7dce8;
+    line-height:1.7;
+}
+
+.feedback-type{
+    color:white;
+    font-weight:600;
+}
+
+.feedback-stars svg{
+    margin-right:3px;
+}
