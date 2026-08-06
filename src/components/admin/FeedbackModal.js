@@ -62,8 +62,48 @@ export default function FeedbackModal({
                     ).toLocaleString()}
                 </p>
                 <hr />
-                <div style={{ background: "#24304a", borderRadius: "12px", padding: "20px", whiteSpace: "pre-wrap", lineHeight: "1.8", }}>
+                <div style={{ background: "#24304a", borderRadius: "12px", padding: "20px", whiteSpace: "pre-wrap", lineHeight: "1.8", wordBreak: "break-all", overflowWrap: "break-word", overflow: "hidden", boxSizing: "border-box" }}>
                     {feedback.message}
+                    <hr />
+
+                    <h5 className="mb-3">
+                        💬 Replies
+                    </h5>
+                    {feedback.replies?.length === 0 ? (
+                        <p className="text-secondary">
+                            No replies yet.
+                        </p>
+                    ) : (
+                        feedback.replies.map((reply) => (
+                            <div key={reply._id} className="mb-3 p-3 rounded" style={{ background: "#1f2937"}} >
+                                <strong>
+                                    {reply.username}
+                                </strong>
+                                <small className="ms-2 text-secondary">
+                                    {new Date(reply.createdAt).toLocaleString()}
+                                </small>
+                                <p className="mt-2 mb-0">
+                                    {reply.message}
+                                </p>
+                            </div>
+                            
+                        ))
+                    )}
+                    <textarea
+  className="form-control bg-dark text-light border-secondary"
+  rows={3}
+  placeholder="Write a reply..."
+/>
+
+<div className="text-end mt-3">
+
+<button className="btn btn-warning">
+
+💬 Send Reply
+
+</button>
+
+</div>
                 </div>
             </Modal.Body>
         </Modal>

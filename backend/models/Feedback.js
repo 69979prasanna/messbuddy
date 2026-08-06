@@ -1,7 +1,30 @@
-import mongoose from "mongoose";
+import mongoose from "mongoose"
+const replySchema = new mongoose.Schema(
+  {
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
 
+    username: {
+      type: String,
+      required: true,
+    },
+
+    message: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+  },
+  {
+    timestamps: true,
+  }
+)
 const feedbackSchema = new mongoose.Schema(
   {
+    replies: [replySchema],
     name: {
       type: String,
       trim: true,
@@ -41,6 +64,6 @@ const feedbackSchema = new mongoose.Schema(
   {
     timestamps: true,
   }
-);
+)
 
 export default mongoose.model("Feedback", feedbackSchema)

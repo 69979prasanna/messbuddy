@@ -1,9 +1,4 @@
-import {
-    FaTrash,
-    FaEnvelope,
-    FaCalendarAlt,
-    FaStar,
-} from "react-icons/fa"
+import {FaEnvelope,FaCalendarAlt, FaStar} from "react-icons/fa"
 import "../../styles/feedback.css"
 export default function FeedbackCard({
     feedback,
@@ -28,7 +23,7 @@ export default function FeedbackCard({
     }
     return (
         <div className="col-xl-4 col-lg-6 col-md-6 mb-4">
-            <div className="feedback-card" style={{ minHeight: "360px", display: "flex", flexDirection: "column" }}>
+            <div className="feedback-card" style={{ minHeight: "320px", display: "flex", flexDirection: "column" }}>
                 <div className="d-flex justify-content-between align-items-center mb-3">
                     <div className="feedback-stars">
                         {[...Array(feedback.rating)].map((_, i) => (
@@ -64,7 +59,7 @@ export default function FeedbackCard({
                     <FaEnvelope className="me-2" />
                     {feedback.email || "No Email"}
                 </div>
-                <div className="feedback-message" style={{ background: "#2b364d", borderRadius: "12px", padding: "16px", lineHeight: "1.7" }} >
+                <div className="feedback-message" style={{ background: "#2b364d", borderRadius: "12px", padding: "16px", lineHeight: "0.9", whiteSpace: "pre-wrap", overflowWrap: "anywhere", wordBreak: "break-all", overflow: "hidden" }} >
                     <p style={{ marginBottom: "8px", display: "-webkit-box", WebkitBoxOrient: "vertical", WebkitLineClamp: 4, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "normal", wordBreak: "break-word", overflowWrap: "break-word" }}>
                         {feedback.message.length > 180
                             ? feedback.message.slice(0, 180) + "..."
@@ -77,10 +72,12 @@ export default function FeedbackCard({
                     )}
                 </div>
                 <div className="mt-3 d-flex justify-content-end">
-                    <button className="btn btn-outline-danger btn-sm" onClick={() => onDelete(feedback._id)}>
-                        <FaTrash className="me-2" />
-                        Delete
-                    </button>
+                    <button
+  className="btn btn-outline-primary btn-sm"
+  onClick={onView}
+>
+  💬 Reply
+</button>
                 </div>
             </div>
         </div>
