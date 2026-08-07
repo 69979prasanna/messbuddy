@@ -1,17 +1,42 @@
 import { Modal } from "react-bootstrap"
-import {
-    FaEnvelope,
-    FaCalendarAlt,
-    FaStar,
-} from "react-icons/fa"
-
-export default function FeedbackModal({
-    show,
-    onClose,
-    feedback,
-}) {
+import { FaEnvelope, FaCalendarAlt, FaStar } from "react-icons/fa"
+import { useState } from "react"
+export default function FeedbackModal({ show, onClose, feedback }) {
+    const [reply, setReply] = useState("")
+    const [loading, setLoading] = useState(false)
+    const API = process.env.REACT_APP_APIKEY
+    const handleReply = async () => {
+        if (!reply.trim()) return
+        try {
+            setLoading(true)
+            const token = localStorage.getItem("token")
+            const res = await fetch(
+                `${API}/feedback/${feedback._id}/reply`,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${token}`,
+                    },
+                    body: JSON.stringify({
+                        message: reply,
+                    }),
+                }
+            )
+            const data = await res.json()
+            if (!res.ok) {
+                alert(data.message)
+                return
+            }
+            alert("Reply sent successfully!")
+            setReply("")
+        } catch (err) {
+            console.error(err)
+        } finally {
+            setLoading(false)
+        }
+    }
     if (!feedback) return null
-
     const badgeColor = () => {
         switch (feedback.type) {
             case "Suggestion":
@@ -28,7 +53,6 @@ export default function FeedbackModal({
                 return "#6b7280"
         }
     }
-
     return (
         <Modal show={show} onHide={onClose} centered size="lg" >
             <Modal.Header closeButton style={{ background: "#1f2937", color: "white", borderBottom: "1px solid #374151", }}>
@@ -65,7 +89,6 @@ export default function FeedbackModal({
                 <div style={{ background: "#24304a", borderRadius: "12px", padding: "20px", whiteSpace: "pre-wrap", lineHeight: "1.8", wordBreak: "break-all", overflowWrap: "break-word", overflow: "hidden", boxSizing: "border-box" }}>
                     {feedback.message}
                     <hr />
-
                     <h5 className="mb-3">
                         💬 Replies
                     </h5>
@@ -75,7 +98,7 @@ export default function FeedbackModal({
                         </p>
                     ) : (
                         feedback.replies.map((reply) => (
-                            <div key={reply._id} className="mb-3 p-3 rounded" style={{ background: "#1f2937"}} >
+                            <div key={reply._id} className="mb-3 p-3 rounded" style={{ background: "#1f2937" }}>
                                 <strong>
                                     {reply.username}
                                 </strong>
@@ -86,24 +109,15 @@ export default function FeedbackModal({
                                     {reply.message}
                                 </p>
                             </div>
-                            
+
                         ))
                     )}
-                    <textarea
-  className="form-control bg-dark text-light border-secondary"
-  rows={3}
-  placeholder="Write a reply..."
-/>
-
-<div className="text-end mt-3">
-
-<button className="btn btn-warning">
-
-💬 Send Reply
-
-</button>
-
-</div>
+                    <textarea className="form-control bg-dark text-light border-secondary" rows={5} placeholder="Write a official response..." value={reply} onChange={(e) => { setReply(e.target.value) }} />
+                    <div className="text-end mt-3">
+                        <button className="btn btn-warning" disabled={loading} onClick={handleReply}>
+                            💬 Send Reply
+                        </button>
+                    </div>
                 </div>
             </Modal.Body>
         </Modal>
