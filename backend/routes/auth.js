@@ -5,6 +5,7 @@ import User from "../models/User.js"
 import dotenv from "dotenv"
 import validator from "validator"
 import crypto from "crypto"
+import { sendVerificationEmail } from "../utils/sendEmail.js"
 const router = express.Router()
 dotenv.config()
 router.post("/signup", async (req, res) => {
@@ -61,11 +62,17 @@ router.post("/signup", async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10)
     const verificationToken = crypto.randomBytes(32).toString("hex")
     const newUser = await User.create({
-      username,
-      email,
-      password: hashedPassword,
-      verificationToken,
-    })
+  username,
+  email,
+  password: hashedPassword,
+  verificationToken,
+})
+
+await sendVerificationEmail(
+  newUser.email,
+  newUser.username,
+  verificationToken
+)
     res.status(201).json({
       message:
         "Account created successfully. Please verify your email.",
@@ -103,7 +110,6 @@ router.post("/login", async (req, res) => {
         expiresIn: "7d",
       }
     )
-
     res.json({
       message: "Login Successful",
       token,
@@ -113,7 +119,6 @@ router.post("/login", async (req, res) => {
         email: user.email
       }
     })
-
   } catch (err) {
     console.error(err)
     res.status(500).json({
