@@ -60,19 +60,29 @@ router.post("/signup", async (req, res) => {
       })
     }
     const hashedPassword = await bcrypt.hash(password, 10)
-    const verificationToken = crypto.randomBytes(32).toString("hex")
-    const newUser = await User.create({
-  username,
-  email,
-  password: hashedPassword,
-  verificationToken,
-})
 
-await sendVerificationEmail(
-  newUser.email,
-  newUser.username,
-  verificationToken
-)
+    const verificationToken =
+      crypto.randomBytes(32).toString("hex")
+
+    console.log("🔐 Generated token:", verificationToken)
+
+    const newUser = await User.create({
+      username,
+      email,
+      password: hashedPassword,
+      verificationToken,
+    })
+
+    console.log(
+      "💾 Token saved in DB:",
+      newUser.verificationToken
+    )
+
+    await sendVerificationEmail(
+      newUser.email,
+      newUser.username,
+      verificationToken
+    )
     res.status(201).json({
       message:
         "Account created successfully. Please verify your email.",
@@ -126,5 +136,39 @@ router.post("/login", async (req, res) => {
     })
   }
 })
+router.get("/verify/:token", async (req, res) => {
+  try {
+    const { token } = req.params
 
+    console.log("🔎 Token received:", token)
+
+    const user = await User.findOne({
+      verificationToken: token,
+    })
+
+    console.log(
+      "👤 User found:",
+      user ? user.email : "NO USER"
+    )
+
+    if (!user) {
+      return res.status(400).json({
+        message: "Invalid or expired verification link.",
+      })
+    }
+    user.isVerified = true
+    user.verificationToken = null
+    await user.save()
+    console.log("✅ Email verified:", user.email)
+    res.json({
+      message:
+        "Your email has been verified successfully!",
+    })
+  } catch (err) {
+    console.error("❌ Verification error:", err)
+    res.status(500).json({
+      message: "Server error.",
+    })
+  }
+})
 export default router

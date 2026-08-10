@@ -25,65 +25,84 @@ body {
   color: #f87171;
   font-size: 0.9rem;
 }
-.modal-overlay {
+
+.auth-modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0,0,0,0.65);
+  background: rgba(0, 0, 0, 0.45);
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 999;
   backdrop-filter: blur(6px);
-  background: rgba(0, 0, 0, 0.45);
 }
 
-.auth-modal {
+.auth-modal-container {
   width: 400px;
   max-width: 90%;
   background: #111827;
   color: white;
   padding: 30px;
   border-radius: 20px;
-  box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
   position: relative;
-   animation: popup 0.2s ease;
+  animation: authModalPopup 0.2s ease;
 }
 
-.auth-modal h2 {
+.auth-modal-title {
   margin-bottom: 10px;
 }
 
-.auth-modal p {
+.auth-modal-subtitle {
   color: #cbd5e1;
 }
 
-.auth-modal form {
+.auth-modal-form {
   display: flex;
   flex-direction: column;
   gap: 14px;
   margin-top: 20px;
 }
 
-.auth-modal input {
+.auth-modal-input {
   padding: 12px;
   border-radius: 10px;
   border: none;
   outline: none;
+  font-size: 15px;
+  background: #1e293b;
+  color: white;
 }
 
-.auth-modal button[type="submit"] {
+.auth-modal-input::placeholder {
+  color: #94a3b8;
+}
+
+.auth-modal-submit {
   padding: 12px;
   border: none;
   border-radius: 10px;
   background: #2563eb;
   color: white;
   cursor: pointer;
+  font-size: 15px;
+  font-weight: 600;
+  transition: 0.2s;
 }
 
-.close-btn {
+.auth-modal-submit:hover {
+  background: #1d4ed8;
+}
+
+.auth-modal-submit:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.auth-modal-close {
   position: absolute;
   top: 15px;
   right: 20px;
@@ -92,8 +111,44 @@ body {
   color: white;
   font-size: 20px;
   cursor: pointer;
+  transition: 0.2s;
 }
-@keyframes popup {
+
+.auth-modal-close:hover {
+  color: #f87171;
+  transform: scale(1.1);
+}
+
+.auth-modal-switch {
+  color: #4ea1ff;
+  cursor: pointer;
+  margin-left: 6px;
+  font-weight: 600;
+}
+
+.auth-modal-switch:hover {
+  text-decoration: underline;
+}
+
+.auth-modal-error {
+  background: rgba(239, 68, 68, 0.15);
+  border: 1px solid rgba(239, 68, 68, 0.4);
+  color: #fca5a5;
+  padding: 10px 12px;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.auth-modal-success {
+  background: rgba(34, 197, 94, 0.15);
+  border: 1px solid rgba(34, 197, 94, 0.4);
+  color: #86efac;
+  padding: 10px 12px;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+@keyframes authModalPopup {
   from {
     opacity: 0;
     transform: scale(0.9);
@@ -103,4 +158,3 @@ body {
     transform: scale(1);
   }
 }
-

@@ -15,25 +15,27 @@ import MenuManager from "./pages/admin/MenuManager"
 import FeedbackManager from "./pages/admin/FeedbackManager"
 import EditRestaurant from "./pages/admin/EditRestaurant"
 import ManageMenus from "./pages/admin/ManageMenus"
+import VerifyEmail from "./pages/VerifyEmail"
 export default function App() {
   const [showAuthModal, setShowAuthModal] = useState(false)
   return (
     <>
-      <Navbar setShowAuthModal={setShowAuthModal}/>
+      <Navbar setShowAuthModal={setShowAuthModal} />
       <div className="app">
         <Routes>
+          <Route path="/verify/:token" element={<VerifyEmail />} />
           <Route path="/admin/manage-menus" element={<ManageMenus />} />
-          <Route path="/admin/restaurants/edit/:id" element={<EditRestaurant />}/>
+          <Route path="/admin/restaurants/edit/:id" element={<EditRestaurant />} />
           <Route path="/admin" element={<Dashboard />} />
-          <Route path="/admin/restaurants/new"element={<AddRestaurant />}/>
-          <Route path="/admin/restaurants"element={<ManageRestaurants />}/>
-          <Route path="/admin/menu"element={<MenuManager />}/>
-          <Route path="/admin/feedback"element={<FeedbackManager />}/>
+          <Route path="/admin/restaurants/new" element={<AddRestaurant />} />
+          <Route path="/admin/restaurants" element={<ManageRestaurants />} />
+          <Route path="/admin/menu" element={<MenuManager />} />
+          <Route path="/admin/feedback" element={<FeedbackManager />} />
           <Route path="/" element={<BestToday setShowAuthModal={setShowAuthModal} />} />
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
-          <Route path="/place/:id" element={<PlaceDetails setShowAuthModal={setShowAuthModal}/>} />
-          <Route path="/favorites" element={<Favorites setShowAuthModal={setShowAuthModal}  />} />
+          <Route path="/place/:id" element={<PlaceDetails setShowAuthModal={setShowAuthModal} />} />
+          <Route path="/favorites" element={<Favorites setShowAuthModal={setShowAuthModal} />} />
         </Routes>
         <AIChat />
         {showAuthModal && (

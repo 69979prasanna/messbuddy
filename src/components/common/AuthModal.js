@@ -92,49 +92,45 @@ export default function AuthModal({ onClose }) {
   }
 
   return (
-    <div className="auth-overlay">
-      <div className="auth-modal">
-        <button className="close-btn" onClick={onClose}>
+    <div className="auth-modal-overlay">
+      <div className="auth-modal-container">
+        <button className="auth-modal-close" onClick={onClose}>
           ✕
         </button>
-        <h2>
+        <h2 className="auth-modal-title">
           {isLogin
             ? "Welcome Back 👋"
             : "Join MessBuddy 🍽"}
         </h2>
-        <p>
+        <p className="auth-modal-subtitle">
           {isLogin
             ? "Login to vote, save favourites and review restaurants."
             : "Create your account to unlock all features."}
         </p>
         {error && (
-          <div className="alert alert-danger">
+          <div className="auth-modal-error">
             {error}
           </div>
         )}
         {success && (
-          <div className="alert alert-success">
+          <div className="auth-modal-success">
             {success}
           </div>
         )}
-        <form onSubmit={handleSubmit}>
+        <form className="auth-modal-form" onSubmit={handleSubmit}>
           {!isLogin && (
-            <input type="text" name="username" placeholder="Username" value={formData.username} onChange={handleChange} autoComplete="username" required />)}
-          <input type="email" name="email" placeholder="Email" value={formData.email} onChange={handleChange} autoComplete="email" required />
-          <input type="password" name="password" placeholder="Password" value={formData.password} onChange={handleChange} autoComplete={isLogin ? "current-password" : "new-password"} required />
-          <button type="submit" disabled={loading}>
-            {loading
-              ? isLogin
-                ? "Logging in..." : "Creating Account..."
-              : isLogin
-                ? "Login" : "Sign Up"}
+            <input className="auth-modal-input" type="text" name="username" placeholder="Username" value={formData.username} onChange={handleChange} autoComplete="username" required />)}
+          <input className="auth-modal-input" type="email" name="email" placeholder="Email" value={formData.email} onChange={handleChange} autoComplete="email" required />
+          <input className="auth-modal-input" type="password" name="password" placeholder="Password" value={formData.password} onChange={handleChange} autoComplete={isLogin ? "current-password" : "new-password"} required />
+          <button className="auth-modal-submit" type="submit" disabled={loading}>
+            {loading ? isLogin ? "Logging in..." : "Creating Account..." : isLogin ? "Login" : "Sign Up"}
           </button>
         </form>
-        <p className="mt-3">
+        <p>
           {isLogin
             ? "Don't have an account?"
             : "Already have an account?"}
-          <span onClick={switchMode} style={{ color: "#4ea1ff", cursor: "pointer", marginLeft: "6px", fontWeight: "600", }}>
+          <span className="auth-modal-switch" onClick={switchMode}>
             {isLogin ? "Sign Up" : "Login"}
           </span>
         </p>
