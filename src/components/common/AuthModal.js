@@ -82,6 +82,9 @@ export default function AuthModal({ onClose }) {
         )
 
         clearForm()
+        setTimeout(() => {
+          onClose()
+        }, 2500)
       }
     } catch (err) {
       console.error(err)

@@ -23,7 +23,7 @@ export default function App() {
       <Navbar setShowAuthModal={setShowAuthModal} />
       <div className="app">
         <Routes>
-          <Route path="/verify/:token" element={<VerifyEmail />} />
+          <Route path="/verify/:token" element={<VerifyEmail onClose={()=> setShowAuthModal(false)} />} />
           <Route path="/admin/manage-menus" element={<ManageMenus />} />
           <Route path="/admin/restaurants/edit/:id" element={<EditRestaurant />} />
           <Route path="/admin" element={<Dashboard />} />
