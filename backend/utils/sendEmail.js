@@ -60,3 +60,70 @@ export const sendVerificationEmail = async (
 
   console.log("✅ Verification email sent:", info.messageId)
 }
+
+export const sendFeedbackReplyEmail = async (
+  email,
+  username,
+  message
+) => {
+  const info = await transporter.sendMail({
+    from: `"MessBuddy Team" <${process.env.EMAIL}>`,
+    to: email,
+    subject: "MessBuddy replied to your feedback 🍽️",
+
+    html: `
+      <div style="
+        font-family: Arial, sans-serif;
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 30px;
+        background: #111827;
+        color: #ffffff;
+        border-radius: 12px;
+      ">
+
+        <h1 style="color: #facc15;">
+          🍽️ MessBuddy
+        </h1>
+
+        <p style="font-size: 16px;">
+          Hi ${username},
+        </p>
+
+        <p style="font-size: 16px;">
+          Thank you for contacting MessBuddy.
+          Our team has replied to your feedback:
+        </p>
+
+        <div style="
+          background: #1f2937;
+          padding: 20px;
+          margin: 20px 0;
+          border-radius: 10px;
+          border-left: 4px solid #facc15;
+        ">
+          <p style="
+            margin: 0;
+            font-size: 16px;
+            line-height: 1.6;
+          ">
+            ${message}
+          </p>
+        </div>
+
+        <p style="font-size: 15px; color: #cbd5e1;">
+          We appreciate your feedback and your help in making
+          MessBuddy better.
+        </p>
+
+        <p style="margin-top: 30px;">
+          Regards,<br />
+          <strong>MessBuddy Team</strong>
+        </p>
+
+      </div>
+    `,
+  })
+
+  console.log("📧 Feedback reply email sent:", info.messageId)
+}

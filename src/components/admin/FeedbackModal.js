@@ -28,10 +28,11 @@ export default function FeedbackModal({ show, onClose, feedback }) {
                 alert(data.message)
                 return
             }
-            alert("Reply sent successfully!")
+            alert("Reply sent to the user's email successfully!")
             setReply("")
         } catch (err) {
             console.error(err)
+            alert("Failed to send reply.")
         } finally {
             setLoading(false)
         }
