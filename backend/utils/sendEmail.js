@@ -127,3 +127,84 @@ export const sendFeedbackReplyEmail = async (
 
   console.log("📧 Feedback reply email sent:", info.messageId)
 }
+export const sendPasswordResetEmail = async (
+    email,
+    username,
+    token
+) => {
+
+    const resetUrl =
+        `${process.env.FRONTEND_URL}/reset-password/${token}`
+
+    await transporter.sendMail({
+        from: `"MessBuddy Team" <${process.env.EMAIL}>`,
+        to: email,
+        subject: "Reset your MessBuddy password 🔐",
+
+        html: `
+            <div style="
+                font-family: Arial, sans-serif;
+                max-width: 600px;
+                margin: auto;
+                padding: 30px;
+                background: #f8fafc;
+                color: #1e293b;
+            ">
+
+                <h1 style="color: #2563eb;">
+                    🍽️ MessBuddy
+                </h1>
+
+                <h2>
+                    Password Reset
+                </h2>
+
+                <p>
+                    Hi ${username},
+                </p>
+
+                <p>
+                    We received a request to reset your
+                    MessBuddy password.
+                </p>
+
+                <div style="text-align: center; margin: 30px 0;">
+
+                    <a
+                        href="${resetUrl}"
+                        style="
+                            display: inline-block;
+                            padding: 14px 24px;
+                            background: #2563eb;
+                            color: white;
+                            text-decoration: none;
+                            border-radius: 8px;
+                            font-weight: bold;
+                        "
+                    >
+                        Reset My Password
+                    </a>
+
+                </div>
+
+                <p>
+                    This link will expire in
+                    <strong>15 minutes</strong>.
+                </p>
+
+                <p style="color: #64748b;">
+                    If you didn't request a password reset,
+                    you can safely ignore this email.
+                </p>
+
+                <hr />
+
+                <p>
+                    Regards,<br>
+                    <strong>MessBuddy Team</strong>
+                </p>
+
+            </div>
+        `,
+    })
+}

@@ -5,7 +5,10 @@ import User from "../models/User.js"
 import dotenv from "dotenv"
 import validator from "validator"
 import crypto from "crypto"
-import { sendVerificationEmail } from "../utils/sendEmail.js"
+import {
+  sendVerificationEmail,
+  sendPasswordResetEmail
+} from "../utils/sendEmail.js"
 const router = express.Router()
 dotenv.config()
 router.post("/signup", async (req, res) => {
@@ -166,6 +169,105 @@ router.get("/verify/:token", async (req, res) => {
     })
   } catch (err) {
     console.error("❌ Verification error:", err)
+    res.status(500).json({
+      message: "Server error.",
+    })
+  }
+})
+router.post("/forgot-password", async (req, res) => {
+  try {
+    const { email } = req.body
+
+    if (!email) {
+      return res.status(400).json({
+        message: "Email is required.",
+      })
+    }
+
+    if (!validator.isEmail(email)) {
+      return res.status(400).json({
+        message: "Please enter a valid email.",
+      })
+    }
+
+    const user = await User.findOne({ email })
+
+    if (!user) {
+      return res.json({
+        message:
+          "If an account exists with this email, a password reset link has been sent.",
+      })
+    }
+    const resetToken = crypto.randomBytes(32).toString("hex")
+    user.resetPasswordToken = resetToken
+    user.resetPasswordExpires = Date.now() + 15 * 60 * 1000
+    await user.save()
+
+    await sendPasswordResetEmail(
+      user.email,
+      user.username,
+      resetToken
+    )
+
+    res.json({
+      message:
+        "If an account exists with this email, a password reset link has been sent.",
+    })
+
+  } catch (err) {
+    console.error(err)
+
+    res.status(500).json({
+      message: "Server error.",
+    })
+  }
+})
+router.post("/reset-password/:token", async (req, res) => {
+  try {
+    const { token } = req.params
+    const { password } = req.body
+    if (!password) {
+      return res.status(400).json({
+        message: "Password is required.",
+      })
+    }
+    if (
+      !validator.isStrongPassword(password, {
+        minLength: 5,
+        minLowercase: 1,
+        minUppercase: 1,
+        minNumbers: 1,
+        minSymbols: 0,
+      })
+    ) {
+      return res.status(400).json({
+        message:
+          "Password must contain at least 5 characters, one uppercase letter and one number.",
+      })
+    }
+    const user = await User.findOne({
+      resetPasswordToken: token,
+      resetPasswordExpires: {
+        $gt: Date.now(),
+      },
+    })
+    if (!user) {
+      return res.status(400).json({
+        message:
+          "Invalid or expired password reset link.",
+      })
+    }
+    const hashedPassword = await bcrypt.hash(password, 10)
+    user.password = hashedPassword
+    user.resetPasswordToken = null
+    user.resetPasswordExpires = null
+    await user.save()
+    res.json({
+      message:
+        "Password reset successfully. You can now login.",
+    })
+  } catch (err) {
+    console.error(err)
     res.status(500).json({
       message: "Server error.",
     })
