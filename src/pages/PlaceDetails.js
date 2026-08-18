@@ -1,6 +1,6 @@
 import { useParams, useNavigate } from "react-router-dom"
 import { useState, useEffect } from "react"
-import { getFavorites, toggleFavorite,} from "../utils/favorites"
+import { getFavorites, toggleFavorite, } from "../utils/favorites"
 import "../styles/PlaceDetails.css"
 import ReviewForm from "../components/restaurantDetails/ReviewForm"
 import ReviewList from "../components/restaurantDetails/ReviewList"
@@ -106,12 +106,12 @@ export default function PlaceDetails({ setShowAuthModal }) {
       <button className="btn btn-outline-light rounded-pill px-4 mb-4" onClick={() => navigate(-1)}>
         ← Back
       </button>
-      <div className="position-relative overflow-hidden rounded-4 shadow-lg mb-4" style={{ height: "300px" }}>
-        <img src={restaurant.image} alt={restaurant.name} className="w-100 h-100" style={{ objectFit: "cover" }} />
-        <div className="position-absolute top-0 start-0 w-100 h-100" style={{ background: "linear-gradient(rgba(0,0,0,.25), rgba(0,0,0,.92))" }} />
-        <div className="position-absolute bottom-0 start-0 w-100 p-4">
-          <div className="d-flex justify-content-between align-items-end flex-wrap">
-            <div>
+      <div className="row g-4 mb-4">
+        <div className="col-lg-8">
+          <div className="position-relative overflow-hidden rounded-4 shadow-lg" style={{ height: "300px" }}>
+            <img src={restaurant.image} alt={restaurant.name} className="w-100 h-100" style={{ objectFit: "cover" }} />
+            <div className="position-absolute top-0 start-0 w-100 h-100" style={{ background: "linear-gradient(rgba(0,0,0,.2), rgba(0,0,0,.9))" }} />
+            <div className="position-absolute bottom-0 start-0 w-100 p-4">
               <h1 className="fw-bold text-white mb-2">
                 {restaurant?.name || "Loading..."}
               </h1>
@@ -129,6 +129,27 @@ export default function PlaceDetails({ setShowAuthModal }) {
             </div>
           </div>
         </div>
+        <div className="col-lg-4">
+          <a href={restaurant.googleMapsUrl} target="_blank" rel="noopener noreferrer" className="text-decoration-none" >
+            <div className="position-relative overflow-hidden rounded-4 shadow-lg" style={{ height: "300px", cursor: "pointer" }} >
+
+              <img src={restaurant.locationImage} alt={`${restaurant.name} location`} className="w-100 h-100" style={{ objectFit: "cover" }} />
+              <div className="position-absolute top-0 start-0 w-100 h-100" style={{ background: "linear-gradient(rgba(0,0,0,.15), rgba(0,0,0,.85)" }} />
+              <div className="position-absolute bottom-0 start-0 w-100 p-4">
+                <h3 className="text-white fw-bold mb-2">
+                  📍 Location
+                </h3>
+                <p className="text-light mb-2">
+                  {restaurant.address || "View restaurant location"}
+                </p>
+                <span className="badge bg-warning text-dark px-3 py-2">
+                  🗺️ Open in Google Maps
+                </span>
+              </div>
+            </div>
+          </a>
+        </div>
+
       </div>
       <div className="input-group mb-4">
         <input type="text" className="input-group-text bg-dark text-light border-secondary" placeholder=" 🔍 Search your favourite dish..." value={search} onChange={(e) => setSearch(e.target.value)} />
