@@ -16,6 +16,8 @@ import FeedbackManager from "./pages/admin/FeedbackManager"
 import EditRestaurant from "./pages/admin/EditRestaurant"
 import ManageMenus from "./pages/admin/ManageMenus"
 import VerifyEmail from "./pages/VerifyEmail"
+import ResetPassword from "./components/common/ResetPassword"
+
 export default function App() {
   const [showAuthModal, setShowAuthModal] = useState(false)
   return (
@@ -23,6 +25,7 @@ export default function App() {
       <Navbar setShowAuthModal={setShowAuthModal} />
       <div className="app">
         <Routes>
+          <Route path="/reset-password/:token" element={<ResetPassword />}/>
           <Route path="/verify/:token" element={<VerifyEmail onClose={()=> setShowAuthModal(false)} />} />
           <Route path="/admin/manage-menus" element={<ManageMenus />} />
           <Route path="/admin/restaurants/edit/:id" element={<EditRestaurant />} />

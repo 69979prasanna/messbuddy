@@ -1,7 +1,9 @@
 import { useState } from "react"
 import "../../App.css"
+import ForgotPassword from "./ForgotPassword"
 export default function AuthModal({ onClose }) {
   const API = process.env.REACT_APP_AUTH
+  const [isForgotPassword, setIsForgotPassword] = useState(false)
   const [isLogin, setIsLogin] = useState(true)
   const [formData, setFormData] = useState({
     username: "",
@@ -93,7 +95,12 @@ export default function AuthModal({ onClose }) {
       setLoading(false)
     }
   }
-
+  if (isForgotPassword) {
+    return (
+      <ForgotPassword
+        onBack={() => setIsForgotPassword(false)}
+        onClose={onClose} />)
+  }
   return (
     <div className="auth-modal-overlay">
       <div className="auth-modal-container">
@@ -125,6 +132,18 @@ export default function AuthModal({ onClose }) {
             <input className="auth-modal-input" type="text" name="username" placeholder="Username" value={formData.username} onChange={handleChange} autoComplete="username" required />)}
           <input className="auth-modal-input" type="email" name="email" placeholder="Email" value={formData.email} onChange={handleChange} autoComplete="email" required />
           <input className="auth-modal-input" type="password" name="password" placeholder="Password" value={formData.password} onChange={handleChange} autoComplete={isLogin ? "current-password" : "new-password"} required />
+          {isLogin && (
+            <div className="text-end">
+              <span onClick={() => {
+                setIsForgotPassword(true)
+                setError("")
+                setSuccess("")
+              }}
+                style={{ color: "#60a5fa", cursor: "pointer", fontSize: "14px" }}>
+                Forgot Password?
+              </span>
+            </div>
+          )}
           <button className="auth-modal-submit" type="submit" disabled={loading}>
             {loading ? isLogin ? "Logging in..." : "Creating Account..." : isLogin ? "Login" : "Sign Up"}
           </button>

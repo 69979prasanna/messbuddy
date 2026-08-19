@@ -5,10 +5,7 @@ import User from "../models/User.js"
 import dotenv from "dotenv"
 import validator from "validator"
 import crypto from "crypto"
-import {
-  sendVerificationEmail,
-  sendPasswordResetEmail
-} from "../utils/sendEmail.js"
+import { sendVerificationEmail } from "../utils/sendEmail.js"
 const router = express.Router()
 dotenv.config()
 router.post("/signup", async (req, res) => {
@@ -217,57 +214,6 @@ router.post("/forgot-password", async (req, res) => {
   } catch (err) {
     console.error(err)
 
-    res.status(500).json({
-      message: "Server error.",
-    })
-  }
-})
-router.post("/reset-password/:token", async (req, res) => {
-  try {
-    const { token } = req.params
-    const { password } = req.body
-    if (!password) {
-      return res.status(400).json({
-        message: "Password is required.",
-      })
-    }
-    if (
-      !validator.isStrongPassword(password, {
-        minLength: 5,
-        minLowercase: 1,
-        minUppercase: 1,
-        minNumbers: 1,
-        minSymbols: 0,
-      })
-    ) {
-      return res.status(400).json({
-        message:
-          "Password must contain at least 5 characters, one uppercase letter and one number.",
-      })
-    }
-    const user = await User.findOne({
-      resetPasswordToken: token,
-      resetPasswordExpires: {
-        $gt: Date.now(),
-      },
-    })
-    if (!user) {
-      return res.status(400).json({
-        message:
-          "Invalid or expired password reset link.",
-      })
-    }
-    const hashedPassword = await bcrypt.hash(password, 10)
-    user.password = hashedPassword
-    user.resetPasswordToken = null
-    user.resetPasswordExpires = null
-    await user.save()
-    res.json({
-      message:
-        "Password reset successfully. You can now login.",
-    })
-  } catch (err) {
-    console.error(err)
     res.status(500).json({
       message: "Server error.",
     })

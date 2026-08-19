@@ -158,3 +158,126 @@ body {
     transform: scale(1);
   }
 }
+/* ================================
+   FORGOT PASSWORD / RESET PASSWORD
+================================ */
+
+.auth-modal {
+  animation: popup 0.25s ease;
+}
+
+/* Form inputs */
+
+.auth-modal input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 13px 14px;
+  border-radius: 10px;
+  border: 1px solid #334155;
+  outline: none;
+  background: #1e293b;
+  color: white;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.auth-modal input::placeholder {
+  color: #94a3b8;
+}
+
+.auth-modal input:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+}
+
+
+/* Submit buttons */
+
+.auth-modal button[type="submit"] {
+  width: 100%;
+  padding: 13px;
+  border: none;
+  border-radius: 10px;
+  background: #2563eb;
+  color: white;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.15s;
+}
+
+.auth-modal button[type="submit"]:hover {
+  background: #1d4ed8;
+  transform: translateY(-1px);
+}
+
+.auth-modal button[type="submit"]:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+
+/* Success / error messages */
+
+.auth-modal .alert {
+  border-radius: 10px;
+  font-size: 14px;
+  margin-top: 15px;
+}
+
+
+/* Back to login */
+
+.auth-modal .back-link {
+  color: #60a5fa;
+  cursor: pointer;
+  font-weight: 600;
+  transition: color 0.2s;
+}
+
+.auth-modal .back-link:hover {
+  color: #93c5fd;
+}
+
+
+/* Reset password success button */
+
+.auth-modal .success-button {
+  width: 100%;
+  margin-top: 15px;
+  padding: 13px;
+  border: none;
+  border-radius: 10px;
+  background: #22c55e;
+  color: white;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.15s;
+}
+
+.auth-modal .success-button:hover {
+  background: #16a34a;
+  transform: translateY(-1px);
+}
+
+
+/* Mobile */
+
+@media (max-width: 480px) {
+
+  .auth-modal {
+    width: 90%;
+    padding: 24px;
+    border-radius: 16px;
+  }
+
+  .auth-modal h2 {
+    font-size: 24px;
+  }
+
+  .auth-modal p {
+    font-size: 14px;
+  }
+
+}
