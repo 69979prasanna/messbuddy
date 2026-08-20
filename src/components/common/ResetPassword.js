@@ -7,6 +7,8 @@ export default function ResetPassword() {
     const navigate = useNavigate()
     const [password, setPassword] = useState("")
     const [confirmPassword, setConfirmPassword] = useState("")
+    const [showPassword, setShowPassword] = useState(false)
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false)
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState("")
     const [success, setSuccess] = useState("")
@@ -14,6 +16,7 @@ export default function ResetPassword() {
         e.preventDefault()
         setError("")
         setSuccess("")
+
         if (password !== confirmPassword) {
             setError("Passwords do not match.")
             return
@@ -34,54 +37,120 @@ export default function ResetPassword() {
             )
             const data = await response.json()
             if (!response.ok) {
-                setError(data.message)
+                setError(
+                    data.message ||
+                    "Unable to reset your password."
+                )
                 return
             }
-            setSuccess(data.message)
+            setSuccess(
+                data.message ||
+                "Password reset successfully."
+            )
+            setPassword("")
+            setConfirmPassword("")
         } catch (err) {
             console.error(err)
             setError(
-                "Something went wrong. Please try again."
+                "Unable to connect to MessBuddy. Please try again."
             )
         } finally {
             setLoading(false)
         }
     }
     return (
-        <div className="modal-overlay">
-            <div className="auth-modal">
-                <h2>
-                    🔐 Reset Password
-                </h2>
-                <p>
-                    Create a new password for your
-                    MessBuddy account.
-                </p>
-                {error && (
-                    <div className="alert alert-danger py-2">
-                        {error}
-                    </div>
-                )}
-                {success && (
-                    <div className="alert alert-success py-2">
-                        {success}
-                    </div>
-                )}
-                {!success && (
-                    <form onSubmit={handleSubmit}>
-                        <input type="password" placeholder="New Password" value={password} onChange={(e) => setPassword(e.target.value)} minLength={5} required />
-                        <input type="password" placeholder="Confirm New Password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} minLength={5} required />
-                        <button type="submit" disabled={loading}>
-                            {loading ? "Resetting..." : "Reset Password"}
+        <div className="password-page">
+            <div className="password-card">
+                <div className="password-logo">
+                    🍽️
+                </div>
+                <h1>
+                    Reset Password
+                </h1>
+                {!success ? (
+                    <>
+                        <p className="password-subtitle">
+                            Create a new password for your
+                            MessBuddy account.
+                        </p>
+                        {error && (
+                            <div className="password-error">
+                                ⚠️ {error}
+                            </div>
+                        )}
+                        <form onSubmit={handleSubmit} className="password-form">
+                            <div className="password-field">
+                                <label>
+                                    New Password
+                                </label>
+                                <div className="password-input-wrapper">
+                                    <input  type={showPassword ? "text"  : "password" } placeholder="Enter new password" value={password} onChange={(e) => setPassword( e.target.value ) } required />
+                                    <button type="button" className="password-toggle" onClick={() =>   setShowPassword( !showPassword ) } >
+                                        {showPassword  ? "🙈"  : "👁️"}
+                                    </button>
+                                </div>
+                            </div>
+                            <div className="password-field">
+                                <label>
+                                    Confirm Password
+                                </label>
+                                <div className="password-input-wrapper">
+                                    <input type={ showConfirmPassword  ? "text"  : "password" } placeholder="Confirm new password" value={confirmPassword} onChange={(e) => setConfirmPassword( e.target.value ) } required />
+                                    <button type="button" className="password-toggle" onClick={() =>  setShowConfirmPassword( !showConfirmPassword ) } >
+                                        {showConfirmPassword ? "🙈" : "👁️"}
+                                    </button>
+                                </div>
+                            </div>
+                            <div className="password-requirements">
+                                <strong>
+                                    Password must contain:
+                                </strong>
+                                <span>
+                                    ✓ At least 5 characters
+                                </span>
+                                <span>
+                                    ✓ One uppercase letter
+                                </span>
+                                <span>
+                                    ✓ One number
+                                </span>
+                            </div>
+                            <button type="submit" className="reset-password-btn" disabled={loading} >
+                                {loading
+                                    ? "Resetting..."
+                                    : "🔐 Reset Password"}
+                            </button>
+                        </form>
+                        <button className="back-login-btn" onClick={() => navigate("/")}>
+                            ← Back to MessBuddy
                         </button>
-                    </form>
-                )}
-                {success && (
-                    <button type="button" className="success-button" onClick={() => navigate("/")} >
-                        Go to MessBuddy
-                    </button>
+                    </>
+                ) : (
+                    <div className="password-success">
+                        <div className="success-icon">
+                            ✓
+                        </div>
+                        <h2>
+                            Password Updated!
+                        </h2>
+                        <p>
+                            Your MessBuddy password has
+                            been changed successfully.
+                        </p>
+                        <p className="success-small">
+                            You can now log in using your
+                            new password.
+                        </p>
+
+                        <button className="reset-password-btn" onClick={() => navigate("/")}  >
+                            🍽️ Go to MessBuddy
+                        </button>
+                    </div>
                 )}
             </div>
+            <p className="password-footer">
+                © {new Date().getFullYear()} MessBuddy
+            </p>
         </div>
     )
 }

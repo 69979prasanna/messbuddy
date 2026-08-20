@@ -8,9 +8,9 @@ export default function ForgotPassword({ onBack, onClose }) {
     const [success, setSuccess] = useState("")
     const handleSubmit = async (e) => {
         e.preventDefault()
-        setLoading(true)
         setError("")
         setSuccess("")
+        setLoading(true)
         try {
             const response = await fetch(
                 `${API}/forgot-password`,
@@ -26,14 +26,23 @@ export default function ForgotPassword({ onBack, onClose }) {
             )
             const data = await response.json()
             if (!response.ok) {
-                setError(data.message)
+                setError(
+                    data.message ||
+                    "Unable to send reset link."
+                )
                 return
             }
-            setSuccess(data.message)
+            setSuccess(
+                data.message ||
+                "Password reset link sent successfully."
+            )
+            setEmail("")
+
         } catch (err) {
             console.error(err)
+
             setError(
-                "Something went wrong. Please try again."
+                "Unable to connect to MessBuddy. Please try again."
             )
         } finally {
             setLoading(false)
@@ -41,41 +50,68 @@ export default function ForgotPassword({ onBack, onClose }) {
     }
     return (
         <div className="modal-overlay">
-            <div className="auth-modal">
-                <button className="close-btn" onClick={onClose} >
+            <div className="password-card forgot-password-modal">
+                <button className="password-close-btn" onClick={onClose} type="button" >
                     ✕
                 </button>
-                <h2>
-                    🔐 Forgot Password?
-                </h2>
-                <p>
-                    Enter your email and we'll send you
-                    a password reset link.
-                </p>
-                {error && (
-                    <div className="alert alert-danger py-2">
-                        {error}
-                    </div>
-                )}
-                {success && (
-                    <div className="alert alert-success py-2">
-                        {success}
-                    </div>
-                )}
-                {!success && (
-                    <form onSubmit={handleSubmit}>
-                        <input type="email" placeholder="Enter your email" value={email} onChange={(e) => setEmail(e.target.value)} required />
-                        <button type="submit" disabled={loading} >
-                            {loading ? "Sending..." : "Send Reset Link"}
+                <div className="password-logo">
+                    🍽️
+                </div>
+                <h1>
+                    Forgot Password?
+                </h1>
+                {!success ? (
+                    <>
+                        <p className="password-subtitle">
+                            Enter your email and we'll send you
+                            a password reset link.
+                        </p>
+                        {error && (
+                            <div className="password-error">
+                                ⚠️ {error}
+                            </div>
+                        )}
+                        <form onSubmit={handleSubmit} className="password-form" >
+                            <div className="password-field">
+                                <label>
+                                    Email Address
+                                </label>
+                                <input type="email" placeholder="Enter your email" value={email} onChange={(e) => setEmail( e.target.value )} required />
+                            </div>
+                            <button type="submit" className="reset-password-btn" disabled={loading}>
+                                {loading ? "Sending..." : "📧 Send Reset Link"}
+                            </button>
+                        </form>
+                        <button className="back-login-btn" onClick={onBack} type="button"  >
+                            ← Back to Login
                         </button>
-                    </form>
+                    </>
+                ) : (
+                    <div className="password-success">
+                        <div className="success-icon">
+                            ✓
+                        </div>
+                        <h2>
+                            Check Your Email
+                        </h2>
+                        <p>
+                            We've sent a password reset
+                            link to your email address.
+                        </p>
+                        <p className="success-small">
+                            The link will expire in 15 minutes.
+                            Check your spam folder if you don't
+                            see it in your inbox.
+                        </p>
+                        <button className="reset-password-btn" onClick={onBack} type="button">
+                            ← Back to Login
+                        </button>
+                    </div>
                 )}
-                <p style={{ marginTop: "20px", textAlign: "center" }} >
-                    <span  onClick={onBack} className="back-link">
-                        ← Back to Login
-                    </span>
-                </p>
             </div>
+            <p className="password-footer">
+                © {new Date().getFullYear()} MessBuddy
+            </p>
         </div>
     )
 }

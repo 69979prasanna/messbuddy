@@ -275,9 +275,332 @@ body {
   .auth-modal h2 {
     font-size: 24px;
   }
-
   .auth-modal p {
     font-size: 14px;
   }
+}
+.password-page {
+    min-height: 100vh;
+    background: #0f172a;
 
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    padding: 30px 20px;
+
+    box-sizing: border-box;
+}
+.password-card {
+    width: 100%;
+    max-width: 480px;
+    background: #111827;
+    padding: 40px;
+    border-radius: 24px;
+    border: 1px solid #1e293b;
+    box-shadow:
+        0 25px 60px rgba(0, 0, 0, 0.45);
+
+    animation: passwordPopup 0.3s ease;
+}
+
+.password-logo {
+    width: 64px;
+    height: 64px;
+    margin: 0 auto 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #1e293b;
+    border-radius: 18px;
+    font-size: 32px;
+}
+.password-card h1 {
+    text-align: center;
+    color: white;
+    font-size: 30px;
+    margin-bottom: 10px;
+    font-weight: 700;
+}
+.password-subtitle {
+    text-align: center;
+    color: #94a3b8;
+    line-height: 1.6;
+    margin-bottom: 28px;
+}
+.password-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+.password-field {
+    display: flex;
+    flex-direction: column;
+
+    gap: 8px;
+}
+
+.password-field label {
+    color: #e2e8f0;
+    font-size: 14px;
+    font-weight: 600;
+}
+.password-input-wrapper {
+    position: relative;
+}
+.password-input-wrapper input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 14px 48px 14px 15px;
+    border-radius: 12px;
+    border: 1px solid #334155;
+    background: #1e293b;
+    color: white;
+    font-size: 15px;
+    outline: none;
+    transition:
+        border-color 0.2s,
+        box-shadow 0.2s;
+}
+.password-input-wrapper input::placeholder {
+    color: #64748b;
+}
+
+.password-input-wrapper input:focus {
+    border-color: #3b82f6;
+    box-shadow:
+        0 0 0 3px rgba(59, 130, 246, 0.15);
+}
+.password-toggle {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    border: none;
+    background: transparent;
+    color: #94a3b8;
+    cursor: pointer;
+    font-size: 17px;
+    padding: 5px;
+}
+.password-toggle:hover {
+    color: white;
+}
+.password-requirements {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    padding: 14px;
+    border-radius: 12px;
+    background: #0f172a;
+    border: 1px solid #1e293b;
+    font-size: 13px;
+    color: #94a3b8;
+}
+.password-requirements strong {
+    color: #cbd5e1;
+
+    margin-bottom: 3px;
+}
+
+.password-error {
+    background: rgba(239, 68, 68, 0.12);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    color: #fca5a5;
+    padding: 12px 14px;
+    border-radius: 10px;
+    font-size: 14px;
+    margin-bottom: 20px;
+}
+.reset-password-btn {
+    width: 100%;
+    padding: 14px;
+    border: none;
+    border-radius: 12px;
+    background: #2563eb;
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition:
+        background 0.2s,
+        transform 0.15s;
+}
+.reset-password-btn:hover {
+    background: #1d4ed8;
+
+    transform: translateY(-1px);
+}
+
+.reset-password-btn:disabled {
+    opacity: 0.6;
+
+    cursor: not-allowed;
+
+    transform: none;
+}
+.back-login-btn {
+    display: block;
+    margin: 22px auto 0;
+    border: none;
+    background: transparent;
+    color: #60a5fa;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.back-login-btn:hover {
+    color: #93c5fd;
+}
+.password-success {
+    text-align: center;
+}
+
+.success-icon {
+    width: 70px;
+    height: 70px;
+    margin: 0 auto 20px;
+    border-radius: 50%;
+    background: rgba(34, 197, 94, 0.15);
+    border: 2px solid #22c55e;
+    color: #22c55e;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 34px;
+    font-weight: bold;
+}
+
+.password-success h2 {
+    color: white;
+    margin-bottom: 10px;
+    font-size: 25px;
+}
+
+.password-success p {
+    color: #94a3b8;
+    line-height: 1.6;
+}
+.success-small {
+    font-size: 14px;
+    margin-bottom: 25px;
+}
+.password-footer {
+    color: #475569;
+    font-size: 13px;
+    margin-top: 20px;
+}
+@keyframes passwordPopup {
+    from {
+        opacity: 0;
+        transform: translateY(15px) scale(0.98);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+@media (max-width: 520px) {
+    .password-page {
+        padding: 20px 15px;
+    }
+    .password-card {
+        padding: 28px 22px;
+        border-radius: 20px;
+    }
+    .password-card h1 {
+        font-size: 26px;
+    }
+
+}
+.password-close-btn {
+    position: absolute;
+    top: 18px;
+    right: 18px;
+    width: 44px;
+    height: 44px;
+    border: none;
+    border-radius: 50%;
+    background: #1e293b;
+    color: white;
+    font-size: 22px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition:
+        background 0.2s,
+        transform 0.2s;
+}
+.password-close-btn:hover {
+    background: #334155;
+    transform: rotate(90deg);
+}
+.password-card {
+    position: relative;
+}
+.password-field > input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 14px 15px;
+    border-radius: 12px;
+    border: 1px solid #334155;
+    background: #1e293b;
+    color: white;
+    font-size: 15px;
+    outline: none;
+    transition:
+        border-color 0.2s,
+        box-shadow 0.2s;
+}
+.password-field > input::placeholder {
+    color: #64748b;
+}
+.password-field > input:focus {
+    border-color: #3b82f6;
+    box-shadow:
+        0 0 0 3px rgba(59, 130, 246, 0.15);
+}
+.forgot-password-modal {
+    width: 420px;
+    max-width: 90%;
+    padding: 32px;
+    border-radius: 20px;
+
+    animation: popup 0.2s ease;
+}
+.forgot-password-modal .password-logo {
+    width: 58px;
+    height: 58px;
+    margin-bottom: 18px;
+}
+.forgot-password-modal h1 {
+    font-size: 28px;
+}
+.forgot-password-modal .password-subtitle {
+    font-size: 15px;
+    margin-bottom: 24px;
+}
+.forgot-password-modal + .password-footer {
+    display: none;
+}
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 100%;
+
+    background: rgba(0, 0, 0, 0.45);
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    z-index: 999;
+
+    backdrop-filter: blur(6px);
 }
