@@ -5,13 +5,17 @@ const router = express.Router()
 
 router.get("/", async (req, res) => {
   try {
-
-    const menus = await Menu.find().populate(
-      "restaurant",
-      "name"
-    )
+    const menus = await Menu.find()
+      .populate("restaurant", "name")
     const menusWithRatings = await Promise.all(
       menus.map(async (menu) => {
+        if (!menu.restaurant) {
+          return {
+            ...menu.toObject(),
+            averageRating: "0.0",
+            totalReviews: 0,
+          }
+        }
         const reviews = await Review.find({
           place: menu.restaurant.name,
         })
@@ -19,11 +23,12 @@ router.get("/", async (req, res) => {
         const averageRating =
           totalReviews > 0
             ? (
-                reviews.reduce(
-                  (sum, review) => sum + review.rating,
-                  0
-                ) / totalReviews
-              ).toFixed(1)
+              reviews.reduce(
+                (sum, review) =>
+                  sum + review.rating,
+                0
+              ) / totalReviews
+            ).toFixed(1)
             : "0.0"
         return {
           ...menu.toObject(),
@@ -34,6 +39,8 @@ router.get("/", async (req, res) => {
     )
     res.json(menusWithRatings)
   } catch (err) {
+    console.error("❌ GET /menus ERROR:", err)
+
     res.status(500).json({
       message: err.message,
     })
@@ -59,7 +66,7 @@ router.post("/", async (req, res) => {
     const { restaurant, dish } = req.body
     const existingMenu = await Menu.findOne({
       restaurant,
-      dish: { $regex: new RegExp(`^${dish}$`, "i") }, 
+      dish: { $regex: new RegExp(`^${dish}$`, "i") },
     })
     if (existingMenu) {
       return res.status(400).json({
