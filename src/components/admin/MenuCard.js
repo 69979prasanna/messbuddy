@@ -39,8 +39,7 @@ export default function MenuCard({
               ✏ Edit
             </button>
             <button className="btn btn-outline-danger btn" onClick={() =>
-              onDelete(menu._id)}
-            >
+              onDelete(menu._id)} >
               🗑 Delete
             </button>
           </div>
