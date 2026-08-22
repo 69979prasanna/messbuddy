@@ -130,17 +130,23 @@ export default function PlaceDetails({ setShowAuthModal }) {
           </div>
         </div>
         <div className="col-lg-4">
-          <a href={restaurant.googleMapsUrl} target="_blank" rel="noopener noreferrer" className="text-decoration-none" >
-            <div className="position-relative overflow-hidden rounded-4 shadow-lg" style={{ height: "300px", cursor: "pointer" }} >
-
-              <img src={restaurant.locationImage} alt={`${restaurant.name} location`} className="w-100 h-100" style={{ objectFit: "cover" }} />
-              <div className="position-absolute top-0 start-0 w-100 h-100" style={{ background: "linear-gradient(rgba(0,0,0,.15), rgba(0,0,0,.85)" }} />
+          <a href={restaurant.googleMapsUrl || `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${restaurant.name}, ${restaurant.address || ""}`)}`} target="_blank" rel="noopener noreferrer" className="text-decoration-none">
+            <div className="location-card position-relative overflow-hidden rounded-4 shadow-lg" style={{ height: "300px", cursor: "pointer", }} >
+              <div className="location-background">
+                <div className="location-grid"></div>
+                <div className="location-pin">
+                  📍
+                </div>
+                <div className="location-ripple"></div>
+              </div>
+              <div className="location-overlay"></div>
               <div className="position-absolute bottom-0 start-0 w-100 p-4">
                 <h3 className="text-white fw-bold mb-2">
                   📍 Location
                 </h3>
                 <p className="text-light mb-2">
-                  {restaurant.address || "View restaurant location"}
+                  {restaurant.address ||
+                    "View restaurant location"}
                 </p>
                 <span className="badge bg-warning text-dark px-3 py-2">
                   🗺️ Open in Google Maps
@@ -149,7 +155,6 @@ export default function PlaceDetails({ setShowAuthModal }) {
             </div>
           </a>
         </div>
-
       </div>
       <div className="input-group mb-4">
         <input type="text" className="input-group-text bg-dark text-light border-secondary" placeholder=" 🔍 Search your favourite dish..." value={search} onChange={(e) => setSearch(e.target.value)} />
@@ -158,9 +163,7 @@ export default function PlaceDetails({ setShowAuthModal }) {
         <button className={`btn rounded-pill px-4 ${filter === "all"
           ? "btn-warning text-dark"
           : "btn-outline-warning"
-          }`}
-          onClick={() => setFilter("all")}
-        >
+          }`} onClick={() => setFilter("all")}>
           🍽 All
         </button>
       </div>

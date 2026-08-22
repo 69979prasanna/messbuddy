@@ -100,21 +100,6 @@ export default function MenuForm({
             </div>
             <div className="col-md-4 mb-3">
               <label className="form-label">
-                Rating
-              </label>
-              <input
-                type="number"
-                step="0.1"
-                min="0"
-                max="5"
-                className="form-control bg-dark text-light border-secondary"
-                name="rating"
-                value={formData.rating}
-                onChange={handleChange}
-              />
-            </div>
-            <div className="col-md-4 mb-3">
-              <label className="form-label">
                 Category
               </label>
               <select

@@ -1,0 +1,383 @@
+.restaurant-form-card {
+    width: 100%;
+    max-width: 1050px;
+    margin: 30px auto 60px;
+
+    background: #172236;
+    border: 1px solid #334155;
+    border-radius: 20px;
+
+    overflow: hidden;
+
+    box-shadow:
+        0 20px 50px rgba(0, 0, 0, 0.25);
+}
+
+.restaurant-form-header {
+    padding: 32px 40px;
+
+    border-bottom: 1px solid #334155;
+
+    background:
+        linear-gradient(
+            135deg,
+            #172236,
+            #1b2a42
+        );
+}
+
+.restaurant-form-header h1 {
+    margin: 0;
+
+    color: #f8fafc;
+
+    font-size: 32px;
+    font-weight: 700;
+}
+
+.restaurant-form-header p {
+    margin: 8px 0 0;
+
+    color: #94a3b8;
+
+    font-size: 16px;
+}
+
+.restaurant-form {
+    padding: 35px 40px;
+}
+
+.form-section {
+    margin-bottom: 35px;
+    padding-bottom: 30px;
+
+    border-bottom: 1px solid #334155;
+}
+
+.form-section:last-of-type {
+    border-bottom: none;
+    margin-bottom: 15px;
+}
+.section-heading {
+    display: flex;
+    align-items: center;
+
+    gap: 14px;
+
+    margin-bottom: 25px;
+}
+
+.section-heading > span {
+    width: 44px;
+    height: 44px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 12px;
+
+    background: #1e293b;
+
+    font-size: 21px;
+}
+
+.section-heading h3 {
+    margin: 0;
+
+    color: #f1f5f9;
+
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.section-heading p {
+    margin: 3px 0 0;
+
+    color: #64748b;
+
+    font-size: 14px;
+}
+
+.form-row {
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    gap: 24px;
+}
+
+.form-group {
+    margin-bottom: 22px;
+}
+
+.form-group label {
+    display: block;
+
+    margin-bottom: 9px;
+
+    color: #e2e8f0;
+
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.form-group input {
+    width: 100%;
+    height: 52px;
+
+    padding: 0 16px;
+
+    box-sizing: border-box;
+
+    border: 1px solid #475569;
+    border-radius: 12px;
+
+    outline: none;
+
+    background: #1e293b;
+
+    color: #f8fafc;
+
+    font-size: 15px;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease,
+        background 0.2s ease;
+}
+
+.form-group input::placeholder {
+    color: #64748b;
+}
+
+.form-group input:focus {
+    border-color: #3b82f6;
+
+    background: #202e44;
+
+    box-shadow:
+        0 0 0 3px rgba(59, 130, 246, 0.12);
+}
+
+.form-group small {
+    display: block;
+
+    margin-top: 7px;
+
+    color: #64748b;
+
+    font-size: 12px;
+}
+
+.input-with-symbol {
+    position: relative;
+}
+
+.input-with-symbol span {
+    position: absolute;
+
+    left: 16px;
+    top: 50%;
+
+    transform: translateY(-50%);
+
+    color: #fbbf24;
+
+    font-size: 16px;
+    font-weight: 700;
+
+    z-index: 2;
+}
+
+.input-with-symbol input {
+    padding-left: 36px;
+}
+
+.form-group input[type="time"] {
+    color-scheme: dark;
+}
+
+.image-upload {
+    position: relative;
+
+    width: 100%;
+    height: 240px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    overflow: hidden;
+
+    border: 2px dashed #475569;
+    border-radius: 16px;
+
+    background: #1e293b;
+
+    cursor: pointer;
+
+    transition:
+        border-color 0.2s ease,
+        background 0.2s ease;
+}
+
+.image-upload:hover {
+    border-color: #3b82f6;
+
+    background: #202e44;
+}
+
+.image-upload input {
+    display: none;
+}
+
+
+
+.image-upload img {
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+}
+
+.upload-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    gap: 8px;
+
+    color: #cbd5e1;
+
+    text-align: center;
+}
+
+.upload-icon {
+    width: 60px;
+    height: 60px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    margin-bottom: 5px;
+
+    border-radius: 16px;
+
+    background: #26354c;
+
+    font-size: 28px;
+}
+
+.upload-placeholder strong {
+    font-size: 16px;
+}
+
+.upload-placeholder span {
+    color: #64748b;
+
+    font-size: 13px;
+}
+
+.image-selected {
+    margin-top: 12px;
+
+    color: #4ade80;
+
+    font-size: 14px;
+    font-weight: 600;
+
+    text-align: center;
+}
+
+.save-restaurant-btn {
+    width: 100%;
+    height: 54px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 9px;
+
+    border: none;
+    border-radius: 12px;
+
+    background: #16a34a;
+
+    color: white;
+
+    font-size: 16px;
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition:
+        transform 0.2s ease,
+        background 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.save-restaurant-btn:hover:not(:disabled) {
+    background: #22c55e;
+
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 8px 20px rgba(34, 197, 94, 0.2);
+}
+
+.save-restaurant-btn:active:not(:disabled) {
+    transform: translateY(0);
+}
+
+.save-restaurant-btn:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+}
+.save-spinner {
+    width: 18px;
+    height: 18px;
+
+    border: 2px solid rgba(255,255,255,0.35);
+    border-top-color: white;
+
+    border-radius: 50%;
+
+    animation: restaurantSpin 0.7s linear infinite;
+}
+
+@keyframes restaurantSpin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+@media (max-width: 768px) {
+
+    .restaurant-form-card {
+        margin: 15px auto 40px;
+
+        border-radius: 16px;
+    }
+
+    .restaurant-form-header {
+        padding: 25px;
+    }
+
+    .restaurant-form-header h1 {
+        font-size: 26px;
+    }
+
+    .restaurant-form {
+        padding: 25px;
+    }
+    .form-row {
+        grid-template-columns: 1fr;
+
+        gap: 0;
+    }
+    .image-upload {
+        height: 200px;
+    }
+}
