@@ -40,33 +40,60 @@ export default function FoodCard({
   }
 
   const getStatus = () => {
-    if (!food?.openingTime || !food?.closingTime) {
-      return {
-        open: false,
-        closingSoon: false,
-      }
-    }
-
-    const now = new Date()
-    const currentMinutes =
-      now.getHours() * 60 + now.getMinutes()
-    const [openHour, openMinute] =
-      food.openingTime.split(":").map(Number)
-    const [closeHour, closeMinute] =
-      food.closingTime.split(":").map(Number)
-    const openMinutes = openHour * 60 + openMinute
-    const closeMinutes = closeHour * 60 + closeMinute
-    const open =
-      currentMinutes >= openMinutes &&
-      currentMinutes < closeMinutes
-    const closingSoon =
-      open &&
-      closeMinutes - currentMinutes <= 30
+  if (!food?.openingTime || !food?.closingTime) {
     return {
-      open,
-      closingSoon,
+      open: false,
+      closingSoon: false,
     }
   }
+
+  const now = new Date()
+  const currentMinutes =
+    now.getHours() * 60 + now.getMinutes()
+  const [openHour, openMinute] =
+    food.openingTime.split(":").map(Number)
+  const [closeHour, closeMinute] =
+    food.closingTime.split(":").map(Number)
+  const openMinutes =
+    openHour * 60 + openMinute
+  const closeMinutes =
+    closeHour * 60 + closeMinute
+  let open = false
+  let minutesUntilClose = 0
+  if (openMinutes < closeMinutes) {
+    open =
+      currentMinutes >= openMinutes &&
+      currentMinutes < closeMinutes
+
+    if (open) {
+      minutesUntilClose =
+        closeMinutes - currentMinutes
+    }
+  }
+  else if (openMinutes > closeMinutes) {
+    open =
+      currentMinutes >= openMinutes ||
+      currentMinutes < closeMinutes
+    if (open) {
+      if (currentMinutes >= openMinutes) {
+        minutesUntilClose =
+          (24 * 60 - currentMinutes) +
+          closeMinutes
+      } else {
+        minutesUntilClose =
+          closeMinutes - currentMinutes
+      }
+    }
+  }
+  const closingSoon =
+    open &&
+    minutesUntilClose > 0 &&
+    minutesUntilClose <= 30
+  return {
+    open,
+    closingSoon,
+  }
+}
 
   const { open, closingSoon } = getStatus()
   const openPlace = () => {
