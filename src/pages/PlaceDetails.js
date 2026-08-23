@@ -1,17 +1,25 @@
 import { useParams, useNavigate } from "react-router-dom"
 import { useState, useEffect } from "react"
-import { getFavorites, toggleFavorite, } from "../utils/favorites"
+import {
+  getFavorites,
+  getMenuFavorites,
+  toggleMenuFavorite,
+} from "../utils/favorites"
 import "../styles/PlaceDetails.css"
 import ReviewForm from "../components/restaurantDetails/ReviewForm"
 import ReviewList from "../components/restaurantDetails/ReviewList"
 const API = process.env.REACT_APP_APIKEY
-export default function PlaceDetails({ setShowAuthModal }) {
+export default function PlaceDetails({
+  setShowAuthModal,
+}) {
   const { id } = useParams()
   const navigate = useNavigate()
   const [restaurant, setRestaurant] = useState(null)
   const [menus, setMenus] = useState([])
   const [loading, setLoading] = useState(true)
   const [favoriteIds, setFavoriteIds] = useState([])
+  const [menuFavoriteIds, setMenuFavoriteIds] =
+    useState([])
   const [filter, setFilter] = useState("all")
   const [search, setSearch] = useState("")
   useEffect(() => {
@@ -25,19 +33,23 @@ export default function PlaceDetails({ setShowAuthModal }) {
           `${API}/restaurants/${id}`
         )
         if (!restaurantRes.ok) {
-          throw new Error("Restaurant not found")
+          throw new Error(
+            "Restaurant not found"
+          )
         }
         const restaurantData =
           await restaurantRes.json()
         setRestaurant(restaurantData)
-        console.log(restaurantData)
         const menuRes = await fetch(
           `${API}/menus/restaurant/${id}`
         )
         if (!menuRes.ok) {
-          throw new Error("Couldn't load menu")
+          throw new Error(
+            "Couldn't load menu"
+          )
         }
-        const menuData = await menuRes.json()
+        const menuData =
+          await menuRes.json()
         setMenus(menuData)
       } catch (err) {
         console.error(err)
@@ -48,90 +60,145 @@ export default function PlaceDetails({ setShowAuthModal }) {
     fetchRestaurant()
   }, [id])
   const loadFavorites = async () => {
-    const token = localStorage.getItem("token")
+    const token =
+      localStorage.getItem("token")
     if (!token) {
       setFavoriteIds([])
+      setMenuFavoriteIds([])
       return
     }
     try {
-      const data = await getFavorites()
+      const restaurantFavorites =
+        await getFavorites()
       setFavoriteIds(
-        data.map((fav) => fav.restaurant._id)
+        restaurantFavorites
+          .filter(
+            (fav) => fav.restaurant
+          )
+          .map(
+            (fav) => fav.restaurant._id
+          )
+      )
+      const menuFavorites =
+        await getMenuFavorites()
+      setMenuFavoriteIds(
+        menuFavorites
+          .filter(
+            (fav) => fav.menu
+          )
+          .map(
+            (fav) => fav.menu._id
+          )
       )
     } catch (err) {
       console.error(err)
     }
   }
   const toggleFavourite = async (item) => {
-    const token = localStorage.getItem("token")
+    const token =
+      localStorage.getItem("token")
     if (!token) {
       setShowAuthModal(true)
       return
     }
     try {
-      await toggleFavorite(item._id)
-      await loadFavorites()
+      const result =
+        await toggleMenuFavorite(
+          item._id
+        )
+      if (!result) return
+      if (result.favorite) {
+        setMenuFavoriteIds(
+          (prev) => [
+            ...prev,
+            item._id,
+          ]
+        )
+      }
+      else {
+        setMenuFavoriteIds(
+          (prev) =>
+            prev.filter(
+              (menuId) =>
+                menuId !== item._id
+            )
+        )
+      }
     } catch (err) {
       console.error(err)
     }
   }
   const filteredMenus = (
     filter === "top"
-      ? menus.filter((item) => item.rating >= 4.3)
+      ? menus.filter(
+          (item) => item.rating >= 4.3
+        )
       : filter === "cheap"
-        ? menus.filter((item) => item.price <= 60)
+        ? menus.filter(
+            (item) => item.price <= 60
+          )
         : menus
   ).filter((item) =>
     item.dish
       .toLowerCase()
-      .includes(search.toLowerCase())
+      .includes(
+        search.toLowerCase()
+      )
   )
-
-  const avgPrice = menus.length > 0
-    ? menus.reduce(
-      (sum, item) => sum + item.price,
-      0
-    ) / menus.length
-    : 0
+  const avgPrice =
+    menus.length > 0
+      ? menus.reduce(
+          (sum, item) =>
+            sum + item.price,
+          0
+        ) / menus.length
+      : 0
   if (loading || !restaurant) {
     return (
       <div className="container py-5 text-center text-light">
         <div className="spinner-border text-warning" />
-        <p className="mt-3">Loading restaurant...</p>
+        <p className="mt-3">
+          Loading restaurant...
+        </p>
       </div>
     )
   }
   return (
-    <div className="container py-4 text-light">
+        <div className="container py-4 text-light">
       <button className="btn btn-outline-light rounded-pill px-4 mb-4" onClick={() => navigate(-1)}>
         ← Back
       </button>
       <div className="row g-4 mb-4">
         <div className="col-lg-8">
           <div className="position-relative overflow-hidden rounded-4 shadow-lg" style={{ height: "300px" }}>
-            <img src={restaurant.image} alt={restaurant.name} className="w-100 h-100" style={{ objectFit: "cover" }} />
-            <div className="position-absolute top-0 start-0 w-100 h-100" style={{ background: "linear-gradient(rgba(0,0,0,.2), rgba(0,0,0,.9))" }} />
-            <div className="position-absolute bottom-0 start-0 w-100 p-4">
+            <img src={restaurant.image} alt={restaurant.name} className="w-100 h-100" style={{objectFit: "cover" }} />
+            <div className="position-absolute top-0 start-0 w-100 h-100" style={{background: "linear-gradient(rgba(0,0,0,.2), rgba(0,0,0,.9))" }} />
+            <div className="position-absolute bottom-0 start-0 w-100 p-4" >
               <h1 className="fw-bold text-white mb-2">
-                {restaurant?.name || "Loading..."}
+                {restaurant?.name ||
+                  "Loading..."}
               </h1>
               <div className="d-flex flex-wrap gap-2">
                 <span className="badge bg-success px-3 py-2 fs-6">
-                  ⭐ {(restaurant?.averageRating ?? 0).toFixed(1)}
+                  ⭐{" "}
+                  {(restaurant?.averageRating ??
+                    0
+                  ).toFixed(1)}
                 </span>
                 <span className="badge bg-dark border border-secondary px-3 py-2">
                   🍽 {menus.length} Items
                 </span>
                 <span className="badge bg-warning text-dark px-3 py-2">
-                  ₹{avgPrice.toFixed(0)} Avg Price
+                  ₹{avgPrice.toFixed(0)}
+                  {" "}Avg Price
                 </span>
               </div>
             </div>
           </div>
         </div>
         <div className="col-lg-4">
-          <a href={restaurant.googleMapsUrl || `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${restaurant.name}, ${restaurant.address || ""}`)}`} target="_blank" rel="noopener noreferrer" className="text-decoration-none">
-            <div className="location-card position-relative overflow-hidden rounded-4 shadow-lg" style={{ height: "300px", cursor: "pointer", }} >
+          <a href={ restaurant.googleMapsUrl || `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent( `${restaurant.name}, ${ restaurant.address || "" }` )}` } target="_blank" rel="noopener noreferrer" className="text-decoration-none" >
+            <div className="location-card position-relative overflow-hidden rounded-4 shadow-lg" style={{ height: "300px", cursor: "pointer"}}>
               <div className="location-background">
                 <div className="location-grid"></div>
                 <div className="location-pin">
@@ -145,8 +212,7 @@ export default function PlaceDetails({ setShowAuthModal }) {
                   📍 Location
                 </h3>
                 <p className="text-light mb-2">
-                  {restaurant.address ||
-                    "View restaurant location"}
+                  {restaurant.address ||"View restaurant location"}
                 </p>
                 <span className="badge bg-warning text-dark px-3 py-2">
                   🗺️ Open in Google Maps
@@ -157,53 +223,42 @@ export default function PlaceDetails({ setShowAuthModal }) {
         </div>
       </div>
       <div className="input-group mb-4">
-        <input type="text" className="input-group-text bg-dark text-light border-secondary" placeholder=" 🔍 Search your favourite dish..." value={search} onChange={(e) => setSearch(e.target.value)} />
+        <input type="text" className="form-control bg-dark text-light border-secondary" placeholder="🔍 Search your favourite dish..." value={search} onChange={(e) => setSearch(e.target.value)} />
       </div>
       <div className="d-flex flex-wrap gap-3 mb-4">
-        <button className={`btn rounded-pill px-4 ${filter === "all"
-          ? "btn-warning text-dark"
-          : "btn-outline-warning"
-          }`} onClick={() => setFilter("all")}>
+        <button className={`btn rounded-pill px-4 ${ filter === "all" ? "btn-warning text-dark" : "btn-outline-warning" }`}  onClick={() =>setFilter("all") }  >
           🍽 All
         </button>
+        <button className={`btn rounded-pill px-4 ${ filter === "top" ? "btn-warning text-dark" : "btn-outline-warning"}`} onClick={() => setFilter("top") }>
+          ⭐ Top Rated
+        </button>
+        <button className={`btn rounded-pill px-4 ${ filter === "cheap" ? "btn-warning text-dark" : "btn-outline-warning" }`}onClick={() => setFilter("cheap") } >
+          💸 Under ₹60
+        </button>
       </div>
-      {loading ? (
-        <div className="text-center py-5">
-          <div className="spinner-border text-info" role="status">
-            <span className="visually-hidden">
-              Loading...
-            </span>
-          </div>
-          <p className="mt-3">
-            Loading Menu...
-          </p>
-        </div>
-      ) : filteredMenus.length === 0 ? (
+      {filteredMenus.length === 0 ? (
         <div className="text-center mt-5">
-          <h3>🍽 No Menu Available</h3>
+          <h3>
+            🍽 No Menu Available
+          </h3>
           <p className="text-secondary">
-            This restaurant doesn't have any menu items yet.
+            This restaurant doesn't have
+            any menu items yet.
           </p>
         </div>
       ) : (
         <div className="row g-4">
           {filteredMenus.map((item) => (
-            <div className="col-lg-4 col-md-6" key={item._id}>
-              <div className="card bg-dark text-light border-0 shadow-lg h-100 menu-card" style={{ borderRadius: "18px", overflow: "hidden", transition: ".3s" }}>
+            <div className="col-lg-4 col-md-6" key={item._id}  >
+              <div className="card bg-dark text-light border-0 shadow-lg h-100 menu-card" style={{ borderRadius: "18px", overflow: "hidden", transition: ".3s"}} >
                 <div className="position-relative">
-
-                  <img src={item.image} alt={item.dish} className="w-100" style={{ height: "190px", objectFit: "cover" }} />
-                  <button className="btn position-absolute top-0 end-0 m-3 p-0" style={{ background: "transparent", border: "none", fontSize: "1.6rem" }} onClick={(e) => {
-                    e.stopPropagation()
-                    toggleFavourite(item)
-                  }}>
-                    {favoriteIds.includes(item._id)
-                      ? "❤️"
-                      : "🤍"}
+                  <img src={item.image} alt={item.dish} className="w-100" style={{ height: "190px", objectFit: "cover" }}/>
+                  <button className="btn position-absolute top-0 end-0 m-3 p-0" style={{ background:"rgba(0, 0, 0, 0.45)", border: "none", width: "42px", height: "42px", borderRadius: "50%", fontSize: "1.35rem", display: "flex", alignItems: "center", justifyContent: "center", backdropFilter:"blur(6px)", transition: "transform 0.2s ease"}} onClick={(e) => {
+                      e.stopPropagation()
+                      toggleFavourite(item)  }} >
+                    {menuFavoriteIds.includes( item._id  ) ? "❤️" : "🤍"}
                   </button>
-                  <div
-                    className="position-absolute bottom-0 start-0 p-3"
-                  >
+                  <div className="position-absolute bottom-0 start-0 p-3" >
                     {item.isAvailable ? (
                       <span className="badge bg-success rounded-pill px-3 py-2">
                         🟢 Available
@@ -221,8 +276,8 @@ export default function PlaceDetails({ setShowAuthModal }) {
                       <h5 className="fw-bold mb-1">
                         {item.dish}
                       </h5>
-                      <p className="text-secondary mb-3" style={{ minHeight: "45px" }}>
-                        {item.description}
+                      <p className="text-secondary mb-3" style={{minHeight: "45px" }} > 
+                        {item.description || "No description available."}
                       </p>
                     </div>
                   </div>
@@ -243,17 +298,12 @@ export default function PlaceDetails({ setShowAuthModal }) {
         </div>
       )}
       <div className="mt-5">
-        <ReviewForm
-          place={restaurant?.name}
-          onReviewAdded={() => window.location.reload()}
-          setShowAuthModal={setShowAuthModal}
-        />
+        <ReviewForm place={restaurant?.name} onReviewAdded={() => window.location.reload() } setShowAuthModal={ setShowAuthModal  } />
       </div>
       <div className="mt-4">
-        <ReviewList
-          place={restaurant?.name}
-        />
+        <ReviewList place={restaurant?.name} />
       </div>
     </div>
+
   )
 }

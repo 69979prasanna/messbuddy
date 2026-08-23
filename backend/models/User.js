@@ -67,6 +67,12 @@ const userSchema = new mongoose.Schema(
         ref: "Restaurant",
       },
     ],
+    favoriteMenus: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Menu",
+      },
+    ],
     preferences: {
       diet: {
         type: String,
