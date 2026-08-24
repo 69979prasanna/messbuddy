@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import {
   getFavorites,
   getMenuFavorites,
+  toggleMenuFavorite
 } from "../utils/favorites"
 import FoodCard from "../components/home/FoodCard"
 export default function Favorites({
@@ -42,6 +43,24 @@ export default function Favorites({
       console.error(err)
     } finally {
       setLoading(false)
+    }
+  }
+  const handleMenuFavorite = async (menuId) => {
+    const token = localStorage.getItem("token")
+    if (!token) {
+      setShowAuthModal(true)
+      return
+    }
+    try {
+      const result = await toggleMenuFavorite(menuId)
+      if (result?.favorite === false) {
+        setMenuFavorites((prev) =>
+          prev.filter((menu) => menu._id !== menuId)
+        )
+      }
+
+    } catch (err) {
+      console.error("Failed to update menu favorite:", err)
     }
   }
   if (loading) {
@@ -112,9 +131,9 @@ export default function Favorites({
                 <div className="card bg-dark text-light border-0 shadow-lg h-100" style={{ borderRadius: "18px", overflow: "hidden" }}>
                   <div className="position-relative">
                     <img src={menu.image || "https://placehold.co/600x400?text=No+Image"} alt={menu.dish} className="w-100" style={{ height: "190px", objectFit: "cover", }} />
-                    <div className="position-absolute top-0 end-0 m-3" style={{ fontSize: "1.5rem", background: "rgba(0,0,0,.45)", width: "42px", height: "42px", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", backdropFilter: "blur(6px)", }} >
+                    <button type="button" className="position-absolute top-0 end-0 m-3" onClick={() => handleMenuFavorite(menu._id)} style={{ fontSize: "1.5rem", background: "rgba(0,0,0,.55)", width: "42px", height: "42px", borderRadius: "50%", border: "none", display: "flex", alignItems: "center", justifyContent: "center", backdropFilter: "blur(6px)", cursor: "pointer", zIndex: 10 }} >
                       ❤️
-                    </div>
+                    </button>
                     <div className="position-absolute bottom-0 start-0 p-3">
                       {menu.isAvailable ? (
                         <span className="badge bg-success rounded-pill px-3 py-2">

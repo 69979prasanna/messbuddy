@@ -131,12 +131,12 @@ export default function PlaceDetails({
   const filteredMenus = (
     filter === "top"
       ? menus.filter(
-          (item) => item.rating >= 4.3
-        )
+        (item) => item.rating >= 4.3
+      )
       : filter === "cheap"
         ? menus.filter(
-            (item) => item.price <= 60
-          )
+          (item) => item.price <= 60
+        )
         : menus
   ).filter((item) =>
     item.dish
@@ -148,10 +148,10 @@ export default function PlaceDetails({
   const avgPrice =
     menus.length > 0
       ? menus.reduce(
-          (sum, item) =>
-            sum + item.price,
-          0
-        ) / menus.length
+        (sum, item) =>
+          sum + item.price,
+        0
+      ) / menus.length
       : 0
   if (loading || !restaurant) {
     return (
@@ -164,19 +164,18 @@ export default function PlaceDetails({
     )
   }
   return (
-        <div className="container py-4 text-light">
+    <div className="container py-4 text-light">
       <button className="btn btn-outline-light rounded-pill px-4 mb-4" onClick={() => navigate(-1)}>
         ← Back
       </button>
       <div className="row g-4 mb-4">
         <div className="col-lg-8">
           <div className="position-relative overflow-hidden rounded-4 shadow-lg" style={{ height: "300px" }}>
-            <img src={restaurant.image} alt={restaurant.name} className="w-100 h-100" style={{objectFit: "cover" }} />
-            <div className="position-absolute top-0 start-0 w-100 h-100" style={{background: "linear-gradient(rgba(0,0,0,.2), rgba(0,0,0,.9))" }} />
+            <img src={restaurant.image} alt={restaurant.name} className="w-100 h-100" style={{ objectFit: "cover" }} />
+            <div className="position-absolute top-0 start-0 w-100 h-100" style={{ background: "linear-gradient(rgba(0,0,0,.2), rgba(0,0,0,.9))" }} />
             <div className="position-absolute bottom-0 start-0 w-100 p-4" >
               <h1 className="fw-bold text-white mb-2">
-                {restaurant?.name ||
-                  "Loading..."}
+                {restaurant?.name || "Loading..."}
               </h1>
               <div className="d-flex flex-wrap gap-2">
                 <span className="badge bg-success px-3 py-2 fs-6">
@@ -197,8 +196,8 @@ export default function PlaceDetails({
           </div>
         </div>
         <div className="col-lg-4">
-          <a href={ restaurant.googleMapsUrl || `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent( `${restaurant.name}, ${ restaurant.address || "" }` )}` } target="_blank" rel="noopener noreferrer" className="text-decoration-none" >
-            <div className="location-card position-relative overflow-hidden rounded-4 shadow-lg" style={{ height: "300px", cursor: "pointer"}}>
+          <a href={restaurant.googleMapsUrl || `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${restaurant.name}, ${restaurant.address || ""}`)}`} target="_blank" rel="noopener noreferrer" className="text-decoration-none" >
+            <div className="location-card position-relative overflow-hidden rounded-4 shadow-lg" style={{ height: "300px", cursor: "pointer" }}>
               <div className="location-background">
                 <div className="location-grid"></div>
                 <div className="location-pin">
@@ -212,7 +211,7 @@ export default function PlaceDetails({
                   📍 Location
                 </h3>
                 <p className="text-light mb-2">
-                  {restaurant.address ||"View restaurant location"}
+                  {restaurant.address || "View restaurant location"}
                 </p>
                 <span className="badge bg-warning text-dark px-3 py-2">
                   🗺️ Open in Google Maps
@@ -222,17 +221,17 @@ export default function PlaceDetails({
           </a>
         </div>
       </div>
-      <div className="input-group mb-4">
-        <input type="text" className="form-control bg-dark text-light border-secondary" placeholder="🔍 Search your favourite dish..." value={search} onChange={(e) => setSearch(e.target.value)} />
+      <div className="mb-4">
+        <input type="text" className="form-control restaurant-search" placeholder="🔍 Search your favourite dish..." value={search} onChange={(e) => setSearch(e.target.value)} />
       </div>
       <div className="d-flex flex-wrap gap-3 mb-4">
-        <button className={`btn rounded-pill px-4 ${ filter === "all" ? "btn-warning text-dark" : "btn-outline-warning" }`}  onClick={() =>setFilter("all") }  >
+        <button className={`btn rounded-pill px-4 ${filter === "all" ? "btn-warning text-dark" : "btn-outline-warning"}`} onClick={() => setFilter("all")}  >
           🍽 All
         </button>
-        <button className={`btn rounded-pill px-4 ${ filter === "top" ? "btn-warning text-dark" : "btn-outline-warning"}`} onClick={() => setFilter("top") }>
+        <button className={`btn rounded-pill px-4 ${filter === "top" ? "btn-warning text-dark" : "btn-outline-warning"}`} onClick={() => setFilter("top")}>
           ⭐ Top Rated
         </button>
-        <button className={`btn rounded-pill px-4 ${ filter === "cheap" ? "btn-warning text-dark" : "btn-outline-warning" }`}onClick={() => setFilter("cheap") } >
+        <button className={`btn rounded-pill px-4 ${filter === "cheap" ? "btn-warning text-dark" : "btn-outline-warning"}`} onClick={() => setFilter("cheap")} >
           💸 Under ₹60
         </button>
       </div>
@@ -250,13 +249,14 @@ export default function PlaceDetails({
         <div className="row g-4">
           {filteredMenus.map((item) => (
             <div className="col-lg-4 col-md-6" key={item._id}  >
-              <div className="card bg-dark text-light border-0 shadow-lg h-100 menu-card" style={{ borderRadius: "18px", overflow: "hidden", transition: ".3s"}} >
+              <div className="card bg-dark text-light border-0 shadow-lg h-100 menu-card" style={{ borderRadius: "18px", overflow: "hidden", transition: ".3s" }} >
                 <div className="position-relative">
-                  <img src={item.image} alt={item.dish} className="w-100" style={{ height: "190px", objectFit: "cover" }}/>
-                  <button className="btn position-absolute top-0 end-0 m-3 p-0" style={{ background:"rgba(0, 0, 0, 0.45)", border: "none", width: "42px", height: "42px", borderRadius: "50%", fontSize: "1.35rem", display: "flex", alignItems: "center", justifyContent: "center", backdropFilter:"blur(6px)", transition: "transform 0.2s ease"}} onClick={(e) => {
-                      e.stopPropagation()
-                      toggleFavourite(item)  }} >
-                    {menuFavoriteIds.includes( item._id  ) ? "❤️" : "🤍"}
+                  <img src={item.image} alt={item.dish} className="w-100" style={{ height: "190px", objectFit: "cover" }} />
+                  <button className="btn position-absolute top-0 end-0 m-3 p-0" style={{ background: "rgba(0, 0, 0, 0.45)", border: "none", width: "42px", height: "42px", borderRadius: "50%", fontSize: "1.35rem", display: "flex", alignItems: "center", justifyContent: "center", backdropFilter: "blur(6px)", transition: "transform 0.2s ease" }} onClick={(e) => {
+                    e.stopPropagation()
+                    toggleFavourite(item)
+                  }} >
+                    {menuFavoriteIds.includes(item._id) ? "❤️" : "🤍"}
                   </button>
                   <div className="position-absolute bottom-0 start-0 p-3" >
                     {item.isAvailable ? (
@@ -276,7 +276,7 @@ export default function PlaceDetails({
                       <h5 className="fw-bold mb-1">
                         {item.dish}
                       </h5>
-                      <p className="text-secondary mb-3" style={{minHeight: "45px" }} > 
+                      <p className="text-secondary mb-3" style={{ minHeight: "45px" }} >
                         {item.description || "No description available."}
                       </p>
                     </div>
@@ -298,7 +298,7 @@ export default function PlaceDetails({
         </div>
       )}
       <div className="mt-5">
-        <ReviewForm place={restaurant?.name} onReviewAdded={() => window.location.reload() } setShowAuthModal={ setShowAuthModal  } />
+        <ReviewForm place={restaurant?.name} onReviewAdded={() => window.location.reload()} setShowAuthModal={setShowAuthModal} />
       </div>
       <div className="mt-4">
         <ReviewList place={restaurant?.name} />
