@@ -101,17 +101,10 @@ export default function FoodCard({
   }
   if (!food) return null
   return (
-    <div className="card bg-dark text-light shadow food-card border-0" style={{ cursor: "pointer", borderRadius: "16px", overflow: "hidden", transition: "0.25s", }} onClick={openPlace}>
+    <div className="card bg-dark text-light shadow food-card border-0" style={{ cursor: "pointer", borderRadius: "19px", overflow: "hidden", transition: "0.25s",  }} onClick={openPlace}>
       <div className="position-relative">
         <img src={food.image} alt={food.name} className="w-100" style={{ height: "190px", objectFit: "cover", }} />
-        <button
-          onClick={handleFavorite}
-          className="btn position-absolute top-0 end-0 m-2 p-0"
-          style={{
-            background: "transparent",
-            border: "none",
-            fontSize: "1.5rem",
-          }}>
+        <button onClick={handleFavorite} className="btn position-absolute top-0 end-0 m-2 p-0" style={{ background: "transparent", border: "none", fontSize: "1.5rem"}}>
           {fav ? "❤️" : "🤍"}
         </button>
         <div className="position-absolute bottom-0 start-0 w-100 px-3 py-2"
