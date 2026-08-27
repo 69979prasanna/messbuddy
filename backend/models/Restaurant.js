@@ -29,7 +29,25 @@ const restaurantSchema = new mongoose.Schema(
         type: String,
       },
     ],
+    address: {
+      type: String,
+      default: "",
+    },
 
+    latitude: {
+      type: Number,
+      default: null,
+    },
+
+    longitude: {
+      type: Number,
+      default: null,
+    },
+
+    googleMapsUrl: {
+      type: String,
+      default: "",
+    },
     averageRating: {
       type: Number,
       default: 0,
@@ -40,14 +58,14 @@ const restaurantSchema = new mongoose.Schema(
       default: 0,
     },
     openingTime: {
-    type: String,
-    required: true,
-},
+      type: String,
+      required: true,
+    },
 
-closingTime: {
-    type: String,
-    required: true,
-}
+    closingTime: {
+      type: String,
+      required: true,
+    }
   },
   {
     timestamps: true,
