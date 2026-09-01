@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import RestaurantForm from "../../components/admin/RestaurantForm";
 const API = process.env.REACT_APP_APIKEY;
@@ -8,10 +8,8 @@ export default function EditRestaurant() {
   const navigate = useNavigate();
   const [restaurant, setRestaurant] = useState(null);
   const [loading, setLoading] = useState(true);
-  useEffect(() => {
-    fetchRestaurant();
-  }, [])
-  const fetchRestaurant = async () => {
+
+  const fetchRestaurant = useCallback(async () => {
     try {
       const res = await fetch(`${API}/restaurants/${id}`);
       const data = await res.json();
@@ -21,7 +19,11 @@ export default function EditRestaurant() {
     } finally {
       setLoading(false);
     }
-  }
+  }, [id]);
+
+  useEffect(() => {
+    fetchRestaurant();
+  }, [fetchRestaurant]);
   const handleSubmit = async (formData) => {
     try {
       let imageUrl = restaurant.image
@@ -42,11 +44,25 @@ export default function EditRestaurant() {
         image: imageUrl,
         tags: formData.tags
           .split(",")
-          .map(tag => tag.trim())
-          .filter(tag => tag),
+          .map((tag) => tag.trim())
+          .filter((tag) => tag),
         openingTime: formData.openingTime,
         closingTime: formData.closingTime,
-      }
+        address: formData.address || "",
+        latitude:
+          formData.latitude !== null &&
+          formData.latitude !== undefined &&
+          formData.latitude !== ""
+            ? Number(formData.latitude)
+            : null,
+        longitude:
+          formData.longitude !== null &&
+          formData.longitude !== undefined &&
+          formData.longitude !== ""
+            ? Number(formData.longitude)
+            : null,
+        googleMapsUrl: formData.googleMapsUrl || "",
+      };
       await fetch(`${API}/restaurants/${id}`, {
         method: "PUT",
         headers: {

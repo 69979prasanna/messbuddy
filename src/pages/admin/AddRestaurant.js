@@ -22,17 +22,31 @@ export default function AddRestaurant() {
         return;
       }
       const restaurant = {
-  name: formData.name,
-  featuredDish: formData.featuredDish,
-  featuredPrice: Number(formData.featuredPrice), 
-  image: uploadResult.imageUrl,
-  tags: formData.tags
-    .split(",")
-    .map(tag => tag.trim())
-    .filter(tag => tag !== ""),
-  openingTime: formData.openingTime,
-  closingTime: formData.closingTime,
-};
+        name: formData.name,
+        featuredDish: formData.featuredDish,
+        featuredPrice: Number(formData.featuredPrice),
+        image: uploadResult.imageUrl,
+        tags: formData.tags
+          .split(",")
+          .map((tag) => tag.trim())
+          .filter((tag) => tag !== ""),
+        openingTime: formData.openingTime,
+        closingTime: formData.closingTime,
+        address: formData.address || "",
+        latitude:
+          formData.latitude !== null &&
+          formData.latitude !== undefined &&
+          formData.latitude !== ""
+            ? Number(formData.latitude)
+            : null,
+        longitude:
+          formData.longitude !== null &&
+          formData.longitude !== undefined &&
+          formData.longitude !== ""
+            ? Number(formData.longitude)
+            : null,
+        googleMapsUrl: formData.googleMapsUrl || "",
+      };
 
       const res = await fetch(`${API}/restaurants`, {
         method: "POST",

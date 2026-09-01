@@ -1,81 +1,32 @@
+import { setOptions, importLibrary } from "@googlemaps/js-api-loader"
+
 const API_KEY = process.env.REACT_APP_GOOGLE_MAPS_KEY
 
-let googleMapsPromise = null
+let optionsSet = false
 
-export const loadGoogleMaps = () => {
-  // Already loaded
+export const loadGoogleMaps = async () => {
   if (
     window.google &&
     window.google.maps &&
-    window.google.maps.importLibrary
+    typeof window.google.maps.importLibrary === "function"
   ) {
-    return Promise.resolve(window.google)
+    return window.google
   }
 
-  // Already loading
-  if (googleMapsPromise) {
-    return googleMapsPromise
+  if (!API_KEY) {
+    throw new Error(
+      "Google Maps API key is missing. Check REACT_APP_GOOGLE_MAPS_KEY in your .env file."
+    )
   }
 
-  googleMapsPromise = new Promise((resolve, reject) => {
-    if (!API_KEY) {
-      reject(
-        new Error(
-          "Google Maps API key is missing. Check REACT_APP_GOOGLE_MAPS_KEY."
-        )
-      )
-      return
-    }
+  if (!optionsSet) {
+    setOptions({
+      key: API_KEY,
+      v: "weekly",
+    })
+    optionsSet = true
+  }
 
-    // Google Maps bootstrap loader
-    const callbackName = "__messBuddyGoogleMapsLoaded"
-
-    window[callbackName] = () => {
-      if (
-        window.google &&
-        window.google.maps &&
-        window.google.maps.importLibrary
-      ) {
-        resolve(window.google)
-      } else {
-        reject(
-          new Error(
-            "Google Maps loaded but importLibrary is unavailable."
-          )
-        )
-      }
-
-      delete window[callbackName]
-    }
-
-    const script = document.createElement("script")
-
-    script.src =
-      `https://maps.googleapis.com/maps/api/js` +
-      `?key=${API_KEY}` +
-      `&loading=async` +
-      `&callback=${callbackName}` +
-      `&v=weekly`
-
-    script.async = true
-    script.defer = true
-
-    script.onload = () => {
-      // The callback should normally handle this.
-      // We don't resolve here because Google may
-      // still be initializing.
-    }
-
-    script.onerror = () => {
-      reject(
-        new Error("Google Maps JavaScript API failed to load.")
-      )
-
-      googleMapsPromise = null
-    }
-
-    document.head.appendChild(script)
-  })
-
-  return googleMapsPromise
+  await importLibrary("places")
+  return window.google
 }

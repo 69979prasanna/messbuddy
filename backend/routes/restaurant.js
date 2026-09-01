@@ -59,8 +59,12 @@ router.post("/", async (req, res) => {
       featuredPrice,
       image,
       tags,
-       openingTime,
-    closingTime,
+      openingTime,
+      closingTime,
+      address,
+      latitude,
+      longitude,
+      googleMapsUrl,
     } = req.body
 
     const exists = await Restaurant.findOne({
@@ -74,14 +78,18 @@ router.post("/", async (req, res) => {
     }
 
     const restaurant = await Restaurant.create({
-    name,
-    featuredDish,
-    featuredPrice,
-    image,
-    tags,
-    openingTime,
-    closingTime,
-})
+      name,
+      featuredDish,
+      featuredPrice,
+      image,
+      tags,
+      openingTime,
+      closingTime,
+      address: address || "",
+      latitude: latitude !== undefined ? latitude : null,
+      longitude: longitude !== undefined ? longitude : null,
+      googleMapsUrl: googleMapsUrl || "",
+    })
 
     res.status(201).json(restaurant)
   } catch (err) {
