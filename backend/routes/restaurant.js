@@ -1,7 +1,17 @@
 import express from "express"
 import Restaurant from "../models/Restaurant.js"
 import Review from "../models/Review.js"
+import auth from "../middleware/authMiddleware.js"
+import admin from "../middleware/adminMiddleware.js"
 const router = express.Router()
+
+const populateSchedule = (query) => {
+  return query
+    .populate("weeklySchedule.meals.breakfast.items")
+    .populate("weeklySchedule.meals.lunch.items")
+    .populate("weeklySchedule.meals.snacks.items")
+    .populate("weeklySchedule.meals.dinner.items")
+}
 
 router.get("/", async (req, res) => {
   try {
@@ -33,9 +43,95 @@ router.get("/", async (req, res) => {
   }
 })
 
+// GET /api/restaurants/:id/schedule/today
+router.get("/:id/schedule/today", async (req, res) => {
+  try {
+    const restaurant = await populateSchedule(Restaurant.findById(req.params.id))
+    if (!restaurant) {
+      return res.status(404).json({
+        message: "Restaurant not found",
+      })
+    }
+    const days = [
+      "Sunday",
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday",
+    ]
+    const todayName = days[new Date().getDay()]
+    const todaySchedule =
+      restaurant.weeklySchedule?.find(
+        (s) => s.day.toLowerCase() === todayName.toLowerCase()
+      ) || null
+
+    res.json({
+      day: todayName,
+      schedule: todaySchedule,
+    })
+  } catch (err) {
+    res.status(500).json({
+      message: err.message,
+    })
+  }
+})
+
+// GET /api/restaurants/:id/schedule
+router.get("/:id/schedule", async (req, res) => {
+  try {
+    const restaurant = await populateSchedule(Restaurant.findById(req.params.id))
+    if (!restaurant) {
+      return res.status(404).json({
+        message: "Restaurant not found",
+      })
+    }
+    res.json(restaurant.weeklySchedule || [])
+  } catch (err) {
+    res.status(500).json({
+      message: err.message,
+    })
+  }
+})
+
+// PUT /api/restaurants/:id/schedule (Protected: Auth + Admin)
+router.put("/:id/schedule", auth, admin, async (req, res) => {
+  try {
+    const { weeklySchedule } = req.body
+    if (!Array.isArray(weeklySchedule)) {
+      return res.status(400).json({
+        message: "weeklySchedule must be an array of daily schedules",
+      })
+    }
+
+    const restaurant = await Restaurant.findByIdAndUpdate(
+      req.params.id,
+      { weeklySchedule },
+      { new: true, runValidators: true }
+    )
+
+    if (!restaurant) {
+      return res.status(404).json({
+        message: "Restaurant not found",
+      })
+    }
+
+    const populated = await populateSchedule(Restaurant.findById(restaurant._id))
+    res.json({
+      message: "Weekly schedule updated successfully",
+      weeklySchedule: populated.weeklySchedule,
+    })
+  } catch (err) {
+    res.status(500).json({
+      message: err.message,
+    })
+  }
+})
+
 router.get("/:id", async (req, res) => {
   try {
-    const restaurant = await Restaurant.findById(req.params.id)
+    const restaurant = await populateSchedule(Restaurant.findById(req.params.id))
 
     if (!restaurant) {
       return res.status(404).json({

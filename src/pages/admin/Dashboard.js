@@ -102,6 +102,11 @@ export default function Dashboard() {
           icon="🍔"
           path="/admin/manage-menus"
         />
+        <ActionCard
+          title="Meal Schedules"
+          icon="⏰"
+          path="/admin/schedule"
+        />
       </div>
     </div>
   );

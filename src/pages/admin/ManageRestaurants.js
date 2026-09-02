@@ -118,17 +118,24 @@ export default function ManageRestaurants() {
                   {restaurant.closingTime}
                 </p>
               </div>
-              <div className="card-footer d-flex gap-2">
+              <div className="card-footer d-flex flex-column gap-2">
                 <button
-                  className="btn btn-warning w-50"
-                  onClick={() => navigate(`/admin/restaurants/edit/${restaurant._id}`)}>
-                        ✏ Edit
+                  className="btn btn-outline-warning w-100 fw-bold"
+                  onClick={() => navigate(`/admin/schedule/${restaurant._id}`)}>
+                  ⏰ Weekly Meal Schedule
                 </button>
-                <button
-                 className="btn btn-danger w-50"
-                 onClick={() => deleteRestaurant(restaurant._id)}>
-                  🗑 Delete
-               </button>
+                <div className="d-flex gap-2">
+                  <button
+                    className="btn btn-warning w-50"
+                    onClick={() => navigate(`/admin/restaurants/edit/${restaurant._id}`)}>
+                    ✏ Edit
+                  </button>
+                  <button
+                    className="btn btn-danger w-50"
+                    onClick={() => deleteRestaurant(restaurant._id)}>
+                    🗑 Delete
+                  </button>
+                </div>
               </div>
             </div>
           </div>

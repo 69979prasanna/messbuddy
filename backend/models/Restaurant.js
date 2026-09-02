@@ -1,5 +1,56 @@
 import mongoose from "mongoose";
 
+const mealPeriodSchema = new mongoose.Schema(
+  {
+    startTime: {
+      type: String,
+      default: "",
+    },
+    endTime: {
+      type: String,
+      default: "",
+    },
+    items: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Menu",
+      },
+    ],
+    customItems: [
+      {
+        type: String,
+        trim: true,
+      },
+    ],
+  },
+  { _id: false }
+);
+
+const dailyScheduleSchema = new mongoose.Schema(
+  {
+    day: {
+      type: String,
+      enum: [
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday",
+        "Sunday",
+      ],
+      required: true,
+    },
+    meals: {
+      breakfast: { type: mealPeriodSchema, default: () => ({}) },
+      lunch: { type: mealPeriodSchema, default: () => ({}) },
+      snacks: { type: mealPeriodSchema, default: () => ({}) },
+      dinner: { type: mealPeriodSchema, default: () => ({}) },
+    },
+  },
+  { _id: false }
+);
+
 const restaurantSchema = new mongoose.Schema(
   {
     name: {
@@ -65,7 +116,12 @@ const restaurantSchema = new mongoose.Schema(
     closingTime: {
       type: String,
       required: true,
-    }
+    },
+
+    weeklySchedule: {
+      type: [dailyScheduleSchema],
+      default: [],
+    },
   },
   {
     timestamps: true,

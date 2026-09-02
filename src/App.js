@@ -15,6 +15,7 @@ import MenuManager from "./pages/admin/MenuManager"
 import FeedbackManager from "./pages/admin/FeedbackManager"
 import EditRestaurant from "./pages/admin/EditRestaurant"
 import ManageMenus from "./pages/admin/ManageMenus"
+import ManageSchedule from "./pages/admin/ManageSchedule"
 import VerifyEmail from "./pages/VerifyEmail"
 import ResetPassword from "./components/common/ResetPassword"
 
@@ -27,6 +28,8 @@ export default function App() {
         <Routes>
           <Route path="/reset-password/:token" element={<ResetPassword />}/>
           <Route path="/verify/:token" element={<VerifyEmail onClose={()=> setShowAuthModal(false)} />} />
+          <Route path="/admin/schedule/:restaurantId" element={<ManageSchedule />} />
+          <Route path="/admin/schedule" element={<ManageSchedule />} />
           <Route path="/admin/manage-menus" element={<ManageMenus />} />
           <Route path="/admin/restaurants/edit/:id" element={<EditRestaurant />} />
           <Route path="/admin" element={<Dashboard />} />

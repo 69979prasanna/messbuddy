@@ -1,0 +1,478 @@
+/* ===================================================
+   MESSBUDDY - MEAL SCHEDULE & LIVE STATUS STYLES
+   =================================================== */
+
+/* --- Live Meal Status Card --- */
+.live-status-card {
+  position: relative;
+  background: linear-gradient(145deg, #161b26 0%, #1e2638 100%);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 20px;
+  padding: 1.5rem;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.live-status-card.status-serving {
+  border-color: rgba(6, 214, 160, 0.4);
+  box-shadow: 0 12px 35px rgba(6, 214, 160, 0.15);
+}
+
+.live-status-card.status-upcoming {
+  border-color: rgba(255, 183, 3, 0.4);
+  box-shadow: 0 12px 35px rgba(255, 183, 3, 0.15);
+}
+
+.live-status-card.status-closed {
+  border-color: rgba(138, 148, 166, 0.3);
+}
+
+.live-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  border-radius: 50px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.live-badge.serving {
+  background: rgba(6, 214, 160, 0.18);
+  color: #06d6a0;
+  border: 1px solid rgba(6, 214, 160, 0.4);
+}
+
+.live-badge.upcoming {
+  background: rgba(255, 183, 3, 0.18);
+  color: #ffb703;
+  border: 1px solid rgba(255, 183, 3, 0.4);
+}
+
+.live-badge.closed {
+  background: rgba(138, 148, 166, 0.18);
+  color: #c0ccdc;
+  border: 1px solid rgba(138, 148, 166, 0.3);
+}
+
+.pulse-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: currentColor;
+  display: inline-block;
+  animation: pulse-glow 1.5s infinite;
+}
+
+@keyframes pulse-glow {
+  0% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(6, 214, 160, 0.7);
+  }
+  70% {
+    transform: scale(1.2);
+    box-shadow: 0 0 0 10px rgba(6, 214, 160, 0);
+  }
+  100% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(6, 214, 160, 0);
+  }
+}
+
+.countdown-timer-box {
+  background: rgba(0, 0, 0, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  padding: 10px 16px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.countdown-digits {
+  font-family: "Courier New", Courier, monospace, monospace;
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: #ffc107;
+  letter-spacing: 1px;
+}
+
+.meal-items-chip-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.meal-item-chip {
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #f1f5f9;
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: background 0.2s ease;
+}
+
+.meal-item-chip:hover {
+  background: rgba(255, 193, 7, 0.15);
+  border-color: rgba(255, 193, 7, 0.4);
+}
+
+.meal-item-chip .chip-price {
+  color: #ffc107;
+  font-weight: 700;
+  font-size: 0.82rem;
+}
+
+/* --- Dev / Testing Time-Warp Simulation Controls --- */
+.time-simulation-bar {
+  background: rgba(15, 23, 42, 0.85);
+  border: 1px dashed rgba(255, 193, 7, 0.35);
+  border-radius: 12px;
+  padding: 8px 14px;
+  margin-top: 12px;
+  font-size: 0.82rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* --- Day Picker Navigation --- */
+.schedule-day-tabs {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 6px;
+  scrollbar-width: thin;
+}
+
+.schedule-day-tab-btn {
+  background: #18202f;
+  color: #94a3b8;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 10px 18px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  min-width: 74px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.schedule-day-tab-btn:hover {
+  background: #232d42;
+  color: #ffffff;
+  transform: translateY(-2px);
+}
+
+.schedule-day-tab-btn.active {
+  background: linear-gradient(135deg, #ffc107 0%, #ff9800 100%);
+  color: #111827;
+  border-color: #ffc107;
+  box-shadow: 0 6px 18px rgba(255, 193, 7, 0.35);
+  font-weight: 700;
+}
+
+.schedule-day-tab-btn .today-indicator {
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  opacity: 0.85;
+}
+
+/* --- Weekly Meal Cards (User Page) --- */
+.meal-period-card {
+  background: #1a2233;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 18px;
+  padding: 1.25rem;
+  height: 100%;
+  transition: all 0.25s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.meal-period-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(255, 193, 7, 0.3);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35);
+}
+
+.meal-period-card.is-active-meal {
+  border: 2px solid #06d6a0;
+  box-shadow: 0 8px 30px rgba(6, 214, 160, 0.2);
+  background: linear-gradient(160deg, #1b2838 0%, #172434 100%);
+}
+
+.meal-period-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.85rem;
+}
+
+.meal-period-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+
+.meal-period-timing {
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  padding: 4px 10px;
+  font-size: 0.82rem;
+  color: #cbd5e1;
+}
+
+/* --- Admin Schedule Matrix Editor --- */
+.schedule-manager-container {
+  background: #141b26;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
+  padding: 2rem;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+}
+
+.matrix-table-wrapper {
+  overflow-x: auto;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: #101621;
+}
+
+.schedule-matrix-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 850px;
+}
+
+.schedule-matrix-table th {
+  background: #182232;
+  color: #e2e8f0;
+  padding: 14px 16px;
+  font-weight: 700;
+  text-align: left;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+  font-size: 0.95rem;
+}
+
+.schedule-matrix-table td {
+  padding: 14px 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  vertical-align: top;
+}
+
+.schedule-matrix-table tr:last-child td {
+  border-bottom: none;
+}
+
+.schedule-matrix-table tr:hover td {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.day-cell-label {
+  font-weight: 700;
+  font-size: 1rem;
+  color: #ffc107;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.matrix-meal-cell {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 10px;
+  padding: 10px;
+  min-height: 110px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.matrix-time-inputs {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 8px;
+}
+
+.matrix-time-input {
+  background: #0b0f17;
+  color: #e2e8f0;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 6px;
+  padding: 4px 6px;
+  font-size: 0.78rem;
+  width: 78px;
+}
+
+.matrix-items-summary {
+  font-size: 0.82rem;
+  color: #cbd5e1;
+  margin-bottom: 6px;
+  min-height: 36px;
+  line-height: 1.35;
+}
+
+.matrix-edit-btn {
+  background: rgba(255, 193, 7, 0.12);
+  border: 1px solid rgba(255, 193, 7, 0.3);
+  color: #ffc107;
+  font-size: 0.78rem;
+  font-weight: 600;
+  border-radius: 6px;
+  padding: 4px 8px;
+  width: 100%;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.matrix-edit-btn:hover {
+  background: #ffc107;
+  color: #111827;
+}
+
+/* --- Mobile Stacked Matrix Cards --- */
+.mobile-matrix-day-card {
+  background: #17202e;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  padding: 1.25rem;
+  margin-bottom: 1rem;
+}
+
+.mobile-matrix-day-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* --- Menu Item Picker Modal --- */
+.item-picker-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(4px);
+  z-index: 1060;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.item-picker-modal-content {
+  background: #151d2a;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 20px;
+  width: 100%;
+  max-width: 620px;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+  overflow: hidden;
+}
+
+.item-picker-header {
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.item-picker-body {
+  padding: 1.5rem;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.item-picker-footer {
+  padding: 1.25rem 1.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.menu-item-selectable-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 10px;
+  margin-bottom: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.menu-item-selectable-row:hover {
+  background: rgba(255, 255, 255, 0.07);
+  border-color: rgba(255, 193, 7, 0.3);
+}
+
+.menu-item-selectable-row.selected {
+  background: rgba(255, 193, 7, 0.12);
+  border-color: #ffc107;
+}
+
+.custom-item-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #2a3447;
+  color: #e2e8f0;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 4px 10px;
+  border-radius: 16px;
+  font-size: 0.85rem;
+  margin-right: 6px;
+  margin-bottom: 6px;
+}
+
+.custom-item-tag button {
+  background: none;
+  border: none;
+  color: #ef4444;
+  cursor: pointer;
+  padding: 0;
+  font-size: 1rem;
+  line-height: 1;
+}
+
+/* Quick Fill Bar */
+.quick-fill-bar {
+  background: rgba(255, 193, 7, 0.08);
+  border: 1px dashed rgba(255, 193, 7, 0.3);
+  border-radius: 12px;
+  padding: 12px 16px;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+}

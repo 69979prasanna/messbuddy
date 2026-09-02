@@ -8,6 +8,8 @@ import {
 import "../styles/PlaceDetails.css"
 import ReviewForm from "../components/restaurantDetails/ReviewForm"
 import ReviewList from "../components/restaurantDetails/ReviewList"
+import LiveMealStatus from "../components/restaurantDetails/LiveMealStatus"
+import WeeklySchedule from "../components/restaurantDetails/WeeklySchedule"
 const API = process.env.REACT_APP_APIKEY
 export default function PlaceDetails({
   setShowAuthModal,
@@ -191,6 +193,9 @@ export default function PlaceDetails({
                   ₹{avgPrice.toFixed(0)}
                   {" "}Avg Price
                 </span>
+                <span className="badge bg-info text-dark px-3 py-2">
+                  🕒 {restaurant.openingTime} - {restaurant.closingTime}
+                </span>
               </div>
             </div>
           </div>
@@ -221,6 +226,28 @@ export default function PlaceDetails({
           </a>
         </div>
       </div>
+
+      {/* Prominent Live Meal Period Status */}
+      <LiveMealStatus
+        weeklySchedule={restaurant.weeklySchedule}
+        restaurantName={restaurant.name}
+      />
+
+      {/* Interactive Weekly Meal Timetable */}
+      <WeeklySchedule weeklySchedule={restaurant.weeklySchedule} />
+
+      {/* A-La-Carte Full Restaurant Menu Section */}
+      <div className="d-flex justify-content-between align-items-center mb-3 mt-4">
+        <div>
+          <h3 className="fw-bold text-light mb-1">
+            🍽️ Full Restaurant Menu
+          </h3>
+          <p className="text-secondary mb-0 small">
+            Explore all individual items, prices, and availability
+          </p>
+        </div>
+      </div>
+
       <div className="mb-4">
         <input type="text" className="form-control restaurant-search" placeholder="🔍 Search your favourite dish..." value={search} onChange={(e) => setSearch(e.target.value)} />
       </div>

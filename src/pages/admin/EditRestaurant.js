@@ -85,6 +85,22 @@ export default function EditRestaurant() {
   }
   return (
     <div className="container py-5">
+      <div className="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+        <button
+          type="button"
+          className="btn btn-outline-secondary btn-sm"
+          onClick={() => navigate("/admin/restaurants")}
+        >
+          ← Back to Restaurants
+        </button>
+        <button
+          type="button"
+          className="btn btn-outline-warning fw-bold"
+          onClick={() => navigate(`/admin/schedule/${id}`)}
+        >
+          ⏰ Manage Weekly Meal Schedule →
+        </button>
+      </div>
       <RestaurantForm
         initialData={restaurant}
         onSubmit={handleSubmit}
