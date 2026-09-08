@@ -7,7 +7,11 @@ import {
 } from "../../utils/mealTiming"
 import "../../styles/MealSchedule.css"
 
-export default function LiveMealStatus({ weeklySchedule = [], restaurantName }) {
+export default function LiveMealStatus({
+  weeklySchedule = [],
+  restaurantName,
+  menus = [],
+}) {
   const [tick, setTick] = useState(0)
   const [simulatedHourMinute, setSimulatedHourMinute] = useState("") // e.g. "13:30" or "" for live
   const [showSimControls, setShowSimControls] = useState(false)
@@ -49,8 +53,17 @@ export default function LiveMealStatus({ weeklySchedule = [], restaurantName }) 
             price: item.price,
             available: item.isAvailable !== false,
           })
-        } else if (typeof item === "string") {
-          allDishes.push({ name: item, price: null, available: true })
+        } else if (typeof item === "string" && item.trim()) {
+          const found = Array.isArray(menus)
+            ? menus.find((m) => m._id === item)
+            : null
+          if (found) {
+            allDishes.push({
+              name: found.dish,
+              price: found.price,
+              available: found.isAvailable !== false,
+            })
+          }
         }
       })
     }

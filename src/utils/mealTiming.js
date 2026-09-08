@@ -240,9 +240,11 @@ export const generateDefaultWeeklySchedule = (existingSchedule = []) => {
   const result = []
 
   for (const day of DAYS_OF_WEEK) {
-    const existingDay = existingSchedule.find(
-      (s) => s.day?.toLowerCase() === day.toLowerCase()
-    )
+    const existingDay = Array.isArray(existingSchedule)
+      ? existingSchedule.find(
+          (s) => s.day?.toLowerCase() === day.toLowerCase()
+        )
+      : null
 
     const meals = {}
     for (const mealDef of MEAL_PERIODS) {
@@ -250,10 +252,18 @@ export const generateDefaultWeeklySchedule = (existingSchedule = []) => {
       meals[mealDef.key] = {
         startTime: existingMeal?.startTime || mealDef.defaultStart,
         endTime: existingMeal?.endTime || mealDef.defaultEnd,
-        items: existingMeal?.items?.map((item) =>
-          typeof item === "object" ? item._id || item : item
-        ) || [],
-        customItems: existingMeal?.customItems || [],
+        items:
+          existingMeal?.items
+            ?.map((item) =>
+              typeof item === "object" && item !== null
+                ? item._id || item
+                : item
+            )
+            ?.filter(Boolean) || [],
+        customItems:
+          existingMeal?.customItems?.filter(
+            (c) => typeof c === "string" && c.trim()
+          ) || [],
       }
     }
 

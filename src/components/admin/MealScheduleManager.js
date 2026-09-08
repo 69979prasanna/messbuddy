@@ -27,6 +27,8 @@ export default function MealScheduleManager({
     mealKey: null,
   })
 
+  const [saveMessage, setSaveMessage] = useState(null)
+
   // Fetch menus for this restaurant so owner can pick from them
   useEffect(() => {
     if (!restaurantId) return
@@ -132,7 +134,10 @@ export default function MealScheduleManager({
         },
       }))
     )
-    alert("⚡ Standard timings applied to all 7 days!")
+    setSaveMessage({
+      type: "info",
+      text: "⚡ Standard timings applied to all 7 days! Click Save when ready.",
+    })
   }
 
   // Quick helper: Copy Monday's full schedule to Tuesday through Friday
@@ -151,7 +156,32 @@ export default function MealScheduleManager({
         return d
       })
     )
-    alert("📋 Copied Monday's meals and timings to Tue, Wed, Thu & Fri!")
+    setSaveMessage({
+      type: "info",
+      text: "📋 Copied Monday's meals and timings to Tue, Wed, Thu & Fri!",
+    })
+  }
+
+  // Quick helper: Copy Monday's full schedule to all other 6 days
+  const copyMondayToAllDays = () => {
+    const monday = schedule.find((d) => d.day === "Monday")
+    if (!monday) return
+
+    setSchedule((prev) =>
+      prev.map((d) => {
+        if (d.day !== "Monday") {
+          return {
+            ...d,
+            meals: JSON.parse(JSON.stringify(monday.meals)),
+          }
+        }
+        return d
+      })
+    )
+    setSaveMessage({
+      type: "info",
+      text: "🔁 Copied Monday's meals and timings to all 7 days!",
+    })
   }
 
   const handleSaveSchedule = async () => {
@@ -162,7 +192,35 @@ export default function MealScheduleManager({
 
     try {
       setSaving(true)
+      setSaveMessage(null)
       const token = localStorage.getItem("token")
+
+      // Clean and sanitize schedule payload before sending
+      const cleanSchedule = schedule.map((dayRow) => {
+        const cleanedMeals = {}
+        for (const [mealKey, mealVal] of Object.entries(dayRow.meals || {})) {
+          cleanedMeals[mealKey] = {
+            startTime: mealVal?.startTime || "",
+            endTime: mealVal?.endTime || "",
+            items: Array.isArray(mealVal?.items)
+              ? mealVal.items
+                  .map((item) =>
+                    typeof item === "object" && item !== null ? item._id : item
+                  )
+                  .filter((id) => typeof id === "string" && id.trim().length === 24)
+              : [],
+            customItems: Array.isArray(mealVal?.customItems)
+              ? mealVal.customItems.filter(
+                  (c) => typeof c === "string" && c.trim()
+                )
+              : [],
+          }
+        }
+        return {
+          day: dayRow.day,
+          meals: cleanedMeals,
+        }
+      })
 
       const res = await fetch(`${API}/restaurants/${restaurantId}/schedule`, {
         method: "PUT",
@@ -170,7 +228,7 @@ export default function MealScheduleManager({
           "Content-Type": "application/json",
           ...(token ? { Authorization: `Bearer ${token}` } : {}),
         },
-        body: JSON.stringify({ weeklySchedule: schedule }),
+        body: JSON.stringify({ weeklySchedule: cleanSchedule }),
       })
 
       const data = await res.json()
@@ -180,9 +238,16 @@ export default function MealScheduleManager({
       }
 
       if (onSaved) onSaved(data.weeklySchedule)
-      alert("🎉 Weekly Meal Schedule Saved Successfully!")
+      setSaveMessage({
+        type: "success",
+        text: "🎉 Weekly Meal Schedule Saved Successfully!",
+      })
     } catch (err) {
       console.error(err)
+      setSaveMessage({
+        type: "danger",
+        text: err.message || "Error saving weekly schedule.",
+      })
       alert(err.message || "Error saving weekly schedule.")
     } finally {
       setSaving(false)
@@ -196,16 +261,20 @@ export default function MealScheduleManager({
     const names = []
 
     items.forEach((item) => {
-      if (typeof item === "object" && item !== null) {
+      if (typeof item === "object" && item !== null && item.dish) {
         names.push(item.dish)
-      } else {
+      } else if (typeof item === "string" && item.trim()) {
         const found = restaurantMenus.find((m) => m._id === item)
-        names.push(found ? found.dish : "Dish")
+        if (found && found.dish) {
+          names.push(found.dish)
+        } else {
+          names.push("Dish")
+        }
       }
     })
 
     custom.forEach((c) => {
-      if (c) names.push(c)
+      if (typeof c === "string" && c.trim()) names.push(c.trim())
     })
 
     if (names.length === 0) {
@@ -260,8 +329,17 @@ export default function MealScheduleManager({
             type="button"
             className="btn btn-sm btn-outline-info"
             onClick={copyMondayToWeekdays}
+            title="Copy Monday's meal timings and dishes to Tue, Wed, Thu & Fri"
           >
             📋 Copy Mon → Fri
+          </button>
+          <button
+            type="button"
+            className="btn btn-sm btn-outline-light"
+            onClick={copyMondayToAllDays}
+            title="Copy Monday's meal timings and dishes to all 7 days (Mon-Sun)"
+          >
+            🔁 Copy Mon → All Days
           </button>
           <button
             type="button"
@@ -273,6 +351,22 @@ export default function MealScheduleManager({
           </button>
         </div>
       </div>
+
+      {/* Inline Feedback Banner */}
+      {saveMessage && (
+        <div
+          className={`alert alert-${saveMessage.type} alert-dismissible fade show py-2 px-3 mb-4`}
+          role="alert"
+        >
+          <span>{saveMessage.text}</span>
+          <button
+            type="button"
+            className="btn-close py-2"
+            onClick={() => setSaveMessage(null)}
+            aria-label="Close"
+          />
+        </div>
+      )}
 
       {/* Desktop / Large Screen Matrix Table */}
       <div className="d-none d-lg-block">

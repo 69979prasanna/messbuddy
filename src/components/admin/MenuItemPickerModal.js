@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react"
+import React, { useState, useMemo, useEffect } from "react"
 import "../../styles/MealSchedule.css"
 
 export default function MenuItemPickerModal({
@@ -13,16 +13,41 @@ export default function MenuItemPickerModal({
 }) {
   const [chosenIds, setChosenIds] = useState(
     Array.isArray(selectedItemIds)
-      ? selectedItemIds.map((item) =>
-          typeof item === "object" && item !== null ? item._id : item
-        )
+      ? selectedItemIds
+          .map((item) =>
+            typeof item === "object" && item !== null ? item._id : item
+          )
+          .filter(Boolean)
       : []
   )
   const [customList, setCustomList] = useState(
-    Array.isArray(selectedCustomItems) ? [...selectedCustomItems] : []
+    Array.isArray(selectedCustomItems)
+      ? selectedCustomItems.filter(Boolean)
+      : []
   )
   const [customInput, setCustomInput] = useState("")
   const [searchTerm, setSearchTerm] = useState("")
+
+  useEffect(() => {
+    if (show) {
+      setChosenIds(
+        Array.isArray(selectedItemIds)
+          ? selectedItemIds
+              .map((item) =>
+                typeof item === "object" && item !== null ? item._id : item
+              )
+              .filter(Boolean)
+          : []
+      )
+      setCustomList(
+        Array.isArray(selectedCustomItems)
+          ? selectedCustomItems.filter(Boolean)
+          : []
+      )
+      setSearchTerm("")
+      setCustomInput("")
+    }
+  }, [show, selectedItemIds, selectedCustomItems, day, mealMeta])
 
   const filteredMenus = useMemo(() => {
     return restaurantMenus.filter((m) =>

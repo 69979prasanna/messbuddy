@@ -8,7 +8,11 @@ import {
 } from "../../utils/mealTiming"
 import "../../styles/MealSchedule.css"
 
-export default function WeeklySchedule({ weeklySchedule = [] }) {
+export default function WeeklySchedule({
+  weeklySchedule = [],
+  restaurantName = "",
+  menus = [],
+}) {
   const todayName = useMemo(() => getDayName(), [])
   const [selectedDay, setSelectedDay] = useState(todayName)
 
@@ -37,7 +41,20 @@ export default function WeeklySchedule({ weeklySchedule = [] }) {
   }
 
   if (!Array.isArray(weeklySchedule) || weeklySchedule.length === 0) {
-    return null
+    return (
+      <div
+        className="weekly-schedule-section mb-5 p-4 rounded-4 text-center border border-secondary border-opacity-25"
+        style={{ background: "rgba(22, 27, 38, 0.6)" }}
+      >
+        <span style={{ fontSize: "2rem" }}>📅</span>
+        <h4 className="text-white fw-bold mt-2 mb-1">
+          Weekly Meal Timetable
+        </h4>
+        <p className="text-secondary small mb-0">
+          The weekly meal schedule for {restaurantName || "this mess"} has not been published yet.
+        </p>
+      </div>
+    )
   }
 
   return (
@@ -98,8 +115,17 @@ export default function WeeklySchedule({ weeklySchedule = [] }) {
                   price: item.price,
                   available: item.isAvailable !== false,
                 })
-              } else if (typeof item === "string") {
-                allDishes.push({ name: item, price: null, available: true })
+              } else if (typeof item === "string" && item.trim()) {
+                const found = Array.isArray(menus)
+                  ? menus.find((m) => m._id === item)
+                  : null
+                if (found) {
+                  allDishes.push({
+                    name: found.dish,
+                    price: found.price,
+                    available: found.isAvailable !== false,
+                  })
+                }
               }
             })
           }

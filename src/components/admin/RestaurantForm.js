@@ -388,6 +388,30 @@ export default function RestaurantForm({
               />
             </div>
           </div>
+
+          {initialData?._id && (
+            <div
+              className="mt-3 p-3 rounded-3 border border-warning border-opacity-50"
+              style={{ background: "rgba(255, 193, 7, 0.08)" }}
+            >
+              <div className="d-flex justify-content-between align-items-center flex-wrap gap-2">
+                <div>
+                  <strong className="text-warning d-block">
+                    ⏰ Detailed Meal Timetable
+                  </strong>
+                  <span className="text-secondary small">
+                    Configure daily Breakfast, Lunch, Snacks & Dinner timings and menus for {initialData.name || "this mess"}.
+                  </span>
+                </div>
+                <a
+                  href={`/admin/schedule/${initialData._id}`}
+                  className="btn btn-sm btn-outline-warning text-nowrap fw-bold"
+                >
+                  Configure Schedule →
+                </a>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Restaurant Image */}

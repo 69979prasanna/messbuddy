@@ -231,10 +231,15 @@ export default function PlaceDetails({
       <LiveMealStatus
         weeklySchedule={restaurant.weeklySchedule}
         restaurantName={restaurant.name}
+        menus={menus}
       />
 
       {/* Interactive Weekly Meal Timetable */}
-      <WeeklySchedule weeklySchedule={restaurant.weeklySchedule} />
+      <WeeklySchedule
+        weeklySchedule={restaurant.weeklySchedule}
+        restaurantName={restaurant.name}
+        menus={menus}
+      />
 
       {/* A-La-Carte Full Restaurant Menu Section */}
       <div className="d-flex justify-content-between align-items-center mb-3 mt-4">

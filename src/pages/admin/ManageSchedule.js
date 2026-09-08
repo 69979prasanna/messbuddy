@@ -12,7 +12,9 @@ export default function ManageSchedule() {
   const [selectedId, setSelectedId] = useState(restaurantId || "")
   const [selectedRestaurant, setSelectedRestaurant] = useState(null)
   const [loading, setLoading] = useState(true)
+  const [fetchingDetails, setFetchingDetails] = useState(false)
 
+  // Fetch restaurants list once on mount
   useEffect(() => {
     const fetchRestaurants = async () => {
       try {
@@ -33,13 +35,22 @@ export default function ManageSchedule() {
     }
 
     fetchRestaurants()
+  }, []) // run once
+
+  // Sync selectedId when restaurantId from URL changes
+  useEffect(() => {
+    if (restaurantId && restaurantId !== selectedId) {
+      setSelectedId(restaurantId)
+    }
   }, [restaurantId])
 
+  // Fetch full details of the selected restaurant
   useEffect(() => {
     if (!selectedId) return
 
     const fetchSelected = async () => {
       try {
+        setFetchingDetails(true)
         const res = await fetch(`${API}/restaurants/${selectedId}`)
         if (res.ok) {
           const data = await res.json()
@@ -47,6 +58,8 @@ export default function ManageSchedule() {
         }
       } catch (err) {
         console.error("Error fetching restaurant details:", err)
+      } finally {
+        setFetchingDetails(false)
       }
     }
 
@@ -83,24 +96,43 @@ export default function ManageSchedule() {
           </h1>
         </div>
 
-        {/* Restaurant Switcher Dropdown */}
-        <div style={{ minWidth: "260px" }}>
-          <label className="text-secondary small mb-1">
-            Select Restaurant / Mess:
-          </label>
-          <select
-            className="form-select bg-dark text-light border-secondary"
-            value={selectedId}
-            onChange={(e) => handleRestaurantChange(e.target.value)}
-          >
-            {restaurants.map((r) => (
-              <option key={r._id} value={r._id}>
-                {r.name}
-              </option>
-            ))}
-          </select>
+        {/* Restaurant Switcher Dropdown & Live Page Link */}
+        <div className="d-flex align-items-end gap-2" style={{ minWidth: "300px" }}>
+          <div className="flex-grow-1">
+            <label className="text-secondary small mb-1">
+              Select Restaurant / Mess:
+            </label>
+            <select
+              className="form-select bg-dark text-light border-secondary"
+              value={selectedId}
+              onChange={(e) => handleRestaurantChange(e.target.value)}
+            >
+              {restaurants.map((r) => (
+                <option key={r._id} value={r._id}>
+                  {r.name}
+                </option>
+              ))}
+            </select>
+          </div>
+          {selectedId && (
+            <button
+              type="button"
+              className="btn btn-outline-info text-nowrap"
+              title="View how this meal timetable appears on the public student page"
+              onClick={() => window.open(`/place/${selectedId}`, "_blank")}
+            >
+              👁️ View Live Page
+            </button>
+          )}
         </div>
       </div>
+
+      {fetchingDetails && (
+        <div className="text-center py-2 mb-3">
+          <span className="spinner-border spinner-border-sm text-warning me-2" />
+          <span className="text-secondary small">Refreshing schedule details...</span>
+        </div>
+      )}
 
       {selectedRestaurant ? (
         <MealScheduleManager

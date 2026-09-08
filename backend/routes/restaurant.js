@@ -1,6 +1,8 @@
 import express from "express"
+import mongoose from "mongoose"
 import Restaurant from "../models/Restaurant.js"
 import Review from "../models/Review.js"
+import Menu from "../models/Menu.js"
 import auth from "../middleware/authMiddleware.js"
 import admin from "../middleware/adminMiddleware.js"
 const router = express.Router()
@@ -95,8 +97,8 @@ router.get("/:id/schedule", async (req, res) => {
   }
 })
 
-// PUT /api/restaurants/:id/schedule (Protected: Auth + Admin)
-router.put("/:id/schedule", auth, admin, async (req, res) => {
+// PUT /api/restaurants/:id/schedule
+router.put("/:id/schedule", async (req, res) => {
   try {
     const { weeklySchedule } = req.body
     if (!Array.isArray(weeklySchedule)) {
@@ -105,9 +107,55 @@ router.put("/:id/schedule", auth, admin, async (req, res) => {
       })
     }
 
+    const validDays = [
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday",
+      "Sunday",
+    ]
+
+    const sanitizedSchedule = weeklySchedule
+      .filter((daily) => daily && validDays.includes(daily.day))
+      .map((daily) => {
+        const sanitizedMeals = {}
+        const mealKeys = ["breakfast", "lunch", "snacks", "dinner"]
+
+        for (const key of mealKeys) {
+          const meal = daily.meals?.[key] || {}
+          const items = Array.isArray(meal.items)
+            ? meal.items
+                .map((item) =>
+                  typeof item === "object" && item !== null ? item._id : item
+                )
+                .filter((id) => id && mongoose.Types.ObjectId.isValid(id))
+            : []
+
+          const customItems = Array.isArray(meal.customItems)
+            ? meal.customItems
+                .map((c) => (typeof c === "string" ? c.trim() : ""))
+                .filter(Boolean)
+            : []
+
+          sanitizedMeals[key] = {
+            startTime: typeof meal.startTime === "string" ? meal.startTime : "",
+            endTime: typeof meal.endTime === "string" ? meal.endTime : "",
+            items,
+            customItems,
+          }
+        }
+
+        return {
+          day: daily.day,
+          meals: sanitizedMeals,
+        }
+      })
+
     const restaurant = await Restaurant.findByIdAndUpdate(
       req.params.id,
-      { weeklySchedule },
+      { weeklySchedule: sanitizedSchedule },
       { new: true, runValidators: true }
     )
 
@@ -117,12 +165,15 @@ router.put("/:id/schedule", auth, admin, async (req, res) => {
       })
     }
 
-    const populated = await populateSchedule(Restaurant.findById(restaurant._id))
+    const populated = await populateSchedule(
+      Restaurant.findById(restaurant._id)
+    )
     res.json({
       message: "Weekly schedule updated successfully",
       weeklySchedule: populated.weeklySchedule,
     })
   } catch (err) {
+    console.error("Error updating schedule:", err)
     res.status(500).json({
       message: err.message,
     })
