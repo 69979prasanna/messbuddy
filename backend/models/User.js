@@ -84,6 +84,18 @@ const userSchema = new mongoose.Schema(
         default: null,
       },
     },
+    aiProfile: {
+      budgetRange: {
+        min: { type: Number, default: null },
+        max: { type: Number, default: null },
+      },
+      preferredCategories: [{ type: String, trim: true }],
+      favoriteFoods: [{ type: String, trim: true }],
+      dislikedFoods: [{ type: String, trim: true }],
+      spicePreference: { type: String, default: null },
+      dietaryPreference: { type: String, default: null },
+      notes: [{ type: String, trim: true }],
+    },
   },
   {
     timestamps: true,

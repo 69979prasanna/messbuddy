@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from "react"
+import { useState, useMemo, useEffect } from "react"
 import "../../styles/MealSchedule.css"
 
 export default function MenuItemPickerModal({
@@ -14,10 +14,10 @@ export default function MenuItemPickerModal({
   const [chosenIds, setChosenIds] = useState(
     Array.isArray(selectedItemIds)
       ? selectedItemIds
-          .map((item) =>
-            typeof item === "object" && item !== null ? item._id : item
-          )
-          .filter(Boolean)
+        .map((item) =>
+          typeof item === "object" && item !== null ? item._id : item
+        )
+        .filter(Boolean)
       : []
   )
   const [customList, setCustomList] = useState(
@@ -33,10 +33,10 @@ export default function MenuItemPickerModal({
       setChosenIds(
         Array.isArray(selectedItemIds)
           ? selectedItemIds
-              .map((item) =>
-                typeof item === "object" && item !== null ? item._id : item
-              )
-              .filter(Boolean)
+            .map((item) =>
+              typeof item === "object" && item !== null ? item._id : item
+            )
+            .filter(Boolean)
           : []
       )
       setCustomList(
@@ -180,9 +180,8 @@ export default function MenuItemPickerModal({
                   return (
                     <div
                       key={item._id}
-                      className={`menu-item-selectable-row ${
-                        isSelected ? "selected" : ""
-                      }`}
+                      className={`menu-item-selectable-row ${isSelected ? "selected" : ""
+                        }`}
                       onClick={() => toggleItem(item._id)}
                     >
                       <div className="d-flex align-items-center gap-2">
@@ -190,7 +189,7 @@ export default function MenuItemPickerModal({
                           type="checkbox"
                           className="form-check-input mt-0"
                           checked={isSelected}
-                          onChange={() => {}}
+                          onChange={() => { }}
                         />
                         <span className="text-light fw-medium">
                           {item.dish}
