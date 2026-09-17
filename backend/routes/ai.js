@@ -7,12 +7,7 @@ import {
   getUserAIProfile,
   updateUserAIProfile,
 } from "../services/aiService.js"
-
 const router = express.Router()
-
-/**
- * POST /api/ai/chat (Main chat endpoint)
- */
 router.post("/chat", optionalAuth, async (req, res) => {
   try {
     const { message } = req.body
@@ -32,10 +27,6 @@ router.post("/chat", optionalAuth, async (req, res) => {
     })
   }
 })
-
-/**
- * POST /api/ai (Backwards compatibility endpoint)
- */
 router.post("/", optionalAuth, async (req, res) => {
   try {
     const { message } = req.body
@@ -55,10 +46,6 @@ router.post("/", optionalAuth, async (req, res) => {
     })
   }
 })
-
-/**
- * GET /api/ai/history (Fetch conversation history for logged-in user)
- */
 router.get("/history", optionalAuth, async (req, res) => {
   try {
     const userId = req.user?.userId || null
@@ -73,10 +60,6 @@ router.get("/history", optionalAuth, async (req, res) => {
     res.status(500).json({ message: err.message })
   }
 })
-
-/**
- * DELETE /api/ai/history (Clear conversation history)
- */
 router.delete("/history", optionalAuth, async (req, res) => {
   try {
     const userId = req.user?.userId || null
@@ -91,10 +74,6 @@ router.delete("/history", optionalAuth, async (req, res) => {
     res.status(500).json({ message: err.message })
   }
 })
-
-/**
- * GET /api/ai/profile (Fetch user's learned memory and preferences)
- */
 router.get("/profile", optionalAuth, async (req, res) => {
   try {
     const userId = req.user?.userId || null
@@ -109,10 +88,6 @@ router.get("/profile", optionalAuth, async (req, res) => {
     res.status(500).json({ message: err.message })
   }
 })
-
-/**
- * PUT /api/ai/profile (Update user's learned memory preferences)
- */
 router.put("/profile", optionalAuth, async (req, res) => {
   try {
     const userId = req.user?.userId || null
