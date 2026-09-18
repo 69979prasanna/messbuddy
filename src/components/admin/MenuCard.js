@@ -16,8 +16,20 @@ export default function MenuCard({
           <h5 className="fw-bold mb-0 text-white">
             {menu.dish}
           </h5>
-          <span className={`badge ${menu.isAvailable ? "bg-success" : "bg-danger"}`}>
-            {menu.isAvailable ? "Available" : "Out of Stock"}
+          <span
+            className={`badge ${
+              menu.status === "Almost Finished"
+                ? "bg-warning text-dark"
+                : menu.isAvailable
+                ? "bg-success"
+                : "bg-danger"
+            }`}
+          >
+            {menu.status === "Almost Finished"
+              ? "⚠️ Almost Finished"
+              : menu.isAvailable
+              ? "Available"
+              : "Out of Stock"}
           </span>
         </div>
         <small className="text-light mt-1">

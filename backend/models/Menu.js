@@ -43,6 +43,12 @@ const menuSchema = new mongoose.Schema(
       type: Boolean,
       default: true,
     },
+
+    status: {
+      type: String,
+      enum: ["Available", "Almost Finished", "Out of Stock"],
+      default: "Available",
+    },
   },
   {
     timestamps: true,

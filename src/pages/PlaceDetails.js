@@ -238,7 +238,9 @@ export default function PlaceDetails({
       <WeeklySchedule
         weeklySchedule={restaurant.weeklySchedule}
         restaurantName={restaurant.name}
+        restaurantId={restaurant._id}
         menus={menus}
+        setShowAuthModal={setShowAuthModal}
       />
 
       {/* A-La-Carte Full Restaurant Menu Section */}

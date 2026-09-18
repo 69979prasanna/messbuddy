@@ -11,10 +11,15 @@ import adminRoutes from "./routes/admin.js"
 import menuRoutes from "./routes/menu.js"
 import favoriteRoutes from "./routes/favorite.js"
 import aiRoutes from "./routes/ai.js"
+import notificationRoutes from "./routes/notificationRoutes.js"
+import { startNotificationScheduler } from "./services/notificationScheduler.js"
 dotenv.config()
 mongoose
   .connect(process.env.MONGO_URI)
-  .then(() => console.log("MongoDB connected"))
+  .then(() => {
+    console.log("MongoDB connected")
+    startNotificationScheduler()
+  })
   .catch((err) => console.error("Mongo Error:", err))
 const app = express()
 app.use(cors())
@@ -28,6 +33,7 @@ app.use("/api/restaurants", restaurantRoutes)
 app.use("/api/reviews", reviewRoutes)
 app.use("/api/admin", adminRoutes)
 app.use("/api/ai", aiRoutes)
+app.use("/api/notifications", notificationRoutes)
 
 app.listen(5000, () =>
   console.log(`running on http://localhost:${process.env.PORT}`)

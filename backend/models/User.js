@@ -96,6 +96,38 @@ const userSchema = new mongoose.Schema(
       dietaryPreference: { type: String, default: null },
       notes: [{ type: String, trim: true }],
     },
+    notificationPreferences: {
+      enabled: {
+        type: Boolean,
+        default: true,
+      },
+      mealReminders: {
+        enabled: {
+          type: Boolean,
+          default: true,
+        },
+        minutesBefore: {
+          type: Number,
+          default: 15,
+        },
+      },
+      favoriteFoodAvailable: {
+        type: Boolean,
+        default: true,
+      },
+      favoriteFoodAlmostFinished: {
+        type: Boolean,
+        default: true,
+      },
+      favoriteRestaurantUpdates: {
+        type: Boolean,
+        default: false,
+      },
+      aiSuggestions: {
+        type: Boolean,
+        default: false,
+      },
+    },
   },
   {
     timestamps: true,

@@ -1,6 +1,10 @@
 import express from "express"
 import Menu from "../models/Menu.js"
 import Review from "../models/Review.js"
+import {
+  notifyFavoriteFoodAvailable,
+  notifyFavoriteFoodAlmostFinished,
+} from "../services/notificationService.js"
 const router = express.Router()
 
 router.get("/", async (req, res) => {
@@ -124,6 +128,20 @@ router.put("/:id", async (req, res) => {
         message: "Menu item not found",
       })
     }
+
+    if (req.body.status === "Almost Finished") {
+      notifyFavoriteFoodAlmostFinished(menu._id).catch((err) =>
+        console.error("Error triggering almost finished notification:", err)
+      )
+    } else if (
+      (req.body.isAvailable === true || req.body.status === "Available") &&
+      req.body.status !== "Out of Stock"
+    ) {
+      notifyFavoriteFoodAvailable(menu._id).catch((err) =>
+        console.error("Error triggering food available notification:", err)
+      )
+    }
+
     res.json(menu)
   } catch (err) {
     res.status(400).json({

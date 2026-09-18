@@ -21,6 +21,7 @@ export default function EditMenuModal({
     image: "",
     rating: 0,
     isAvailable: true,
+    status: "Available",
   })
   useEffect(() => {
     if (menu) {
@@ -32,7 +33,8 @@ export default function EditMenuModal({
         description: menu.description || "",
         image: menu.image || "",
         rating: menu.rating || 0,
-        isAvailable: menu.isAvailable,
+        isAvailable: menu.isAvailable !== false,
+        status: menu.status || (menu.isAvailable ? "Available" : "Out of Stock"),
       })
     }
   }, [menu])
@@ -171,14 +173,68 @@ export default function EditMenuModal({
               </label>
               <textarea rows={5} name="description" value={formData.description} onChange={handleChange} />
             </div>
-            <div className="availability">
-              <label className="switch">
-                <input type="checkbox" name="isAvailable" checked={formData.isAvailable} onChange={handleChange} />
-                <span className="slider"></span>
-              </label>
-              <span>
-                Available
-              </span>
+            <div className="d-flex align-items-center gap-4 my-2 flex-wrap">
+              <div className="availability">
+                <label className="switch">
+                  <input
+                    type="checkbox"
+                    name="isAvailable"
+                    checked={formData.isAvailable}
+                    onChange={(e) => {
+                      const checked = e.target.checked
+                      setFormData((prev) => ({
+                        ...prev,
+                        isAvailable: checked,
+                        status: !checked
+                          ? "Out of Stock"
+                          : prev.status === "Almost Finished"
+                          ? "Almost Finished"
+                          : "Available",
+                      }))
+                    }}
+                  />
+                  <span className="slider"></span>
+                </label>
+                <span>Available</span>
+              </div>
+
+              {formData.isAvailable && (
+                <div className="availability">
+                  <label className="switch">
+                    <input
+                      type="checkbox"
+                      name="isAlmostFinished"
+                      checked={formData.status === "Almost Finished"}
+                      onChange={(e) => {
+                        const checked = e.target.checked
+                        setFormData((prev) => ({
+                          ...prev,
+                          status: checked ? "Almost Finished" : "Available",
+                        }))
+                      }}
+                    />
+                    <span
+                      className="slider"
+                      style={{
+                        backgroundColor:
+                          formData.status === "Almost Finished"
+                            ? "#f59e0b"
+                            : "",
+                      }}
+                    ></span>
+                  </label>
+                  <span
+                    style={{
+                      color:
+                        formData.status === "Almost Finished"
+                          ? "#fbbf24"
+                          : "#cbd5e1",
+                    }}
+                  >
+                    ⚠️ Running Low / Almost Finished
+                  </span>
+                </div>
+              )}
             </div>
             <div className="button-row">
               <button type="button" className="cancel-btn" onClick={onClose}>

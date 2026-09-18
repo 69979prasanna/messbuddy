@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react"
+import React, { useState, useEffect, useMemo } from "react"
 import {
   DAYS_OF_WEEK,
   MEAL_PERIODS,
@@ -7,14 +7,42 @@ import {
   timeStringToDate,
 } from "../../utils/mealTiming"
 import "../../styles/MealSchedule.css"
+import NotificationModal from "../notifications/NotificationModal"
+import { getNotificationPreferences } from "../../utils/notificationPreferences"
+import "../../styles/NotificationModal.css"
 
 export default function WeeklySchedule({
   weeklySchedule = [],
   restaurantName = "",
   menus = [],
+  setShowAuthModal,
 }) {
   const todayName = useMemo(() => getDayName(), [])
   const [selectedDay, setSelectedDay] = useState(todayName)
+  const [isNotificationModalOpen, setIsNotificationModalOpen] = useState(false)
+  const [notificationsEnabled, setNotificationsEnabled] = useState(false)
+
+  useEffect(() => {
+    const token = localStorage.getItem("token")
+    if (token) {
+      getNotificationPreferences().then((res) => {
+        if (res.success && res.preferences?.enabled) {
+          setNotificationsEnabled(true)
+        }
+      })
+    }
+  }, [])
+
+  const handleNotifyClick = () => {
+    const token = localStorage.getItem("token")
+    if (!token) {
+      if (typeof setShowAuthModal === "function") {
+        setShowAuthModal(true)
+      }
+      return
+    }
+    setIsNotificationModalOpen(true)
+  }
 
   // Current local time to check if a card is actively being served right now
   const now = new Date()
@@ -68,6 +96,24 @@ export default function WeeklySchedule({
             Browse daily breakfast, lunch, snacks, and dinner menus
           </p>
         </div>
+        <button
+          type="button"
+          className={`timetable-notify-btn ${notificationsEnabled ? "is-active" : ""}`}
+          onClick={handleNotifyClick}
+          id="timetable-notify-me-btn"
+          title="Manage MessBuddy Email Notifications"
+        >
+          {notificationsEnabled ? (
+            <>
+              <span className="notify-pulse-dot"></span>
+              <span>🔔 Notifications On</span>
+            </>
+          ) : (
+            <>
+              <span>🔔 Notify Me</span>
+            </>
+          )}
+        </button>
       </div>
 
       {/* Day Selector Navigation Pills */}
@@ -207,6 +253,15 @@ export default function WeeklySchedule({
           )
         })}
       </div>
+
+      {isNotificationModalOpen && (
+        <NotificationModal
+          onClose={() => setIsNotificationModalOpen(false)}
+          onPreferencesUpdated={(updatedPrefs) => {
+            setNotificationsEnabled(Boolean(updatedPrefs?.enabled))
+          }}
+        />
+      )}
     </div>
   )
 }
