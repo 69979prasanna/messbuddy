@@ -10,13 +10,8 @@ const groq = new Groq({
   apiKey: process.env.GROQ_API_KEY,
 })
 
-// Primary and fallback models for high reliability
 const PRIMARY_MODEL = process.env.GROQ_MODEL || "openai/gpt-oss-20b"
 const FALLBACK_MODEL = "qwen/qwen3.8-27b"
-
-/**
- * Heuristically extract user food preferences from user message to update long-term memory
- */
 const extractAndSaveUserPreferences = async (userId, userMessage) => {
   if (!userId || !userMessage) return
   const text = userMessage.toLowerCase()
@@ -211,14 +206,10 @@ export const processAIChat = async ({ userId = null, message }) => {
         content: m.content,
       }))
     }
-
-    // Extract any preferences mentioned in this message asynchronously
     extractAndSaveUserPreferences(userId, cleanMessage).catch((e) =>
       console.warn("Preference extraction error:", e.message)
     )
   }
-
-  // 3. Construct System Prompt
   const systemPrompt = `
 You are **MessBuddy AI**, the intelligent, friendly, and personal campus food companion for college students using the MessBuddy app.
 
@@ -326,9 +317,6 @@ export const getUserConversation = async (userId) => {
   }
 }
 
-/**
- * Clear conversation history for a user
- */
 export const clearUserConversation = async (userId) => {
   if (!userId) return false
   await AIConversation.findOneAndUpdate(
@@ -338,9 +326,6 @@ export const clearUserConversation = async (userId) => {
   return true
 }
 
-/**
- * Retrieve user's AI profile (memory)
- */
 export const getUserAIProfile = async (userId) => {
   if (!userId) return null
   const user = await User.findById(userId).select("username preferences aiProfile").lean()
@@ -352,9 +337,6 @@ export const getUserAIProfile = async (userId) => {
   }
 }
 
-/**
- * Update user's AI profile (memory)
- */
 export const updateUserAIProfile = async (userId, profileData) => {
   if (!userId) return null
   const updatedUser = await User.findByIdAndUpdate(
