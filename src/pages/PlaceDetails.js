@@ -170,16 +170,31 @@ export default function PlaceDetails({
       <button className="btn btn-outline-light rounded-pill px-4 mb-4" onClick={() => navigate(-1)}>
         ← Back
       </button>
-      <div className="row g-4 mb-4">
+      {/* Restaurant Hero & Location Section */}
+      <div className="row g-3 g-lg-4 mb-4 align-items-stretch">
         <div className="col-lg-8">
-          <div className="position-relative overflow-hidden rounded-4 shadow-lg" style={{ height: "300px" }}>
-            <img src={restaurant.image} alt={restaurant.name} className="w-100 h-100" style={{ objectFit: "cover" }} />
-            <div className="position-absolute top-0 start-0 w-100 h-100" style={{ background: "linear-gradient(rgba(0,0,0,.2), rgba(0,0,0,.9))" }} />
-            <div className="position-absolute bottom-0 start-0 w-100 p-4" >
-              <h1 className="fw-bold text-white mb-2">
+          <div className="restaurant-hero position-relative overflow-hidden rounded-4 shadow-lg h-100">
+            <img
+              src={restaurant.image}
+              alt={restaurant.name}
+              className="w-100 h-100 position-absolute top-0 start-0"
+              style={{ objectFit: "cover" }}
+            />
+            <div
+              className="position-absolute top-0 start-0 w-100 h-100 hero-overlay"
+              style={{
+                background:
+                  "linear-gradient(to top, rgba(15, 23, 42, 0.95) 0%, rgba(15, 23, 42, 0.6) 45%, rgba(0, 0, 0, 0.25) 100%)",
+              }}
+            />
+            <div
+              className="position-relative p-4 p-md-4 d-flex flex-column justify-content-end h-100"
+              style={{ minHeight: "250px" }}
+            >
+              <h1 className="fw-bold text-white mb-2 fs-2">
                 {restaurant?.name || "Loading..."}
               </h1>
-              <div className="d-flex flex-wrap gap-2">
+              <div className="d-flex flex-wrap align-items-center gap-2">
                 <span className="badge bg-success px-3 py-2 fs-6">
                   ⭐{" "}
                   {(restaurant?.averageRating ??
@@ -190,8 +205,7 @@ export default function PlaceDetails({
                   🍽 {menus.length} Items
                 </span>
                 <span className="badge bg-warning text-dark px-3 py-2">
-                  ₹{avgPrice.toFixed(0)}
-                  {" "}Avg Price
+                  ₹{avgPrice.toFixed(0)} Avg Price
                 </span>
                 <span className="badge bg-info text-dark px-3 py-2">
                   🕒 {restaurant.openingTime} - {restaurant.closingTime}
@@ -200,30 +214,44 @@ export default function PlaceDetails({
             </div>
           </div>
         </div>
+
         <div className="col-lg-4">
-          <a href={restaurant.googleMapsUrl || `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${restaurant.name}, ${restaurant.address || ""}`)}`} target="_blank" rel="noopener noreferrer" className="text-decoration-none" >
-            <div className="location-card position-relative overflow-hidden rounded-4 shadow-lg" style={{ height: "300px", cursor: "pointer" }}>
-              <div className="location-background">
-                <div className="location-grid"></div>
-                <div className="location-pin">
-                  📍
-                </div>
+          <div className="location-card position-relative overflow-hidden rounded-4 shadow-sm">
+            <div className="location-background">
+              <div className="location-grid"></div>
+              <div className="location-pin-container">
                 <div className="location-ripple"></div>
-              </div>
-              <div className="location-overlay"></div>
-              <div className="position-absolute bottom-0 start-0 w-100 p-4">
-                <h3 className="text-white fw-bold mb-2">
-                  📍 Location
-                </h3>
-                <p className="text-light mb-2">
-                  {restaurant.address || "View restaurant location"}
-                </p>
-                <span className="badge bg-warning text-dark px-3 py-2">
-                  🗺️ Open in Google Maps
-                </span>
+                <div className="location-pin">📍</div>
               </div>
             </div>
-          </a>
+            <div className="location-overlay"></div>
+            <div className="location-content">
+              <div>
+                <h4 className="location-heading text-white fw-bold mb-1">
+                  📍 Location
+                </h4>
+                <p className="location-address mb-3">
+                  {restaurant.address || "View restaurant location"}
+                </p>
+              </div>
+              <div>
+                <a
+                  href={
+                    restaurant.googleMapsUrl ||
+                    `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+                      `${restaurant.name}, ${restaurant.address || ""}`
+                    )}`
+                  }
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn-google-maps"
+                >
+                  <span>🗺️</span>
+                  <span>Open in Google Maps</span>
+                </a>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -232,6 +260,7 @@ export default function PlaceDetails({
         weeklySchedule={restaurant.weeklySchedule}
         restaurantName={restaurant.name}
         menus={menus}
+        setShowAuthModal={setShowAuthModal}
       />
 
       {/* Interactive Weekly Meal Timetable */}

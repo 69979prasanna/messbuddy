@@ -1,7 +1,22 @@
-.restaurant-hero{
-    border-radius:24px;
-    overflow:hidden;
-    box-shadow:0 20px 45px rgba(0,0,0,.35);
+.restaurant-hero-wrapper {
+    width: 100%;
+}
+
+.restaurant-hero {
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    position: relative;
+    background: #111827;
+}
+
+.restaurant-hero img {
+    transition: transform 0.6s ease;
+}
+
+.restaurant-hero:hover img {
+    transform: scale(1.02);
 }
 
 .input-group-text{
@@ -80,81 +95,151 @@
 ::-webkit-scrollbar-thumb:hover{
     background:#888;
 }
+/* --- Compact Location Widget --- */
 .location-card {
-    background: #172236;
-    border: 1px solid #26364f;
-
-    transition:
-        transform 0.25s ease,
-        box-shadow 0.25s ease;
+    background: #0f172a;
+    border: 1px solid rgba(56, 189, 248, 0.22);
+    border-radius: 20px;
+    height: 100%;
+    min-height: 240px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.4);
+    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
 }
 
 .location-card:hover {
-    transform: translateY(-4px);
-
-    box-shadow:
-        0 15px 40px rgba(0, 0, 0, 0.45) !important;
+    transform: translateY(-3px);
+    border-color: rgba(56, 189, 248, 0.45);
+    box-shadow: 0 16px 36px rgba(0, 0, 0, 0.55), 0 0 18px rgba(56, 189, 248, 0.1) !important;
 }
+
 .location-background {
     position: absolute;
     inset: 0;
-    background:
-        linear-gradient(
-            135deg,
-            #1e293b,
-            #172554,
-            #0f172a
-        );
+    background: linear-gradient(145deg, #0b1120 0%, #111d33 55%, #162444 100%);
     overflow: hidden;
 }
+
 .location-grid {
     position: absolute;
-    inset: -50px;
-    opacity: 0.25;
+    inset: -30px;
+    opacity: 0.12;
     background-image:
-        linear-gradient( 45deg, transparent 46%, #64748b 47%, #64748b 48%, transparent 49%),
-        linear-gradient( -45deg, transparent 46%, #64748b 47%, #64748b 48%, transparent 49% );
-    background-size: 70px 70px;
-    transform: rotate(8deg);
+        linear-gradient(45deg, transparent 47%, #38bdf8 48%, #38bdf8 49%, transparent 50%),
+        linear-gradient(-45deg, transparent 47%, #38bdf8 48%, #38bdf8 49%, transparent 50%);
+    background-size: 50px 50px;
+    transform: rotate(6deg);
 }
-.location-pin {
+
+.location-pin-container {
     position: absolute;
-    top: 38%;
+    top: 30%;
     left: 50%;
     transform: translate(-50%, -50%);
-    font-size: 55px;
-    filter:drop-shadow( 0 6px 10px rgba(0, 0, 0, 0.5) );
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 60px;
+    height: 60px;
     z-index: 2;
-    transition:
-        transform 0.25s ease;
 }
+
+.location-pin {
+    font-size: 34px;
+    filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.6));
+    transition: transform 0.25s ease;
+    user-select: none;
+}
+
 .location-card:hover .location-pin {
-    transform:
-        translate(-50%, -55%)
-        scale(1.1);
+    transform: scale(1.12);
 }
+
 .location-ripple {
     position: absolute;
-    top: 38%;
-    left: 50%;
-    width: 90px;
-    height: 90px;
-    transform: translate(-50%, -50%);
+    width: 48px;
+    height: 48px;
     border-radius: 50%;
-    border: 2px solid rgba(255,255,255,0.2);
-    box-shadow:
-        0 0 0 20px rgba(255,255,255,0.04),
-        0 0 0 40px rgba(255,255,255,0.02);
+    border: 1.5px solid rgba(56, 189, 248, 0.35);
+    box-shadow: 0 0 12px rgba(56, 189, 248, 0.15);
+    animation: location-ripple-pulse 2.4s infinite ease-out;
 }
+
+@keyframes location-ripple-pulse {
+    0% {
+        transform: scale(0.85);
+        opacity: 0.8;
+    }
+    70% {
+        transform: scale(1.45);
+        opacity: 0.2;
+    }
+    100% {
+        transform: scale(1.7);
+        opacity: 0;
+    }
+}
+
 .location-overlay {
     position: absolute;
     inset: 0;
-    background:
-        linear-gradient(
-            rgba(15,23,42,0.05),
-            rgba(15,23,42,0.95)
-        );
+    background: linear-gradient(
+        to top,
+        rgba(11, 17, 32, 0.95) 0%,
+        rgba(11, 17, 32, 0.68) 48%,
+        rgba(11, 17, 32, 0.2) 100%
+    );
     z-index: 1;
+}
+
+.location-content {
+    position: relative;
+    z-index: 3;
+    height: 100%;
+    padding: 18px 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+}
+
+.location-heading {
+    font-size: 1.05rem;
+    letter-spacing: 0.2px;
+}
+
+.location-address {
+    font-size: 0.82rem;
+    color: #94a3b8;
+    line-height: 1.35;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.btn-google-maps {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: linear-gradient(135deg, #ffc107 0%, #ffb300 100%);
+    color: #0f172a !important;
+    border: none;
+    border-radius: 30px;
+    padding: 6px 14px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-decoration: none;
+    transition: all 0.25s ease;
+    box-shadow: 0 4px 12px rgba(255, 193, 7, 0.25);
+    width: fit-content;
+}
+
+.btn-google-maps:hover {
+    background: linear-gradient(135deg, #ffd54f 0%, #ffc107 100%);
+    color: #000000 !important;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(255, 193, 7, 0.45);
 }
 .restaurant-search {
   width: 100%;

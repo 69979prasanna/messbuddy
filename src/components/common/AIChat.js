@@ -45,6 +45,15 @@ export default function AIChat() {
     }
   }, [open])
 
+  // Listen for external open requests (e.g. from PlaceDetails Next Meal section)
+  useEffect(() => {
+    const handleOpenChat = () => {
+      setOpen(true)
+    }
+    window.addEventListener("messbuddy:open-ai-chat", handleOpenChat)
+    return () => window.removeEventListener("messbuddy:open-ai-chat", handleOpenChat)
+  }, [])
+
   // Load conversation history on first open if logged in
   useEffect(() => {
     const fetchHistory = async () => {
