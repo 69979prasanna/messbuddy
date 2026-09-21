@@ -10,6 +10,7 @@ import "../../styles/MealSchedule.css"
 import NotificationModal from "../notifications/NotificationModal"
 import { getNotificationPreferences } from "../../utils/notificationPreferences"
 import "../../styles/NotificationModal.css"
+import { FiCalendar, FiBell, FiClock } from "react-icons/fi"
 
 export default function WeeklySchedule({
   weeklySchedule = [],
@@ -89,8 +90,9 @@ export default function WeeklySchedule({
     <div className="weekly-schedule-section mb-5">
       <div className="d-flex flex-wrap justify-content-between align-items-center mb-3">
         <div>
-          <h3 className="fw-bold text-light mb-1">
-            📅 Weekly Meal Timetable
+          <h3 className="fw-bold text-light mb-1 d-flex align-items-center gap-2">
+            <FiCalendar className="text-secondary opacity-75" style={{ fontSize: "1.1rem" }} />
+            Weekly Meal Timetable
           </h3>
           <p className="text-secondary mb-0 small">
             Browse daily breakfast, lunch, snacks, and dinner menus
@@ -103,16 +105,8 @@ export default function WeeklySchedule({
           id="timetable-notify-me-btn"
           title="Manage MessBuddy Email Notifications"
         >
-          {notificationsEnabled ? (
-            <>
-              <span className="notify-pulse-dot"></span>
-              <span>🔔 Notifications On</span>
-            </>
-          ) : (
-            <>
-              <span>🔔 Notify Me</span>
-            </>
-          )}
+          <FiBell style={{ fontSize: "0.85rem" }} />
+          <span>{notificationsEnabled ? "Notifications On" : "Notify Me"}</span>
         </button>
       </div>
 
@@ -195,23 +189,25 @@ export default function WeeklySchedule({
               >
                 {isActive && (
                   <div
-                    className="position-absolute top-0 end-0 m-2 badge bg-success text-white px-2 py-1"
-                    style={{ fontSize: "0.72rem" }}
+                    className="position-absolute top-0 end-0 m-2 badge bg-success-subtle text-success border border-success-subtle px-2 py-1 d-inline-flex align-items-center gap-1"
+                    style={{ fontSize: "0.7rem", borderRadius: "6px" }}
                   >
-                    🟢 Active Now
+                    <span className="pulse-dot" style={{ width: "6px", height: "6px" }}></span>
+                    <span>Active Now</span>
                   </div>
                 )}
 
                 <div className="meal-period-header">
                   <div className="meal-period-title text-white">
-                    <span style={{ fontSize: "1.4rem" }}>{period.icon}</span>
+                    <span style={{ fontSize: "1.2rem" }}>{period.icon}</span>
                     <span>{period.label}</span>
                   </div>
                 </div>
 
                 <div className="mb-3">
-                  <span className="meal-period-timing">
-                    🕒 {formatTime12Hour(startTime)} – {formatTime12Hour(endTime)}
+                  <span className="meal-period-timing d-inline-flex align-items-center gap-1">
+                    <FiClock className="opacity-75" style={{ fontSize: "0.75rem" }} />
+                    {formatTime12Hour(startTime)} – {formatTime12Hour(endTime)}
                   </span>
                 </div>
 

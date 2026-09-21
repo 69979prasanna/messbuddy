@@ -6,6 +6,8 @@ import {
   formatTime12Hour,
 } from "../../utils/mealTiming"
 import "../../styles/MealSchedule.css"
+import { FiClock, FiMoon, FiBell, FiSettings } from "react-icons/fi"
+import { RiRobot2Line } from "react-icons/ri"
 
 export default function LiveMealStatus({
   weeklySchedule = [],
@@ -130,15 +132,21 @@ export default function LiveMealStatus({
     }
 
     return (
-      <div className="meal-items-chip-list">
+      <div className="live-menu-list mt-2">
         {allDishes.map((dish, idx) => (
-          <span key={idx} className="meal-item-chip">
-            <span>🍽️</span>
-            <span>{dish.name}</span>
+          <div
+            key={idx}
+            className="live-menu-item-row d-flex justify-content-between align-items-center py-2 border-bottom border-secondary border-opacity-10"
+          >
+            <span className="dish-name text-light fw-medium small">
+              {dish.name}
+            </span>
             {dish.price !== null && dish.price !== undefined && (
-              <span className="chip-price">₹{dish.price}</span>
+              <span className="dish-price text-warning fw-semibold small font-monospace">
+                ₹{dish.price}
+              </span>
             )}
-          </span>
+          </div>
         ))}
       </div>
     )
@@ -169,15 +177,15 @@ export default function LiveMealStatus({
 
         {liveData.status === "UPCOMING_TODAY" && (
           <div className="live-badge upcoming">
-            <span>🕐</span>
+            <FiClock style={{ fontSize: "0.85rem" }} />
             <span>Next Meal Today</span>
           </div>
         )}
 
         {liveData.status === "NO_MORE_MEALS_TODAY" && (
           <div className="live-badge closed">
-            <span>🌙</span>
-            <span>No More Meals Today</span>
+            <FiMoon style={{ fontSize: "0.85rem" }} />
+            <span>Concluded for Today</span>
           </div>
         )}
       </div>
@@ -188,15 +196,15 @@ export default function LiveMealStatus({
           <div className="live-meal-hero-row d-flex flex-wrap justify-content-between align-items-center gap-3">
             <div>
               <h2 className="live-meal-title text-white fw-bold mb-1">
-                {liveData.currentMeal.icon} {liveData.currentMeal.label}
+                {liveData.currentMeal.label}
               </h2>
-              <div className="live-meal-timing-text text-success fw-semibold">
+              <div className="live-meal-timing-text text-success fw-medium small">
                 {formatTime12Hour(liveData.currentMeal.startTime)} – {formatTime12Hour(liveData.currentMeal.endTime)}
               </div>
             </div>
 
             <div className="countdown-timer-box">
-              <span className="countdown-label text-secondary small">Closes in:</span>
+              <span className="countdown-label text-secondary small">Closes in</span>
               <span className="countdown-digits">
                 {formatCountdown(liveData.secondsRemaining)}
               </span>
@@ -204,8 +212,8 @@ export default function LiveMealStatus({
           </div>
 
           <div className="mt-3">
-            <p className="live-menu-heading text-secondary mb-2 small text-uppercase fw-semibold">
-              Serving right now:
+            <p className="live-menu-heading text-secondary mb-1 small text-uppercase fw-semibold">
+              Serving right now
             </p>
             {renderDishChips(
               liveData.currentMeal.items,
@@ -220,15 +228,15 @@ export default function LiveMealStatus({
           <div className="live-meal-hero-row d-flex flex-wrap justify-content-between align-items-center gap-3">
             <div>
               <h2 className="live-meal-title text-white fw-bold mb-1">
-                {liveData.nextMeal.icon} {liveData.nextMeal.label}
+                {liveData.nextMeal.label}
               </h2>
-              <div className="live-meal-timing-text text-warning fw-semibold">
+              <div className="live-meal-timing-text text-warning fw-medium small">
                 Starts at {formatTime12Hour(liveData.nextMeal.startTime)}
               </div>
             </div>
 
             <div className="countdown-timer-box">
-              <span className="countdown-label text-secondary small">Starts in:</span>
+              <span className="countdown-label text-secondary small">Starts in</span>
               <span className="countdown-digits">
                 {formatCountdown(liveData.secondsUntilStart)}
               </span>
@@ -236,8 +244,8 @@ export default function LiveMealStatus({
           </div>
 
           <div className="mt-3">
-            <p className="live-menu-heading text-secondary mb-2 small text-uppercase fw-semibold">
-              Upcoming menu:
+            <p className="live-menu-heading text-secondary mb-1 small text-uppercase fw-semibold">
+              Upcoming menu
             </p>
             {renderDishChips(
               liveData.nextMeal.items,
@@ -258,7 +266,7 @@ export default function LiveMealStatus({
                 <div className="text-light-50 small">
                   Next meal:{" "}
                   <strong className="text-warning">
-                    {liveData.nextMeal.icon} {liveData.nextMeal.label}
+                    {liveData.nextMeal.label}
                   </strong>{" "}
                   ({liveData.nextMeal.day}{" "}
                   {liveData.nextMeal.isTomorrow ? "Tomorrow" : ""} at{" "}
@@ -273,7 +281,7 @@ export default function LiveMealStatus({
 
             {liveData.nextMeal && (
               <div className="countdown-timer-box">
-                <span className="countdown-label text-secondary small">Next meal in:</span>
+                <span className="countdown-label text-secondary small">Next meal in</span>
                 <span className="countdown-digits">
                   {formatDurationShort(liveData.secondsUntilStart)}
                 </span>
@@ -284,7 +292,7 @@ export default function LiveMealStatus({
       )}
 
       {/* Subtle Actions Row */}
-      <div className="live-status-actions d-flex flex-wrap align-items-center gap-2 pt-3 mt-3 border-top border-secondary border-opacity-25">
+      <div className="live-status-actions d-flex flex-wrap align-items-center gap-2 pt-3 mt-3 border-top border-secondary border-opacity-15">
         <button
           type="button"
           className="live-action-btn live-action-notify"
@@ -292,7 +300,7 @@ export default function LiveMealStatus({
           id="live-meal-notify-btn"
           title="Get meal reminder notifications"
         >
-          <span>🔔</span>
+          <FiBell className="btn-icon" />
           <span>Notify Me</span>
         </button>
 
@@ -303,110 +311,111 @@ export default function LiveMealStatus({
           id="live-meal-ai-btn"
           title="Ask MessBuddy AI about this meal"
         >
-          <span>🤖</span>
+          <RiRobot2Line className="btn-icon" />
           <span>Ask MessBuddy AI</span>
         </button>
       </div>
 
       {/* Test / Time-Warp Simulation Drawer (Hidden for normal users; shown for admin/dev) */}
       {isDevOrAdmin && (
-        <div className="mt-3 pt-2 border-top border-secondary border-opacity-25">
+        <div className="mt-3 pt-2 border-top border-secondary border-opacity-15">
           <div className="d-flex justify-content-between align-items-center">
             <button
               type="button"
-              className="btn btn-link btn-sm text-secondary text-decoration-none p-0"
+              className="btn btn-link btn-sm text-secondary text-decoration-none p-0 d-inline-flex align-items-center gap-1"
               onClick={() => setShowSimControls((prev) => !prev)}
               style={{ fontSize: "0.78rem" }}
             >
-              ⚙️ {showSimControls ? "Hide Time Simulation" : "Preview Meal Periods (Test Mode)"}
+              <FiSettings style={{ fontSize: "0.8rem" }} />
+              <span>{showSimControls ? "Hide Time Simulation" : "Preview Meal Periods (Test Mode)"}</span>
             </button>
             {simulatedHourMinute && (
-              <span className="badge bg-danger text-white small">
-                ⏱ Simulating: {formatTime12Hour(simulatedHourMinute)}
+              <span className="badge bg-secondary text-white small d-inline-flex align-items-center gap-1">
+                <FiClock style={{ fontSize: "0.75rem" }} /> Simulating: {formatTime12Hour(simulatedHourMinute)}
               </span>
             )}
           </div>
 
           {showSimControls && (
             <div className="time-simulation-bar mt-2">
-              <span className="text-warning fw-semibold">Quick Time Warp:</span>
+              <span className="text-secondary fw-semibold small">Quick Time Warp:</span>
               <div className="btn-group btn-group-sm flex-wrap gap-1">
                 <button
                   type="button"
                   className={`btn btn-sm ${
                     !simulatedHourMinute
-                      ? "btn-warning text-dark fw-bold"
+                      ? "btn-warning text-dark fw-semibold"
                       : "btn-outline-secondary text-light"
                   }`}
                   onClick={() => setSimulatedHourMinute("")}
                 >
-                  🔴 Live Clock
+                  Live Clock
                 </button>
                 <button
                   type="button"
                   className={`btn btn-sm ${
                     simulatedHourMinute === "08:30"
-                      ? "btn-warning text-dark fw-bold"
+                      ? "btn-warning text-dark fw-semibold"
                       : "btn-outline-secondary text-light"
                   }`}
                   onClick={() => setSimulatedHourMinute("08:30")}
                 >
-                  🌅 Breakfast (8:30 AM)
+                  Breakfast (8:30 AM)
                 </button>
                 <button
                   type="button"
                   className={`btn btn-sm ${
                     simulatedHourMinute === "11:00"
-                      ? "btn-warning text-dark fw-bold"
+                      ? "btn-warning text-dark fw-semibold"
                       : "btn-outline-secondary text-light"
                   }`}
                   onClick={() => setSimulatedHourMinute("11:00")}
                 >
-                  ⏳ Pre-Lunch (11:00 AM)
+                  Pre-Lunch (11:00 AM)
                 </button>
                 <button
                   type="button"
                   className={`btn btn-sm ${
                     simulatedHourMinute === "13:00"
-                      ? "btn-warning text-dark fw-bold"
+                      ? "btn-warning text-dark fw-semibold"
                       : "btn-outline-secondary text-light"
                   }`}
                   onClick={() => setSimulatedHourMinute("13:00")}
                 >
-                  🍛 Lunch (1:00 PM)
+                  Lunch (1:00 PM)
                 </button>
                 <button
                   type="button"
                   className={`btn btn-sm ${
                     simulatedHourMinute === "16:30"
-                      ? "btn-warning text-dark fw-bold"
+                      ? "btn-warning text-dark fw-semibold"
                       : "btn-outline-secondary text-light"
                   }`}
                   onClick={() => setSimulatedHourMinute("16:30")}
                 >
-                  ☕ Snacks (4:30 PM)
+                  Snacks (4:30 PM)
                 </button>
                 <button
                   type="button"
                   className={`btn btn-sm ${
                     simulatedHourMinute === "20:00"
-                      ? "btn-warning text-dark fw-bold"
+                      ? "btn-warning text-dark fw-semibold"
                       : "btn-outline-secondary text-light"
                   }`}
                   onClick={() => setSimulatedHourMinute("20:00")}
                 >
-                  🌙 Dinner (8:00 PM)
+                  Dinner (8:00 PM)
                 </button>
                 <button
                   type="button"
                   className={`btn btn-sm ${
                     simulatedHourMinute === "23:30"
-                      ? "btn-warning text-dark fw-bold"
+                      ? "btn-warning text-dark fw-semibold"
                       : "btn-outline-secondary text-light"
                   }`}
                   onClick={() => setSimulatedHourMinute("23:30")}
                 >
-                  🌌 Night Closed (11:30 PM)
+                  Night Closed (11:30 PM)
                 </button>
               </div>
             </div>

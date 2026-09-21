@@ -10,6 +10,8 @@ import ReviewForm from "../components/restaurantDetails/ReviewForm"
 import ReviewList from "../components/restaurantDetails/ReviewList"
 import LiveMealStatus from "../components/restaurantDetails/LiveMealStatus"
 import WeeklySchedule from "../components/restaurantDetails/WeeklySchedule"
+import { FaStar, FaUtensils } from "react-icons/fa"
+import { FiArrowLeft, FiClock, FiMapPin, FiExternalLink } from "react-icons/fi"
 const API = process.env.REACT_APP_APIKEY
 export default function PlaceDetails({
   setShowAuthModal,
@@ -167,13 +169,16 @@ export default function PlaceDetails({
   }
   return (
     <div className="container py-4 text-light">
-      <button className="btn btn-outline-light rounded-pill px-4 mb-4" onClick={() => navigate(-1)}>
-        ← Back
+      <button
+        className="btn btn-sm btn-outline-secondary text-light px-3 mb-4 rounded-2 d-inline-flex align-items-center gap-2"
+        onClick={() => navigate(-1)}
+      >
+        <FiArrowLeft /> Back
       </button>
       {/* Restaurant Hero & Location Section */}
       <div className="row g-3 g-lg-4 mb-4 align-items-stretch">
         <div className="col-lg-8">
-          <div className="restaurant-hero position-relative overflow-hidden rounded-4 shadow-lg h-100">
+          <div className="restaurant-hero position-relative overflow-hidden rounded-4 shadow-sm h-100">
             <img
               src={restaurant.image}
               alt={restaurant.name}
@@ -184,7 +189,7 @@ export default function PlaceDetails({
               className="position-absolute top-0 start-0 w-100 h-100 hero-overlay"
               style={{
                 background:
-                  "linear-gradient(to top, rgba(15, 23, 42, 0.95) 0%, rgba(15, 23, 42, 0.6) 45%, rgba(0, 0, 0, 0.25) 100%)",
+                  "linear-gradient(to top, rgba(11, 17, 32, 0.95) 0%, rgba(11, 17, 32, 0.6) 45%, rgba(0, 0, 0, 0.25) 100%)",
               }}
             />
             <div
@@ -194,21 +199,19 @@ export default function PlaceDetails({
               <h1 className="fw-bold text-white mb-2 fs-2">
                 {restaurant?.name || "Loading..."}
               </h1>
-              <div className="d-flex flex-wrap align-items-center gap-2">
-                <span className="badge bg-success px-3 py-2 fs-6">
-                  ⭐{" "}
-                  {(restaurant?.averageRating ??
-                    0
-                  ).toFixed(1)}
+              <div className="hero-meta-row d-flex flex-wrap align-items-center gap-2 text-light-50 small">
+                <span className="d-inline-flex align-items-center text-white fw-semibold">
+                  <FaStar className="text-warning me-1" style={{ fontSize: "0.85rem" }} />
+                  {(restaurant?.averageRating ?? 0).toFixed(1)}
                 </span>
-                <span className="badge bg-dark border border-secondary px-3 py-2">
-                  🍽 {menus.length} Items
-                </span>
-                <span className="badge bg-warning text-dark px-3 py-2">
-                  ₹{avgPrice.toFixed(0)} Avg Price
-                </span>
-                <span className="badge bg-info text-dark px-3 py-2">
-                  🕒 {restaurant.openingTime} - {restaurant.closingTime}
+                <span className="meta-separator text-secondary opacity-50">·</span>
+                <span>{menus.length} items</span>
+                <span className="meta-separator text-secondary opacity-50">·</span>
+                <span className="text-light">₹{avgPrice.toFixed(0)} avg</span>
+                <span className="meta-separator text-secondary opacity-50">·</span>
+                <span className="d-inline-flex align-items-center gap-1">
+                  <FiClock className="opacity-75" />
+                  {restaurant.openingTime} – {restaurant.closingTime}
                 </span>
               </div>
             </div>
@@ -221,14 +224,17 @@ export default function PlaceDetails({
               <div className="location-grid"></div>
               <div className="location-pin-container">
                 <div className="location-ripple"></div>
-                <div className="location-pin">📍</div>
+                <div className="location-pin">
+                  <FiMapPin className="text-info" />
+                </div>
               </div>
             </div>
             <div className="location-overlay"></div>
             <div className="location-content">
               <div>
-                <h4 className="location-heading text-white fw-bold mb-1">
-                  📍 Location
+                <h4 className="location-heading text-white fw-semibold mb-1 d-flex align-items-center gap-1">
+                  <FiMapPin className="text-info opacity-75" style={{ fontSize: "0.95rem" }} />
+                  Location
                 </h4>
                 <p className="location-address mb-3">
                   {restaurant.address || "View restaurant location"}
@@ -246,7 +252,7 @@ export default function PlaceDetails({
                   rel="noopener noreferrer"
                   className="btn-google-maps"
                 >
-                  <span>🗺️</span>
+                  <FiExternalLink style={{ fontSize: "0.85rem" }} />
                   <span>Open in Google Maps</span>
                 </a>
               </div>
@@ -275,8 +281,9 @@ export default function PlaceDetails({
       {/* A-La-Carte Full Restaurant Menu Section */}
       <div className="d-flex justify-content-between align-items-center mb-3 mt-4">
         <div>
-          <h3 className="fw-bold text-light mb-1">
-            🍽️ Full Restaurant Menu
+          <h3 className="fw-bold text-light mb-1 d-flex align-items-center gap-2">
+            <FaUtensils className="text-secondary opacity-75" style={{ fontSize: "1.05rem" }} />
+            Full Restaurant Menu
           </h3>
           <p className="text-secondary mb-0 small">
             Explore all individual items, prices, and availability
@@ -285,17 +292,32 @@ export default function PlaceDetails({
       </div>
 
       <div className="mb-4">
-        <input type="text" className="form-control restaurant-search" placeholder="🔍 Search your favourite dish..." value={search} onChange={(e) => setSearch(e.target.value)} />
+        <input
+          type="text"
+          className="form-control restaurant-search"
+          placeholder="Search dish name..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
       </div>
-      <div className="d-flex flex-wrap gap-3 mb-4">
-        <button className={`btn rounded-pill px-4 ${filter === "all" ? "btn-warning text-dark" : "btn-outline-warning"}`} onClick={() => setFilter("all")}  >
-          🍽 All
+      <div className="d-flex flex-wrap gap-2 mb-4">
+        <button
+          className={`btn btn-sm px-3 rounded-2 ${filter === "all" ? "btn-warning text-dark fw-semibold" : "btn-outline-secondary text-light"}`}
+          onClick={() => setFilter("all")}
+        >
+          All
         </button>
-        <button className={`btn rounded-pill px-4 ${filter === "top" ? "btn-warning text-dark" : "btn-outline-warning"}`} onClick={() => setFilter("top")}>
-          ⭐ Top Rated
+        <button
+          className={`btn btn-sm px-3 rounded-2 d-inline-flex align-items-center gap-1 ${filter === "top" ? "btn-warning text-dark fw-semibold" : "btn-outline-secondary text-light"}`}
+          onClick={() => setFilter("top")}
+        >
+          <FaStar style={{ fontSize: "0.75rem" }} /> Top Rated
         </button>
-        <button className={`btn rounded-pill px-4 ${filter === "cheap" ? "btn-warning text-dark" : "btn-outline-warning"}`} onClick={() => setFilter("cheap")} >
-          💸 Under ₹60
+        <button
+          className={`btn btn-sm px-3 rounded-2 ${filter === "cheap" ? "btn-warning text-dark fw-semibold" : "btn-outline-secondary text-light"}`}
+          onClick={() => setFilter("cheap")}
+        >
+          Under ₹60
         </button>
       </div>
       {filteredMenus.length === 0 ? (

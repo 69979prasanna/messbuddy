@@ -1,75 +1,73 @@
 .live-status-card {
   position: relative;
-  background: linear-gradient(145deg, #161b26 0%, #1e2638 100%);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 20px;
-  padding: 1.5rem;
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
+  background: #0f172a;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  padding: 1.25rem 1.5rem;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
   overflow: hidden;
-  transition: all 0.3s ease;
+  transition: border-color 0.2s ease;
 }
 
 .live-status-card.status-serving {
-  border-color: rgba(6, 214, 160, 0.4);
-  box-shadow: 0 12px 35px rgba(6, 214, 160, 0.15);
+  border-color: rgba(6, 214, 160, 0.25);
 }
 
 .live-status-card.status-upcoming {
-  border-color: rgba(255, 183, 3, 0.4);
-  box-shadow: 0 12px 35px rgba(255, 183, 3, 0.15);
+  border-color: rgba(255, 183, 3, 0.25);
 }
 
 .live-status-card.status-closed {
-  border-color: rgba(138, 148, 166, 0.3);
+  border-color: rgba(255, 255, 255, 0.08);
 }
 
 .live-badge {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  padding: 6px 14px;
-  border-radius: 50px;
-  font-size: 0.85rem;
-  font-weight: 700;
-  letter-spacing: 0.5px;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.3px;
   text-transform: uppercase;
 }
 
 .live-badge.serving {
-  background: rgba(6, 214, 160, 0.18);
+  background: rgba(6, 214, 160, 0.1);
   color: #06d6a0;
-  border: 1px solid rgba(6, 214, 160, 0.4);
+  border: 1px solid rgba(6, 214, 160, 0.25);
 }
 
 .live-badge.upcoming {
-  background: rgba(255, 183, 3, 0.18);
+  background: rgba(255, 183, 3, 0.1);
   color: #ffb703;
-  border: 1px solid rgba(255, 183, 3, 0.4);
+  border: 1px solid rgba(255, 183, 3, 0.25);
 }
 
 .live-badge.closed {
-  background: rgba(138, 148, 166, 0.18);
-  color: #c0ccdc;
-  border: 1px solid rgba(138, 148, 166, 0.3);
+  background: rgba(148, 163, 184, 0.1);
+  color: #94a3b8;
+  border: 1px solid rgba(148, 163, 184, 0.2);
 }
 
 .pulse-dot {
-  width: 10px;
-  height: 10px;
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
   background-color: currentColor;
   display: inline-block;
-  animation: pulse-glow 1.5s infinite;
+  animation: pulse-glow 2s infinite;
 }
 
 @keyframes pulse-glow {
   0% {
     transform: scale(0.95);
-    box-shadow: 0 0 0 0 rgba(6, 214, 160, 0.7);
+    box-shadow: 0 0 0 0 rgba(6, 214, 160, 0.5);
   }
   70% {
-    transform: scale(1.2);
-    box-shadow: 0 0 0 10px rgba(6, 214, 160, 0);
+    transform: scale(1.1);
+    box-shadow: 0 0 0 6px rgba(6, 214, 160, 0);
   }
   100% {
     transform: scale(0.95);
@@ -78,51 +76,60 @@
 }
 
 .live-meal-hero-row {
-  border-radius: 12px;
+  border-radius: 10px;
 }
 
 .live-meal-title {
-  font-size: 1.45rem;
+  font-size: 1.35rem;
   line-height: 1.25;
 }
 
 .live-meal-timing-text {
-  font-size: 0.95rem;
+  font-size: 0.88rem;
 }
 
 .countdown-timer-box {
-  background: rgba(0, 0, 0, 0.45);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 14px;
-  padding: 8px 16px;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 8px;
+  padding: 6px 14px;
   display: inline-flex;
   flex-direction: column;
   align-items: flex-end;
   justify-content: center;
-  min-width: 120px;
+  min-width: 105px;
 }
 
 .countdown-label {
-  font-size: 0.72rem;
+  font-size: 0.68rem;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
-  color: #94a3b8;
+  letter-spacing: 0.4px;
+  color: #64748b;
   line-height: 1.2;
   margin-bottom: 2px;
 }
 
 .countdown-digits {
   font-family: "Courier New", Courier, monospace;
-  font-size: 1.35rem;
-  font-weight: 800;
+  font-size: 1.25rem;
+  font-weight: 700;
   color: #ffc107;
   letter-spacing: 1px;
   line-height: 1.1;
 }
 
 .live-menu-heading {
-  letter-spacing: 0.5px;
-  font-size: 0.78rem;
+  letter-spacing: 0.4px;
+  font-size: 0.75rem;
+  color: #64748b !important;
+}
+
+.live-menu-list {
+  max-width: 580px;
+}
+
+.live-menu-item-row:last-child {
+  border-bottom: none !important;
 }
 
 /* --- Live Meal Status Subtle Action Buttons --- */
@@ -130,53 +137,57 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
 }
 
 .live-action-btn {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  padding: 7px 16px;
-  border-radius: 50px;
-  font-size: 0.84rem;
-  font-weight: 600;
+  gap: 6px;
+  padding: 6px 13px;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  font-weight: 500;
   cursor: pointer;
   transition: all 0.2s ease;
-  backdrop-filter: blur(8px);
   background: rgba(255, 255, 255, 0.04);
   border: 1px solid rgba(255, 255, 255, 0.1);
   color: #cbd5e1;
 }
 
 .live-action-btn:hover {
-  transform: translateY(-1px);
+  transform: none;
+  color: #ffffff;
+}
+
+.live-action-btn .btn-icon {
+  font-size: 0.9rem;
 }
 
 .live-action-btn.live-action-notify {
   color: #93c5fd;
-  border-color: rgba(59, 130, 246, 0.3);
-  background: rgba(37, 99, 235, 0.08);
+  border-color: rgba(59, 130, 246, 0.25);
+  background: rgba(37, 99, 235, 0.06);
 }
 
 .live-action-btn.live-action-notify:hover {
-  background: rgba(37, 99, 235, 0.18);
-  border-color: rgba(59, 130, 246, 0.6);
-  color: #ffffff;
-  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.2);
+  background: rgba(37, 99, 235, 0.14);
+  border-color: rgba(59, 130, 246, 0.4);
+  color: #bfdbfe;
+  box-shadow: none;
 }
 
 .live-action-btn.live-action-ai {
   color: #67e8f9;
-  border-color: rgba(6, 182, 212, 0.3);
-  background: rgba(6, 182, 212, 0.08);
+  border-color: rgba(6, 182, 212, 0.25);
+  background: rgba(6, 182, 212, 0.06);
 }
 
 .live-action-btn.live-action-ai:hover {
-  background: rgba(6, 182, 212, 0.18);
-  border-color: rgba(6, 182, 212, 0.6);
-  color: #ffffff;
-  box-shadow: 0 4px 14px rgba(6, 182, 212, 0.2);
+  background: rgba(6, 182, 212, 0.14);
+  border-color: rgba(6, 182, 212, 0.4);
+  color: #a5f3fc;
+  box-shadow: none;
 }
 
 .meal-items-chip-list {
@@ -291,9 +302,9 @@
 }
 
 .meal-period-card.is-active-meal {
-  border: 2px solid #06d6a0;
-  box-shadow: 0 8px 30px rgba(6, 214, 160, 0.2);
-  background: linear-gradient(160deg, #1b2838 0%, #172434 100%);
+  border: 1px solid rgba(6, 214, 160, 0.4);
+  box-shadow: 0 4px 14px rgba(6, 214, 160, 0.08);
+  background: #141f2c;
 }
 
 .meal-period-header {
