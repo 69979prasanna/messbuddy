@@ -212,3 +212,52 @@ export const sendPasswordResetEmail = async (
     info.messageId
   )
 }
+
+export const sendVerificationOTPEmail = async (email, username, otp) => {
+  const info = await transporter.sendMail({
+    from: `"MessBuddy Team" <${process.env.EMAIL}>`,
+    to: email,
+    subject: "Verify your MessBuddy account",
+    html: `
+      <div style="
+        font-family: Arial, sans-serif;
+        max-width: 600px;
+        margin: auto;
+        padding: 30px;
+        background: #111827;
+        color: #ffffff;
+        border-radius: 12px;
+      ">
+        <h1 style="color: #facc15; margin-bottom: 20px;">🍽️ MessBuddy</h1>
+        <p style="font-size: 16px; margin-bottom: 12px;">Hi ${username},</p>
+        <p style="font-size: 16px; margin-bottom: 20px;">Your MessBuddy verification code is:</p>
+        <div style="
+          background: #1f2937;
+          padding: 16px;
+          margin: 20px 0;
+          border-radius: 10px;
+          text-align: center;
+          letter-spacing: 8px;
+          font-size: 32px;
+          font-weight: bold;
+          color: #facc15;
+          font-family: monospace;
+        ">
+          ${otp}
+        </div>
+        <p style="font-size: 14px; color: #cbd5e1; margin-top: 15px;">
+          This code expires in <strong>5 minutes</strong>.
+        </p>
+        <p style="margin-top: 25px; color: #94a3b8; font-size: 13px;">
+          If you didn't request this, you can safely ignore this email.
+        </p>
+        <hr style="border: 0; border-top: 1px solid #374151; margin: 25px 0;" />
+        <p style="color: #94a3b8; font-size: 14px; margin: 0;">
+          Thanks,<br />
+          <strong>MessBuddy</strong>
+        </p>
+      </div>
+    `,
+  })
+  console.log("📧 Verification OTP email sent:", info.messageId)
+}

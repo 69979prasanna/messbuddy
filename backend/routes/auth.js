@@ -7,10 +7,20 @@ import validator from "validator"
 import crypto from "crypto"
 import {
   sendVerificationEmail,
-  sendPasswordResetEmail
+  sendPasswordResetEmail,
+  sendVerificationOTPEmail,
 } from "../utils/sendEmail.js"
 const router = express.Router()
 dotenv.config()
+
+const generateOTP = () => {
+  return crypto.randomInt(100000, 1000000).toString()
+}
+
+const hashOTP = (otp) => {
+  return crypto.createHash("sha256").update(otp.trim()).digest("hex")
+}
+
 router.post("/signup", async (req, res) => {
   try {
     const { username, email, password } = req.body
@@ -48,12 +58,60 @@ router.post("/signup", async (req, res) => {
           "Password must contain at least 5 characters, one uppercase letter and one number.",
       })
     }
-    const existingEmail = await User.findOne({ email })
+
+    const cleanEmail = email.toLowerCase().trim()
+    const existingEmail = await User.findOne({ email: cleanEmail })
+
     if (existingEmail) {
-      return res.status(400).json({
-        message: "Email already registered.",
+      if (existingEmail.isVerified) {
+        return res.status(400).json({
+          message: "Email already registered.",
+        })
+      }
+
+      // Check resend cooldown if previously requested
+      if (
+        existingEmail.otpLastSentAt &&
+        Date.now() - existingEmail.otpLastSentAt.getTime() < 30 * 1000
+      ) {
+        return res.status(429).json({
+          message: "Please wait before requesting another OTP.",
+        })
+      }
+
+      const existingUsername = await User.findOne({
+        username,
+        _id: { $ne: existingEmail._id },
+      })
+      if (existingUsername) {
+        return res.status(400).json({
+          message: "Username already taken.",
+        })
+      }
+
+      const hashedPassword = await bcrypt.hash(password, 10)
+      const otp = generateOTP()
+
+      existingEmail.username = username
+      existingEmail.password = hashedPassword
+      existingEmail.verificationOTP = hashOTP(otp)
+      existingEmail.verificationOTPExpires = new Date(Date.now() + 5 * 60 * 1000)
+      existingEmail.otpLastSentAt = new Date()
+      await existingEmail.save()
+
+      await sendVerificationOTPEmail(
+        existingEmail.email,
+        existingEmail.username,
+        otp
+      )
+
+      return res.status(200).json({
+        requiresVerification: true,
+        email: existingEmail.email,
+        message: "Verification code sent to your email. Please verify to continue.",
       })
     }
+
     const existingUsername = await User.findOne({
       username,
     })
@@ -63,32 +121,28 @@ router.post("/signup", async (req, res) => {
       })
     }
     const hashedPassword = await bcrypt.hash(password, 10)
-
-    const verificationToken =
-      crypto.randomBytes(32).toString("hex")
-
-    console.log("🔐 Generated token:", verificationToken)
+    const otp = generateOTP()
 
     const newUser = await User.create({
       username,
-      email,
+      email: cleanEmail,
       password: hashedPassword,
-      verificationToken,
+      isVerified: false,
+      verificationOTP: hashOTP(otp),
+      verificationOTPExpires: new Date(Date.now() + 5 * 60 * 1000),
+      otpLastSentAt: new Date(),
     })
 
-    console.log(
-      "💾 Token saved in DB:",
-      newUser.verificationToken
-    )
-
-    await sendVerificationEmail(
+    await sendVerificationOTPEmail(
       newUser.email,
       newUser.username,
-      verificationToken
+      otp
     )
-    res.status(201).json({
-      message:
-        "Account created successfully. Please verify your email.",
+
+    res.status(200).json({
+      requiresVerification: true,
+      email: newUser.email,
+      message: "Verification code sent to your email. Please verify to continue.",
     })
   } catch (err) {
     console.error(err)
@@ -98,20 +152,37 @@ router.post("/signup", async (req, res) => {
     })
   }
 })
+
 router.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body
-    const user = await User.findOne({ email })
+    if (!email || !password) {
+      return res.status(400).json({ message: "Invalid email or password." })
+    }
+
+    const user = await User.findOne({ email: email.toLowerCase().trim() })
 
     if (!user) {
-      return res.status(400).json({ message: "Invalid Credential" })
+      return res.status(400).json({ message: "Invalid email or password." })
     }
     const ismatch = await bcrypt.compare(password, user.password)
     if (!ismatch) {
-      return res.status(400).json({ message: "Invalid Credential" })
+      return res.status(400).json({ message: "Invalid email or password." })
     }
     if (!user.isVerified) {
-      return res.status(403).json({ message: "Please verify your email before logging in." })
+      const otp = generateOTP()
+      user.verificationOTP = hashOTP(otp)
+      user.verificationOTPExpires = new Date(Date.now() + 5 * 60 * 1000)
+      user.otpLastSentAt = new Date()
+      await user.save()
+
+      await sendVerificationOTPEmail(user.email, user.username, otp)
+
+      return res.status(200).json({
+        requiresVerification: true,
+        email: user.email,
+        message: "Please verify your email to continue. We've sent a 6-digit code to your email.",
+      })
     }
     const token = jwt.sign(
       {
@@ -129,13 +200,142 @@ router.post("/login", async (req, res) => {
       user: {
         id: user._id,
         username: user.username,
-        email: user.email
+        email: user.email,
+        role: user.role,
       }
     })
   } catch (err) {
     console.error(err)
     res.status(500).json({
       message: "Server error"
+    })
+  }
+})
+
+router.post("/verify-otp", async (req, res) => {
+  try {
+    const { email, otp } = req.body
+
+    if (!email || !otp) {
+      return res.status(400).json({
+        message: "Email and verification code are required.",
+      })
+    }
+
+    const user = await User.findOne({ email: email.toLowerCase().trim() })
+
+    if (!user) {
+      return res.status(400).json({
+        message: "Account not found.",
+      })
+    }
+
+    if (!user.verificationOTP || !user.verificationOTPExpires) {
+      return res.status(400).json({
+        message: "No pending verification found. Please request a new OTP.",
+      })
+    }
+
+    if (user.verificationOTPExpires.getTime() < Date.now()) {
+      return res.status(400).json({
+        message: "This OTP has expired. Please request a new one.",
+      })
+    }
+
+    const hashedInput = hashOTP(otp)
+    if (user.verificationOTP !== hashedInput) {
+      return res.status(400).json({
+        message: "Invalid verification code.",
+      })
+    }
+
+    user.isVerified = true
+    user.verificationOTP = null
+    user.verificationOTPExpires = null
+    user.verificationToken = null
+    await user.save()
+
+    const token = jwt.sign(
+      {
+        userId: user._id,
+        role: user.role,
+      },
+      process.env.JWT_SECRET,
+      {
+        expiresIn: "7d",
+      }
+    )
+
+    res.json({
+      message: "Email verified successfully!",
+      token,
+      user: {
+        id: user._id,
+        username: user.username,
+        email: user.email,
+        role: user.role,
+      },
+    })
+  } catch (err) {
+    console.error("❌ Verify OTP error:", err)
+    res.status(500).json({
+      message: "Server error.",
+    })
+  }
+})
+
+router.post("/resend-otp", async (req, res) => {
+  try {
+    const { email } = req.body
+
+    if (!email) {
+      return res.status(400).json({
+        message: "Email is required.",
+      })
+    }
+
+    const user = await User.findOne({ email: email.toLowerCase().trim() })
+
+    if (!user) {
+      return res.status(400).json({
+        message: "Account not found.",
+      })
+    }
+
+    if (user.isVerified) {
+      return res.status(400).json({
+        message: "Account is already verified. Please log in.",
+      })
+    }
+
+    if (
+      user.otpLastSentAt &&
+      Date.now() - user.otpLastSentAt.getTime() < 30 * 1000
+    ) {
+      const remainingSeconds = Math.ceil(
+        (30 * 1000 - (Date.now() - user.otpLastSentAt.getTime())) / 1000
+      )
+      return res.status(429).json({
+        message: "Please wait before requesting another OTP.",
+        retryAfter: remainingSeconds,
+      })
+    }
+
+    const otp = generateOTP()
+    user.verificationOTP = hashOTP(otp)
+    user.verificationOTPExpires = new Date(Date.now() + 5 * 60 * 1000)
+    user.otpLastSentAt = new Date()
+    await user.save()
+
+    await sendVerificationOTPEmail(user.email, user.username, otp)
+
+    res.json({
+      message: "A new verification code has been sent to your email.",
+    })
+  } catch (err) {
+    console.error("❌ Resend OTP error:", err)
+    res.status(500).json({
+      message: "Server error.",
     })
   }
 })

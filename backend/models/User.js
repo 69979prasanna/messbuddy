@@ -51,6 +51,21 @@ const userSchema = new mongoose.Schema(
       default: null,
     },
 
+    verificationOTP: {
+      type: String,
+      default: null,
+    },
+
+    verificationOTPExpires: {
+      type: Date,
+      default: null,
+    },
+
+    otpLastSentAt: {
+      type: Date,
+      default: null,
+    },
+
     resetPasswordToken: {
       type: String,
       default: null,
