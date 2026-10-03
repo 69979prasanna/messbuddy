@@ -7,9 +7,13 @@ export default function FeedbackModal({ show, onClose, feedback }) {
     const API = process.env.REACT_APP_APIKEY
     const handleReply = async () => {
         if (!reply.trim()) return
+        const token = localStorage.getItem("token")
+        if (!token || token === "null" || token === "undefined") {
+            alert("Authentication required. Please log in again.")
+            return
+        }
         try {
             setLoading(true)
-            const token = localStorage.getItem("token")
             const res = await fetch(
                 `${API}/feedback/${feedback._id}/reply`,
                 {
@@ -24,6 +28,10 @@ export default function FeedbackModal({ show, onClose, feedback }) {
                 }
             )
             const data = await res.json()
+            if (res.status === 401) {
+                alert("Authentication required. Please log in again.")
+                return
+            }
             if (!res.ok) {
                 alert(data.message)
                 return
