@@ -16,6 +16,7 @@ export default function AIChat() {
 
   const messagesEndRef = useRef(null)
   const inputRef = useRef(null)
+  const historyFetchedRef = useRef(false)
 
   // Current authenticated user
   const user = JSON.parse(localStorage.getItem("user") || "null")
@@ -79,10 +80,11 @@ export default function AIChat() {
       }
     }
 
-    if (open && messages.length <= 1) {
+    if (open && messages.length <= 1 && !historyFetchedRef.current) {
+      historyFetchedRef.current = true
       fetchHistory()
     }
-  }, [open, token, api])
+  }, [open, token, api, messages.length])
 
   // Send message
   const handleSendMessage = async (textToSend = input) => {

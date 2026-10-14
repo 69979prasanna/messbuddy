@@ -1,7 +1,6 @@
 import { useParams, useNavigate } from "react-router-dom"
 import { useState, useEffect } from "react"
 import {
-  getFavorites,
   getMenuFavorites,
   toggleMenuFavorite,
 } from "../utils/favorites"
@@ -21,7 +20,6 @@ export default function PlaceDetails({
   const [restaurant, setRestaurant] = useState(null)
   const [menus, setMenus] = useState([])
   const [loading, setLoading] = useState(true)
-  const [favoriteIds, setFavoriteIds] = useState([])
   const [menuFavoriteIds, setMenuFavoriteIds] =
     useState([])
   const [filter, setFilter] = useState("all")
@@ -67,22 +65,10 @@ export default function PlaceDetails({
     const token =
       localStorage.getItem("token")
     if (!token) {
-      setFavoriteIds([])
       setMenuFavoriteIds([])
       return
     }
     try {
-      const restaurantFavorites =
-        await getFavorites()
-      setFavoriteIds(
-        restaurantFavorites
-          .filter(
-            (fav) => fav.restaurant
-          )
-          .map(
-            (fav) => fav.restaurant._id
-          )
-      )
       const menuFavorites =
         await getMenuFavorites()
       setMenuFavoriteIds(

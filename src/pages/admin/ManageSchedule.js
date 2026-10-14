@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, useRef } from "react"
 import { useParams, useNavigate } from "react-router-dom"
 import MealScheduleManager from "../../components/admin/MealScheduleManager"
 import "../../styles/MealSchedule.css"
@@ -13,10 +13,13 @@ export default function ManageSchedule() {
   const [selectedRestaurant, setSelectedRestaurant] = useState(null)
   const [loading, setLoading] = useState(true)
   const [fetchingDetails, setFetchingDetails] = useState(false)
+  const restaurantsFetchedRef = useRef(false)
 
   // Fetch restaurants list once on mount
   useEffect(() => {
     const fetchRestaurants = async () => {
+      if (restaurantsFetchedRef.current) return
+      restaurantsFetchedRef.current = true
       try {
         setLoading(true)
         const res = await fetch(`${API}/restaurants`)
@@ -35,14 +38,14 @@ export default function ManageSchedule() {
     }
 
     fetchRestaurants()
-  }, []) // run once
+  }, [restaurantId])
 
   // Sync selectedId when restaurantId from URL changes
   useEffect(() => {
     if (restaurantId && restaurantId !== selectedId) {
       setSelectedId(restaurantId)
     }
-  }, [restaurantId])
+  }, [restaurantId, selectedId])
 
   // Fetch full details of the selected restaurant
   useEffect(() => {

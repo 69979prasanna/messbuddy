@@ -1,14 +1,12 @@
 import { useNavigate } from "react-router-dom"
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import { getFavorites, toggleFavorite } from "../../utils/favorites"
 export default function FoodCard({
   food, setShowAuthModal, }) {
   const navigate = useNavigate()
   const [fav, setFav] = useState(false)
-  useEffect(() => {
-    checkFavorite()
-  }, [food])
-  const checkFavorite = async () => {
+
+  const checkFavorite = useCallback(async () => {
     const token = localStorage.getItem("token")
     if (!token || !food?._id) {
       setFav(false)
@@ -23,7 +21,11 @@ export default function FoodCard({
     } catch (err) {
       console.error(err)
     }
-  }
+  }, [food])
+
+  useEffect(() => {
+    checkFavorite()
+  }, [checkFavorite])
   const handleFavorite = async (e) => {
     e.stopPropagation()
     const token = localStorage.getItem("token")
