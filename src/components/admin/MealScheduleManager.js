@@ -5,8 +5,7 @@ import {
 } from "../../utils/mealTiming"
 import MenuItemPickerModal from "./MenuItemPickerModal"
 import "../../styles/MealSchedule.css"
-
-const API = process.env.REACT_APP_APIKEY
+import { API } from "../../config/api"
 
 export default function MealScheduleManager({
   restaurantId,

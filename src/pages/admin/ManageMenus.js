@@ -3,7 +3,7 @@ import axios from "axios"
 import MenuCard from "../../components/admin/MenuCard"
 import EditMenuModal from "../../components/admin/EditMenuModal"
 import "../../styles/ManageMenu.css"
-const API = process.env.REACT_APP_APIKEY
+import { API } from "../../config/api"
 export default function ManageMenus() {
   const [menus, setMenus] = useState([])
   const [restaurants, setRestaurants] = useState([])

@@ -1,6 +1,5 @@
 import RestaurantForm from "../../components/admin/RestaurantForm";
-
-const API = process.env.REACT_APP_APIKEY;
+import { API } from "../../config/api";
 
 export default function AddRestaurant() {
 

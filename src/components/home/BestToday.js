@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react"
 import FoodCard from "./FoodCard"
-
-const API = process.env.REACT_APP_APIKEY
+import { API } from "../../config/api"
 
 export default function BestToday({ setShowAuthModal }) {
   const [foods, setFoods] = useState([])

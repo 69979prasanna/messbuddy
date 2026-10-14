@@ -2,8 +2,7 @@ import React, { useState, useEffect, useRef } from "react"
 import { useParams, useNavigate } from "react-router-dom"
 import MealScheduleManager from "../../components/admin/MealScheduleManager"
 import "../../styles/MealSchedule.css"
-
-const API = process.env.REACT_APP_APIKEY
+import { API } from "../../config/api"
 
 export default function ManageSchedule() {
   const { restaurantId } = useParams()

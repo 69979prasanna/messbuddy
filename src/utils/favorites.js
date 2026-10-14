@@ -1,4 +1,4 @@
-const API = process.env.REACT_APP_APIKEY
+import { API } from "../config/api"
 export const getFavorites = async () => {
   const token = localStorage.getItem("token")
   if (!token) return []

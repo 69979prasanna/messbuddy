@@ -1,10 +1,10 @@
 import { Modal } from "react-bootstrap"
 import { FaEnvelope, FaCalendarAlt, FaStar } from "react-icons/fa"
 import { useState } from "react"
+import { API } from "../../config/api"
 export default function FeedbackModal({ show, onClose, feedback }) {
     const [reply, setReply] = useState("")
     const [loading, setLoading] = useState(false)
-    const API = process.env.REACT_APP_APIKEY
     const handleReply = async () => {
         if (!reply.trim()) return
         const token = localStorage.getItem("token")

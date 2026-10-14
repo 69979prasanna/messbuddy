@@ -1,7 +1,7 @@
 import { useState } from "react"
 import "../../App.css"
+import { AUTH_API as API } from "../../config/api"
 export default function ForgotPassword({ onBack, onClose }) {
-    const API = process.env.REACT_APP_AUTH
     const [email, setEmail] = useState("")
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState("")

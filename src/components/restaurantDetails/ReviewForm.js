@@ -1,4 +1,5 @@
 import { useState } from "react"
+import { API as api } from "../../config/api"
 export default function ReviewForm({ place, onReviewAdded, setShowAuthModal }) {
   const [rating, setRating] = useState(5)
   const [comment, setComment] = useState("")
@@ -11,7 +12,6 @@ if (!token) {
   setShowAuthModal(true)
   return
 }
-const api = process.env.REACT_APP_APIKEY
 
   const res = await fetch(`${api}/reviews`, {
     method: "POST",

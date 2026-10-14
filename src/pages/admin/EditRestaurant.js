@@ -1,7 +1,7 @@
 import { useEffect, useState, useCallback } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import RestaurantForm from "../../components/admin/RestaurantForm";
-const API = process.env.REACT_APP_APIKEY;
+import { API } from "../../config/api";
 export default function EditRestaurant() {
 
   const { id } = useParams();

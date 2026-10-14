@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState } from "react"
 import { useParams, useNavigate } from "react-router-dom"
+import { AUTH_API as API } from "../config/api"
 
 export default function VerifyEmail({onClose}) {
   const { token } = useParams()
   const navigate = useNavigate()
-  const API = process.env.REACT_APP_AUTH
   const [status, setStatus] = useState("verifying")
   const [message, setMessage] = useState("")
   const verificationStarted = useRef(false)
@@ -53,7 +53,7 @@ export default function VerifyEmail({onClose}) {
       return
     }
     verifyEmail()
-  }, [token, API])
+  }, [token])
 
   return (
     <div className="d-flex justify-content-center align-items-center" style={{ minHeight: "100vh", background: "#0f172a", padding: "20px" }}>

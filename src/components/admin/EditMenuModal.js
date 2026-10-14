@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import "../../styles/EditMenuModal.css";
-
-const API = process.env.REACT_APP_APIKEY;
+import { API } from "../../config/api";
 export default function EditMenuModal({
   show,
   menu,

@@ -1,4 +1,5 @@
 import { useState } from "react"
+import { API as api } from "../config/api"
 
 export default function Contact() {
   const [form, setForm] = useState({
@@ -8,7 +9,6 @@ export default function Contact() {
     message: "",
     rating: 0,
   })
-  const api = process.env.REACT_APP_APIKEY
   const [hoverRating, setHoverRating] = useState(0)
   const [submitted, setSubmitted] = useState(false)
 

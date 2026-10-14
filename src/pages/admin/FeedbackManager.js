@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import FeedbackCard from "../../components/admin/FeedbackCard"
 import "../../styles/FeedbackManager.css"
 import FeedbackModal from "../../components/admin/FeedbackModal"
-const API = process.env.REACT_APP_APIKEY
+import { API } from "../../config/api"
 
 export default function FeedbackManager() {
   const [selectedFeedback, setSelectedFeedback] = useState(null)

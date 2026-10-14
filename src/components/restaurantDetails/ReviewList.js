@@ -1,4 +1,5 @@
 import { useEffect, useState, useCallback } from "react"
+import { API as api } from "../../config/api"
 
 export default function ReviewList({ place }) {
   const [reviews, setReviews] = useState([])
@@ -10,7 +11,6 @@ export default function ReviewList({ place }) {
   const [replyingTo, setReplyingTo] = useState(null)
   const [replyText, setReplyText] = useState("")
   const currentUser = JSON.parse(localStorage.getItem("user"))
-  const api = process.env.REACT_APP_APIKEY
   const fetchReviews = useCallback(async () => {
     try {
       const res = await fetch(`${api}/reviews/${encodeURIComponent(place)}`)
@@ -22,7 +22,7 @@ export default function ReviewList({ place }) {
     } catch (err) {
       console.error(err)
     }
-  }, [place, api])
+  }, [place])
 
   useEffect(() => {
     fetchReviews()

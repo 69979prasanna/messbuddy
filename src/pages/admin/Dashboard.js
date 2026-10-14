@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
 import StatCard from "../../components/admin/StatCard";
 import ActionCard from "../../components/admin/ActionCard";
-
-const API = process.env.REACT_APP_APIKEY;
+import { API } from "../../config/api";
 
 export default function Dashboard() {
 

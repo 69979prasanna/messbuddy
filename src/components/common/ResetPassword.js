@@ -1,8 +1,8 @@
 import { useState } from "react"
 import { useNavigate, useParams } from "react-router-dom"
 import "../../App.css"
+import { AUTH_API as API } from "../../config/api"
 export default function ResetPassword() {
-    const API = process.env.REACT_APP_AUTH
     const { token } = useParams()
     const navigate = useNavigate()
     const [password, setPassword] = useState("")

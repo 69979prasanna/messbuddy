@@ -1,4 +1,4 @@
-const API = process.env.REACT_APP_APIKEY || "http://localhost:5000/api"
+import { API } from "../config/api"
 
 export const DEFAULT_NOTIFICATION_PREFERENCES = {
   enabled: true,

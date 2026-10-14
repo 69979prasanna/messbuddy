@@ -2,9 +2,9 @@ import { useState, useEffect } from "react"
 import "../../App.css"
 import ForgotPassword from "./ForgotPassword"
 import { FaShieldAlt } from "react-icons/fa"
+import { AUTH_API as API } from "../../config/api"
 
 export default function AuthModal({ onClose }) {
-  const API = process.env.REACT_APP_AUTH
   const [isForgotPassword, setIsForgotPassword] = useState(false)
   const [isLogin, setIsLogin] = useState(true)
   const [formData, setFormData] = useState({

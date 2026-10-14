@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from "react"
 import "../../styles/AIChat.css"
+import { API as api } from "../../config/api"
 
 export default function AIChat() {
-  const api = process.env.REACT_APP_APIKEY || "http://localhost:5000/api"
   const [open, setOpen] = useState(false)
   const [input, setInput] = useState("")
   const [loading, setLoading] = useState(false)
@@ -84,7 +84,7 @@ export default function AIChat() {
       historyFetchedRef.current = true
       fetchHistory()
     }
-  }, [open, token, api, messages.length])
+  }, [open, token, messages.length])
 
   // Send message
   const handleSendMessage = async (textToSend = input) => {

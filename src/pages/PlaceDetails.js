@@ -11,7 +11,7 @@ import LiveMealStatus from "../components/restaurantDetails/LiveMealStatus"
 import WeeklySchedule from "../components/restaurantDetails/WeeklySchedule"
 import { FaStar, FaUtensils } from "react-icons/fa"
 import { FiArrowLeft, FiClock, FiMapPin, FiExternalLink } from "react-icons/fi"
-const API = process.env.REACT_APP_APIKEY
+import { API } from "../config/api"
 export default function PlaceDetails({
   setShowAuthModal,
 }) {

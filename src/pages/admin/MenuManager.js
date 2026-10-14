@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import MenuForm from "../../components/admin/MenuForm"
 import "../../styles/MenuManager.css"
-const API = process.env.REACT_APP_APIKEY
+import { API } from "../../config/api"
 export default function MenuManager() {
   const [restaurants, setRestaurants] = useState([])
   const [loading, setLoading] = useState(false)

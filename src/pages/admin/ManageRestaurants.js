@@ -1,7 +1,6 @@
 import { useEffect, useState, } from "react"
 import { useNavigate } from "react-router-dom"
-
-const API = process.env.REACT_APP_APIKEY
+import { API } from "../../config/api"
 
 export default function ManageRestaurants() {
   const navigate = useNavigate()
