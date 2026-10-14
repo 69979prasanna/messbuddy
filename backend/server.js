@@ -34,7 +34,7 @@ app.use("/api/reviews", reviewRoutes)
 app.use("/api/admin", adminRoutes)
 app.use("/api/ai", aiRoutes)
 app.use("/api/notifications", notificationRoutes)
-
-app.listen(5000, () =>
-  console.log(`running on http://localhost:${process.env.PORT}`)
+const PORT = process.env.PORT || 5000
+app.listen(PORT, () =>
+  console.log(`MessBuddy backend running on port ${PORT}`)
 )
