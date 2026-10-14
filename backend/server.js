@@ -14,15 +14,25 @@ import aiRoutes from "./routes/ai.js"
 import notificationRoutes from "./routes/notificationRoutes.js"
 import { startNotificationScheduler } from "./services/notificationScheduler.js"
 dotenv.config()
-mongoose
-  .connect(process.env.MONGO_URI)
-  .then(() => {
-    console.log("MongoDB connected")
-    startNotificationScheduler()
-  })
-  .catch((err) => console.error("Mongo Error:", err))
+
+try {
+  await mongoose.connect(process.env.MONGO_URI)
+  console.log("MongoDB connected")
+  startNotificationScheduler()
+} catch (err) {
+  console.error("Mongo Error:", err)
+  process.exit(1)
+}
+
 const app = express()
-app.use(cors())
+
+app.use(cors({
+  origin: [
+    "http://localhost:3000",
+    "https://messbuddy-self.vercel.app"
+  ],
+  credentials: true
+}))
 app.use(express.json())
 app.use("/api/favorites", favoriteRoutes)
 app.use("/api/auth", authRoutes)
