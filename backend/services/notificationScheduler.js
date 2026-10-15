@@ -1,6 +1,8 @@
 import { runNotificationCheckCycle } from "./notificationService.js"
+import { isResendConfigured } from "./resendEmailService.js"
 
 let schedulerInterval = null
+let initialTimeout = null
 let isRunning = false
 
 export const startNotificationScheduler = (intervalMs = 60 * 1000) => {
@@ -10,8 +12,11 @@ export const startNotificationScheduler = (intervalMs = 60 * 1000) => {
   }
 
   console.log(`⏰ Starting MessBuddy Notification Scheduler (Interval: ${intervalMs / 1000}s)`)
+  if (!isResendConfigured()) {
+    console.warn("⚠️ [Notification Config] RESEND_API_KEY or FROM_EMAIL is not configured. Render Free blocks outbound SMTP; notification emails require RESEND_API_KEY and FROM_EMAIL to send via Resend HTTPS API.")
+  }
 
-  setTimeout(async () => {
+  initialTimeout = setTimeout(async () => {
     try {
       await runScheduledTask()
     } catch (err) {
@@ -47,6 +52,10 @@ const runScheduledTask = async () => {
 }
 
 export const stopNotificationScheduler = () => {
+  if (initialTimeout) {
+    clearTimeout(initialTimeout)
+    initialTimeout = null
+  }
   if (schedulerInterval) {
     clearInterval(schedulerInterval)
     schedulerInterval = null

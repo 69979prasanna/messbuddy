@@ -2,16 +2,17 @@
 
 const normalizeApiUrl = () => {
   let url = process.env.REACT_APP_APIKEY;
+  let url2 = process.env.REACT_APP_APIKEY2;
   let ip = process.env.REACT_APP_IP;
   if (!url || !url.trim()) {
     if (
       typeof window !== "undefined" &&
       window.location &&
       window.location.hostname !== "localhost" &&
-      window.location.hostname !== "127.0.0.1" &&
+      window.location.hostname !== `${ip}` &&
       (!ip || window.location.hostname !== `${ip}`)
     ) {
-      url = "https://messbuddy-api.onrender.com/api";
+      url = `${url2}/api`;
     } else {
       url = "http://localhost:5000/api";
     }

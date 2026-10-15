@@ -3,7 +3,7 @@ import Restaurant from "../models/Restaurant.js"
 import Menu from "../models/Menu.js"
 import Favorite from "../models/Favourite.js"
 import NotificationLog from "../models/NotificationLog.js"
-import { transporter } from "../utils/sendEmail.js"
+import { sendResendEmail } from "./resendEmailService.js"
 import {
   renderMealReminderEmail,
   renderFavoriteFoodAvailableEmail,
@@ -54,6 +54,7 @@ export const sendNotificationEmail = async ({
   subject,
   html,
   metadata = {},
+  emailSender = sendResendEmail,
 }) => {
   if (!user || !user.email) return false
 
@@ -67,8 +68,7 @@ export const sendNotificationEmail = async ({
       return false
     }
 
-    const info = await transporter.sendMail({
-      from: `"MessBuddy" <${process.env.EMAIL}>`,
+    const { id: messageId } = await emailSender({
       to: user.email,
       subject,
       html,
@@ -78,7 +78,7 @@ export const sendNotificationEmail = async ({
       user: user._id,
       type,
       referenceKey,
-      metadata: { ...metadata, messageId: info.messageId },
+      metadata: { ...metadata, messageId },
     })
 
     console.log(`🔔 [Notification Sent] ${type} -> ${user.email} (${referenceKey})`)

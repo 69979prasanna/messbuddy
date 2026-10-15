@@ -13,6 +13,7 @@ shared/
 /build
 .gitignore
 backend/.env
+backend/.env.example
 backend/node_modules/
 /.env
 
