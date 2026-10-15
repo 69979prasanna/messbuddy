@@ -1,5 +1,6 @@
 import nodemailer from "nodemailer"
 import dotenv from "dotenv"
+import { sendResendEmail } from "../services/resendEmailService.js"
 dotenv.config()
 export const transporter = nodemailer.createTransport({
   service: "gmail",
@@ -64,13 +65,12 @@ export const sendVerificationEmail = async (
 export const sendFeedbackReplyEmail = async (
   email,
   username,
-  message
+  message,
+  emailSender = sendResendEmail
 ) => {
-  const info = await transporter.sendMail({
-    from: `"MessBuddy Team" <${process.env.EMAIL}>`,
+  const info = await emailSender({
     to: email,
     subject: "MessBuddy replied to your feedback 🍽️",
-
     html: `
       <div style="
         font-family: Arial, sans-serif;
@@ -125,21 +125,21 @@ export const sendFeedbackReplyEmail = async (
     `,
   })
 
-  console.log("📧 Feedback reply email sent:", info.messageId)
+  console.log("📧 Feedback reply email sent:", info.id || info.messageId)
+  return info
 }
 export const sendPasswordResetEmail = async (
   email,
   username,
-  token
+  token,
+  emailSender = sendResendEmail
 ) => {
   const resetUrl =
     `${process.env.FRONTEND_URL}/reset-password/${token}`
 
-  const info = await transporter.sendMail({
-    from: `"MessBuddy Team" <${process.env.EMAIL}>`,
+  const info = await emailSender({
     to: email,
     subject: "Reset your MessBuddy password 🔐",
-
     html: `
       <div style="
         font-family: Arial, sans-serif;
@@ -209,13 +209,18 @@ export const sendPasswordResetEmail = async (
   })
   console.log(
     "🔐 Password reset email sent:",
-    info.messageId
+    info.id || info.messageId
   )
+  return info
 }
 
-export const sendVerificationOTPEmail = async (email, username, otp) => {
-  const info = await transporter.sendMail({
-    from: `"MessBuddy Team" <${process.env.EMAIL}>`,
+export const sendVerificationOTPEmail = async (
+  email,
+  username,
+  otp,
+  emailSender = sendResendEmail
+) => {
+  const info = await emailSender({
     to: email,
     subject: "Verify your MessBuddy account",
     html: `
@@ -259,5 +264,7 @@ export const sendVerificationOTPEmail = async (email, username, otp) => {
       </div>
     `,
   })
-  console.log("📧 Verification OTP email sent:", info.messageId)
+
+  console.log("📧 Verification OTP email sent:", info.id || info.messageId)
+  return info
 }
